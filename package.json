@@ -1,0 +1,10 @@
+{
+  "name": "airhorn",
+  "version": "0.0.2",
+  "description": "Cloud Notification Library",
+  "main": "index.js",
+  "repository": "https://github.com/jaredwray/airhorn.git",
+  "author": "Jared Wray <me@jaredwray.com>",
+  "license": "MIT",
+  "private": true
+}
