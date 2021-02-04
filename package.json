@@ -7,7 +7,7 @@
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "scripts": {
     "test": "jest --coverage",
     "build": "tsc"
