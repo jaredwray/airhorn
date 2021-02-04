@@ -2,6 +2,10 @@
 
 -----
 
+![airhorn-build](https://github.com/jaredwray/airhorn/workflows/airhorn-build/badge.svg)
+![airhorn-release](https://github.com/jaredwray/airhorn/workflows/airhorn-release/badge.svg)
+[![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
+
 ## Cloud Native Notifications Library
 
 Airhorn was born out of a need to enable a more robust notifications system for many of the applications that were built and maintained by the team. We focused on making it cloud native by default (using cloud services) and also scalable with queue management and retry rate so that you can scale to hundreds if not thousands of instances. 
