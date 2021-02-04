@@ -5,6 +5,8 @@
 ![airhorn-build](https://github.com/jaredwray/airhorn/workflows/airhorn-build/badge.svg)
 ![airhorn-release](https://github.com/jaredwray/airhorn/workflows/airhorn-release/badge.svg)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
+[![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/dm/airhorn)](https://npmjs.com/packages/airhorn)
 
 ## Cloud Native Notifications Library
 
