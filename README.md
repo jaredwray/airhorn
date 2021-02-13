@@ -18,11 +18,13 @@ Airhorn was born out of a need to enable a more robust notifications system for 
 * Email Notifications - easily send email across multple providers and even load balance or active/passive fail over. 
 * SMS Notifications - SMS that is easy to use via a robust template system. 
 * Mobile Push Notifications - Push to IOS and 
-* Webhook Notifications
-* Profile Management - Sending Preferences, Send History
+* Webhook Notifications - Built right into the system as a native feature with retry support. 
+* View Send History / Logs via API / Client for multiple numbers, emails, and urls.
 * Pluggable Cloud Based Architecture - use the services you know
 * Scalable and Enterprise Grade - Ability to scale to thousands of requests per second and retry based system. 
 * 100% Code Coverage / Tested
+* 
+* Deploy straight from the latest supported docker instance if you want to just use the REST API.
 * Examples of how to Deploy (Github Actions, CircleCI, TravisCI)
 
 ## Library API
