@@ -23,15 +23,24 @@ Airhorn was born out of a need to enable a more robust notifications system for 
 * Pluggable Cloud Based Architecture - use the services you know
 * Scalable and Enterprise Grade - Ability to scale to thousands of requests per second and retry based system. 
 * 100% Code Coverage / Tested
-* 
 * Deploy straight from the latest supported docker instance if you want to just use the REST API.
 * Examples of how to Deploy (Github Actions, CircleCI, TravisCI)
 
 ## Library API
 
-### Airhorn.Client -- Robust Node Client with REST and Queue Support
+### Airhorn
 
-### Airhorn.Server -- Robust Rest API 
+* send()
+* sendNow()
+* Providers
+* getHistory({url:[], email:[], sms:[], mobile:[]})
+
+### Airhorn.Server -- Robust Rest API
+
+* /v1/providers
+* /v1/send
+* /v1/queue/status
+* /v1/history
 
 ### Airhorn.Worker -- Scalable Worker Service
 
