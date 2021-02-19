@@ -35,12 +35,17 @@ Airhorn was born out of a need to enable a more robust notifications system for 
 * Providers
 * getHistory({url:[], email:[], sms:[], mobile:[]})
 
-### Airhorn.Server -- Robust Rest API
+### Airhorn.Worker
 
-* /v1/providers
-* /v1/send
-* /v1/queue/status
-* /v1/history
+* processTask()
+* processEmailTask()
+* processSMSTask()
+* processMobilePushTask()
+* processWebhookTask()
+* SMS (IProvider)
+* Email (IProvider)
+* MobilePush (IProvider)
+* languageDefault (set to `en` by default)
 
 ### Airhorn.Worker -- Scalable Worker Service
 
