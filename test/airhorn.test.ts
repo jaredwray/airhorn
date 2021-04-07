@@ -1,4 +1,4 @@
-import { Airhorn } from "./airhorn";
+import { Airhorn } from "../src/airhorn";
 
 test("Test Init Error", () => {
 
