@@ -27,6 +27,9 @@ Airhorn was born out of a need to enable a more robust notifications system for 
 * Examples of how to Deploy (Github Actions, CircleCI, TravisCI)
 * Built using ecto for hanling multiple templates
 
+# Settings
+
+
 ## Library API
 
 ### Airhorn
