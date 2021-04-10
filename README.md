@@ -29,6 +29,8 @@ Airhorn was born out of a need to enable a more robust notifications system for 
 
 # Settings
 
+templatePath
+defaultTemplateLanguage
 
 ## Library API
 
