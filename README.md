@@ -25,7 +25,7 @@ Airhorn was born out of a need to enable a more robust notifications system for 
 * 100% Code Coverage / Tested
 * Deploy straight from the latest supported docker instance if you want to just use the REST API.
 * Examples of how to Deploy (Github Actions, CircleCI, TravisCI)
-* Built using ecto for hanling multiple templates
+* Built using ecto for handling multiple templates
 
 # Settings
 
