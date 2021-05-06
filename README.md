@@ -10,7 +10,7 @@
 
 ## Cloud Native Notifications Library
 
-Airhorn was born out of a need to enable a more robust notifications system for many of the applications that were built and maintained by the team. We focused on making it cloud native by default (using cloud services) and also scalable with queue management and retry rate so that you can scale to hundreds if not thousands of instances. 
+Airhorn was born to enable a more robust notification system. We focused on making it cloud native by default (using cloud services) and also scalable with queue management and retry rate so that you can scale to hundreds if not thousands of instances. 
 
 ## Features
 
