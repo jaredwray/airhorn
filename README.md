@@ -39,6 +39,7 @@ defaultTemplateLanguage
 * send()
 * sendNow()
 * Providers
+* Templates 
 * getHistory({url:[], email:[], sms:[], mobile:[]})
 
 ### Airhorn.Worker
