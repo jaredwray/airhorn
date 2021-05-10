@@ -19,12 +19,10 @@ Airhorn was born to enable a more robust notification system. We focused on maki
 * SMS Notifications - SMS that is easy to use via a robust template system. 
 * Mobile Push Notifications - Push to IOS and 
 * Webhook Notifications - Built right into the system as a native feature with retry support. 
-* View Send History / Logs via API / Client for multiple numbers, emails, and urls.
+* View Send History / Logs via API / Client
 * Pluggable Cloud Based Architecture - use the services you know
 * Scalable and Enterprise Grade - Ability to scale to thousands of requests per second and retry based system. 
-* 100% Code Coverage / Tested
-* Deploy straight from the latest supported docker instance if you want to just use the REST API.
-* Examples of how to Deploy (Github Actions, CircleCI, TravisCI)
+* 100% Code Coverage / Tested 
 * Built using ecto for handling multiple templates
 
 # Settings
