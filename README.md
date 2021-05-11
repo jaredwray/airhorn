@@ -32,6 +32,8 @@ defaultTemplateLanguage
 
 ## Library API
 
+Templates
+
 ### Airhorn
 
 * send()
