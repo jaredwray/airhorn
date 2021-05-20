@@ -34,6 +34,17 @@ test("Config - parse with object", () => {
     expect(config.templatePath).toEqual(obj.templatePath);
 });
 
+test("Config - defaultTemplateLanguage Should Not Be Default en", () => {
+    let obj = {
+        templatePath: "./foo"
+    };
+
+    let config = new Config();
+    config.parse(obj);
+
+    expect(config.defaultTemplateLanguage).toEqual("en");
+});
+
 test("Config - settings on constructor", () => {
     let obj = {
         defaultTemplateLanguage: "es"
