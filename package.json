@@ -20,7 +20,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "dotenv": "^9.0.2",
+    "dotenv": "^10.0.0",
     "ecto": "^1.0.4",
     "winston": "^3.3.3"
   },
