@@ -29,6 +29,8 @@ Airhorn was born to enable a more robust notification system. We focused on maki
 
 templatePath
 defaultTemplateLanguage
+Templates
+Channels
 
 ## Library API
 
