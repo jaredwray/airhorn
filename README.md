@@ -19,7 +19,6 @@ Airhorn was born to enable a more robust notification system. We focused on maki
 * SMS Notifications - SMS that is easy to use via a robust template system. 
 * Mobile Push Notifications - Push to IOS and 
 * Webhook Notifications - Built right into the system as a native feature with retry support.
-* Pluggable Cloud Based Architecture - use the services you know
 * Scalable and Enterprise Grade - Ability to scale to thousands of requests per second and retry based system. 
 * 100% Code Coverage / Tested 
 * Built using ecto for handling multiple templates
