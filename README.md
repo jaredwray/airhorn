@@ -53,15 +53,6 @@ defaultTemplateLanguage
 * MobilePush (IProvider)
 * languageDefault (set to `en` by default)
 
-### Airhorn.Server - REST API and Worker
-
-* `<version>`/tasks
-* `<version>`/tasks/process
-* `<version>`/providers
-* `<version>`/history
-* `<version>`/send
-* `<version>`/send/now
-
 ## Cloud Services
 * Queue: Google Cloud Tasks and Amazon SQS
 * Email: Twilio Sendgrid and AWS SES
