@@ -61,4 +61,4 @@ defaultTemplateLanguage
 
 ## Architecture
 
-## Contribute
+## How to Contribute
