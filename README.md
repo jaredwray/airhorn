@@ -23,7 +23,7 @@ Airhorn was born to enable a more robust notification system. We focused on maki
 * 100% Code Coverage / Tested with Integration Tests
 * Built using ecto for handling multiple templates
 
-# Settings
+# Settings / Opts
 
 templatePath
 defaultTemplateLanguage
