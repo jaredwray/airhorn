@@ -1,6 +1,6 @@
 {
   "name": "airhorn",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Cloud Notification Library",
   "main": "./dist/airhorn",
   "types": "./dist/airhorn",
@@ -34,7 +34,10 @@
         "tsconfig": "tsconfig.json"
       }
     },
-    "moduleFileExtensions": ["ts","js"],
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
