@@ -1556,18 +1556,18 @@ dotenv@*, dotenv@^10.0.0:
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
   integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
-ecto@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/ecto/-/ecto-1.0.4.tgz#ad5df1aaa1267124fef0580b8f09724736b1a8bd"
-  integrity sha512-NX49zVwEz3J1vyTZaJchC96emrakUI/CEia1ZOa8Hdfy0hwMZBN53DgLiibmJjILO5DtDe/amEHEGLgRDGeoDQ==
+ecto@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/ecto/-/ecto-1.0.8.tgz#c31a615e6550050c3bfebd65f9982d6db753c587"
+  integrity sha512-+ThPgNYdSRj5Q4ClqtTCjsODSKrBp2bEVsT4KJpcJYM6c8rrK9sQcp2gu8ZnSCSBOXEOex5iexooJ05aqKk3pQ==
   dependencies:
     ejs "^3.1.6"
     fs-extra "^10.0.0"
     handlebars "^4.7.7"
     handlebars-helpers "^0.10.0"
     helper-date "^1.0.1"
-    liquidjs "^9.23.4"
-    marked "^2.0.3"
+    liquidjs "^9.25.1"
+    marked "^3.0.4"
     nunjucks "^3.2.3"
     pug "^3.0.2"
     winston "^3.3.3"
@@ -3019,10 +3019,10 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
   integrity sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
 
-liquidjs@^9.23.4:
-  version "9.25.0"
-  resolved "https://registry.yarnpkg.com/liquidjs/-/liquidjs-9.25.0.tgz#6975764b74827c81bc1363b5ca4e9bc1140b7bb6"
-  integrity sha512-TIccrphsWN53fVF9G/wDaKD1cHaB097ULLf+FzxxqN2iyJjzp/Oe9xlFjZCR1ZrAeISusWSPg3r7Dg8BD2Uztg==
+liquidjs@^9.25.1:
+  version "9.28.0"
+  resolved "https://registry.yarnpkg.com/liquidjs/-/liquidjs-9.28.0.tgz#19ddf4c6ad152bb12c298fbcd94aea8a0575b898"
+  integrity sha512-BsLhHbv+dHH8hzac1/4tx2f4yPujD87wPOz9gnosPMoDgR0HiRrZXqPUVpfXJgZbWaqEJX1lawnS0GDyG/1r6Q==
 
 locate-path@^5.0.0:
   version "5.0.0"
@@ -3134,10 +3134,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marked@^2.0.3:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-2.0.5.tgz#2d15c759b9497b0e7b5b57f4c2edabe1002ef9e7"
-  integrity sha512-yfCEUXmKhBPLOzEC7c+tc4XZdIeTdGoRCZakFMkCxodr7wDXqoapIME4wjcpBPJLNyUnKJ3e8rb8wlAgnLnaDw==
+marked@^3.0.4:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-3.0.7.tgz#343aad9e91b96249b495c99c512ea09cfe06de1e"
+  integrity sha512-ctKqbnLuNbsHbI26cfMyOlKgXGfl1orOv1AvWWDX7AkgfMOwCWvmuYc+mVLeWhQ9W6hdWVBynOs96VkcscKo0Q==
 
 merge-stream@^2.0.0:
   version "2.0.0"
