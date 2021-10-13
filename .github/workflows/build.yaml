@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [15]
+        node-version: ['12', '14', '16']
 
     steps:
     - uses: actions/checkout@v2
@@ -23,13 +23,13 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install Dependencies
-      run: yarn
+      run: npm install
 
     - name: Build    
-      run: yarn build
+      run: npm run build
 
     - name: Testing    
-      run: yarn test
+      run: npm run test
       
     - name: Code Coverage
       uses: codecov/codecov-action@v1.0.15
