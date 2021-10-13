@@ -1,57 +1,57 @@
-import { Config } from "../src/config";
+import {Config} from '../src/config';
 
-test("Config - init", () => {
-    expect(new Config()).toEqual(new Config());
+test('Config - init', () => {
+	expect(new Config()).toEqual(new Config());
 });
 
-test("Config - default settings", () => {
-    let config = new Config();
+test('Config - default settings', () => {
+	const config = new Config();
 
-    expect(config.templatePath).toEqual("./templates");
-    expect(config.defaultTemplateLanguage).toEqual("en");
+	expect(config.templatePath).toEqual('./templates');
+	expect(config.defaultTemplateLanguage).toEqual('en');
 });
 
-test("Config - settings on constructor", () => {
-    let obj = {
-        templatePath: "./foo",
-        defaultTemplateLanguage: "es"
-    };
+test('Config - settings on constructor', () => {
+	const object = {
+		templatePath: './foo',
+		defaultTemplateLanguage: 'es',
+	};
 
-    let config = new Config(obj);
+	const config = new Config(object);
 
-    expect(config.templatePath).toEqual(obj.templatePath);
+	expect(config.templatePath).toEqual(object.templatePath);
 });
 
-test("Config - parse with object", () => {
-    let obj = {
-        templatePath: "./foo",
-        defaultTemplateLanguage: "es"
-    };
+test('Config - parse with object', () => {
+	const object = {
+		templatePath: './foo',
+		defaultTemplateLanguage: 'es',
+	};
 
-    let config = new Config();
-    config.parse(obj);
+	const config = new Config();
+	config.parse(object);
 
-    expect(config.templatePath).toEqual(obj.templatePath);
+	expect(config.templatePath).toEqual(object.templatePath);
 });
 
-test("Config - defaultTemplateLanguage Should Not Be Default en", () => {
-    let obj = {
-        templatePath: "./foo"
-    };
+test('Config - defaultTemplateLanguage Should Not Be Default en', () => {
+	const object = {
+		templatePath: './foo',
+	};
 
-    let config = new Config();
-    config.parse(obj);
+	const config = new Config();
+	config.parse(object);
 
-    expect(config.defaultTemplateLanguage).toEqual("en");
+	expect(config.defaultTemplateLanguage).toEqual('en');
 });
 
-test("Config - settings on constructor", () => {
-    let obj = {
-        defaultTemplateLanguage: "es"
-    };
+test('Config - settings on constructor', () => {
+	const object = {
+		defaultTemplateLanguage: 'es',
+	};
 
-    let config = new Config();
-    config.parse(obj);
+	const config = new Config();
+	config.parse(object);
 
-    expect(config.defaultTemplateLanguage).toEqual(obj.defaultTemplateLanguage);
+	expect(config.defaultTemplateLanguage).toEqual(object.defaultTemplateLanguage);
 });
