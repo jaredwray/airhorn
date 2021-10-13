@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "dotenv": "^10.0.0",
-    "ecto": "^1.0.4",
+    "ecto": "^1.0.8",
     "winston": "^3.3.3"
   },
   "files": [
