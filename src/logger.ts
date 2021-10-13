@@ -1,9 +1,12 @@
-import * as winston from "winston";
+import * as winston from 'winston';
+import {Config} from './config';
 
 export function create() {
-    let log = winston.createLogger({ transports: [ new winston.transports.Console() ]});
-    if(process.env.NODE_ENV === "test") {
-        log.silent = true;
-    }
-    return log;
+	const log = winston.createLogger({transports: [new winston.transports.Console()]});
+	const config = new Config();
+	if (config.environment === 'test') {
+		log.silent = true;
+	}
+
+	return log;
 }
