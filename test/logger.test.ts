@@ -1,4 +1,4 @@
-import * as process from 'node:process';
+/* eslint-disable node/prefer-global/process */
 import * as Logger from '../src/logger';
 
 test('Logger - silence', () => {
