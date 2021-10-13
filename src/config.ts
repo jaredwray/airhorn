@@ -12,7 +12,7 @@ export class Config {
 		}
 
 		/* Set the node environment */
-		if (process.env.NODE_ENV !== undefined) {
+		if (process.env.NODE_ENV !== 'undefined' && process.env.NODE_ENV !== undefined) {
 			this.environment = process.env.NODE_ENV;
 		}
 	}
