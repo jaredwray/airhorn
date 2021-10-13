@@ -1,4 +1,4 @@
-name: airhorn-release
+name: release
 
 on:
   release:
