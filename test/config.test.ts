@@ -1,3 +1,4 @@
+/* eslint-disable node/prefer-global/process */
 import {Config} from '../src/config';
 
 test('Config - init', () => {
@@ -9,6 +10,13 @@ test('Config - default settings', () => {
 
 	expect(config.templatePath).toEqual('./templates');
 	expect(config.defaultTemplateLanguage).toEqual('en');
+});
+
+test('Config - test if environment defaults to development', () => {
+	process.env.NODE_ENV = undefined;
+	const config = new Config();
+
+	expect(config.environment).toEqual('development');
 });
 
 test('Config - settings on constructor', () => {
