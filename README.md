@@ -42,7 +42,3 @@ defaultTemplateLanguage
 * Email: Twilio Sendgrid and AWS SES
 * SMS: Twilio and AWS SNS
 * Mobile Push: Google Firebase and AWS SNS
-
-## Architecture
-
-## How to Contribute
