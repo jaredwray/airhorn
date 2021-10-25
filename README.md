@@ -14,12 +14,11 @@ Airhorn was born to enable a more robust notification system. We focused on maki
 
 ## Features
 
-* GitOps Based Templating System - your email, sms, mobile, and webhooks all in one place!
+* GitOps Based Templating System - email, sms, mobile push, and webhooks all in one place!
 * Email Notifications - easily send email across multple providers and even load balance or active/passive fail over. 
 * SMS Notifications - SMS that is easy to use via a robust template system. 
-* Mobile Push Notifications - Push to IOS and 
+* Mobile Push Notifications - Push to IOS and Android devices.
 * Webhook Notifications - Built right into the system as a native feature with retry support.
-* Scalable and Enterprise Grade - Ability to scale to thousands of requests per second. 
 * 100% Code Coverage / Tested with Integration Tests
 * Built using ecto for handling multiple templates
 
@@ -36,28 +35,13 @@ defaultTemplateLanguage
 ### Airhorn
 
 * send()
-* sendNow()
 * Providers
 * Templates
 
-### Airhorn.Worker
-
-* processTask()
-* processEmailTask()
-* processSMSTask()
-* processMobilePushTask()
-* processWebhookTask()
-* SMS (IProvider)
-* Email (IProvider)
-* MobilePush (IProvider)
-* languageDefault (set to `en` by default)
-
 ## Cloud Services
-* Queue: Google Cloud Tasks and Amazon SQS
 * Email: Twilio Sendgrid and AWS SES
 * SMS: Twilio and AWS SNS
 * Mobile Push: Google Firebase and AWS SNS
-* Database: MongoDB and PostgreSQL
 
 ## Architecture
 
