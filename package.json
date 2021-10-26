@@ -10,7 +10,7 @@
   "private": false,
   "scripts": {
     "test": "xo && jest --coverage",
-    "build": "tsc"
+    "build": "tsc -p ."
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -26,7 +26,8 @@
     "winston": "^3.3.3"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "jest": {
     "globals": {
