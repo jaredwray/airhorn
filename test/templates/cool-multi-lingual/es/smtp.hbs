@@ -1,0 +1,9 @@
+<p>Hola! {{ firstName }} {{ lastName }}</p>
+<p>Tu correo electrónico es {{ email }}</p>
+
+<hr> 
+
+<p>Haga clic aquí para descargar los siguientes archivos: </p>
+<ul>
+{{#each downloads}}<li><a href="{{ download }}">{{ download }}</a></li>{{/each}}
+</ul>
