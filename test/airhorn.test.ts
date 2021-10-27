@@ -10,3 +10,12 @@ test('Get Templates', () => {
 
 	expect(airhorn.templates.config).toEqual(new Config());
 });
+
+test('Airhorn - Options Validated in Config', () => {
+	const options = {
+		templatePath: './test/templates',
+	};
+	const airhorn = new Airhorn(options);
+
+	expect(airhorn.config.templatePath).toEqual(options.templatePath);
+});
