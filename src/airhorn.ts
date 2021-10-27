@@ -1,12 +1,22 @@
 import {Config} from './config';
-import * as Logger from './logger';
-
-const logger = Logger.create();
+import {TemplateService} from './template-service';
 
 export class Airhorn {
-	config = new Config();
+	private readonly _config = new Config();
 
-	constructor() {
-		logger.error('This is an init project. DO NOT USE. Please follow along at https://github.com/jaredwray/airhorn');
+	private readonly _templateService = new TemplateService();
+
+	constructor(options?: any) {
+		if (options) {
+			this._config = new Config(options);
+		}
+	}
+
+	public get config(): Config {
+		return this._config;
+	}
+
+	public get templates(): TemplateService {
+		return this._templateService;
 	}
 }

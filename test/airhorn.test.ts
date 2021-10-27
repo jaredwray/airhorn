@@ -1,5 +1,21 @@
 import {Airhorn} from '../src/airhorn';
+import {Config} from '../src/config';
 
-test('Test Init Error', () => {
+test('Airhorn Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
+});
+
+test('Get Templates', () => {
+	const airhorn = new Airhorn();
+
+	expect(airhorn.templates.config).toEqual(new Config());
+});
+
+test('Airhorn - Options Validated in Config', () => {
+	const options = {
+		templatePath: './test/templates',
+	};
+	const airhorn = new Airhorn(options);
+
+	expect(airhorn.config.templatePath).toEqual(options.templatePath);
 });

@@ -10,10 +10,11 @@
   "private": false,
   "scripts": {
     "test": "xo && jest --coverage",
-    "build": "tsc"
+    "build": "tsc -p ."
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.5",
     "ts-jest": "^27.0.5",
@@ -23,10 +24,12 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "ecto": "^1.0.8",
+    "fs-extra": "^10.0.0",
     "winston": "^3.3.3"
   },
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
   "jest": {
     "globals": {

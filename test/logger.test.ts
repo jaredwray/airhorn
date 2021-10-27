@@ -6,3 +6,9 @@ test('Logger - silence', () => {
 	const logger = Logger.create();
 	expect(logger.silent).toEqual(undefined);
 });
+
+test('Logger - silence', () => {
+	process.env.NODE_ENV = 'test';
+	const logger = Logger.create();
+	expect(logger.silent).toEqual(true);
+});
