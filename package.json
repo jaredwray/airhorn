@@ -12,6 +12,12 @@
     "test": "xo && jest --coverage",
     "build": "tsc -p ."
   },
+  "xo": {
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars-experimental": "error"
+    }
+  },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/fs-extra": "^9.0.13",
