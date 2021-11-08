@@ -36,7 +36,7 @@ export class ProviderService {
 		let result: ProviderInterface[] = [];
 		const provider = this._providers.filter(provider => provider.type === type);
 
-		if (provider) {
+		if (provider.length > 0) {
 			result = provider;
 		}
 
