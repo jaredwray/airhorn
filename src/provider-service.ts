@@ -1,6 +1,7 @@
 import {Config} from './config';
 import {ProviderInterface} from './provider-interface';
 import {ProviderType} from './provider-type';
+import {WebHook} from './providers/webhook';
 
 export class ProviderService {
 	config = new Config();
@@ -10,6 +11,8 @@ export class ProviderService {
 		if (options) {
 			this.config = new Config(options);
 		}
+
+		this.loadProviders();
 	}
 
 	public get providers(): ProviderInterface[] {
@@ -82,5 +85,9 @@ export class ProviderService {
 		}
 
 		return result;
+	}
+
+	public loadProviders() {
+		this._providers.push(new WebHook());
 	}
 }

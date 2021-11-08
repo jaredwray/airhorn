@@ -3,5 +3,5 @@ import {ProviderType} from './provider-type';
 export interface ProviderInterface {
 	name: string;
 	type: ProviderType;
-	send(): Promise<boolean>;
+	send(message: string): Promise<boolean>;
 }

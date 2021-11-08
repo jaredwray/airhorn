@@ -18,7 +18,7 @@ test('Provider Service - Options', () => {
 test('Provider Service - Get Providers', () => {
 	const providerService = new ProviderService();
 
-	expect(providerService.providers.length).toEqual(0);
+	expect(providerService.providers.length).toEqual(1);
 });
 
 test('Provider Service - Get SMS Providers', () => {
@@ -36,7 +36,7 @@ test('Provider Service - Get smtp Provider', () => {
 test('Provider Service - Get webhook Provider', () => {
 	const providerService = new ProviderService();
 
-	expect(providerService.webhook).toEqual([]);
+	expect(providerService.webhook.length).toEqual(1);
 });
 
 test('Provider Service - Get mobilePush Provider', () => {
@@ -47,24 +47,20 @@ test('Provider Service - Get mobilePush Provider', () => {
 
 test('Provider Service - Get Provider By Type With No Result', () => {
 	const providerService = new ProviderService();
-	const webHook = new WebHook();
-
-	providerService.addProvider(webHook);
 
 	expect(providerService.getProviderByType(ProviderType.SMS).length).toEqual(0);
 });
 
 test('Provider Service - Get Provider By Type', () => {
 	const providerService = new ProviderService();
-	const webHook = new WebHook();
-
-	providerService.addProvider(webHook);
 
 	expect(providerService.getProviderByType(ProviderType.WEBHOOK).length).toEqual(1);
 });
 
 test('Provider Service - Add Provider', () => {
 	const providerService = new ProviderService();
+	providerService.removeProvider('webhook');
+
 	const webHook = new WebHook();
 
 	providerService.addProvider(webHook);
@@ -76,8 +72,6 @@ test('Provider Service - Add Provider Exists', () => {
 	const providerService = new ProviderService();
 	const webHook = new WebHook();
 
-	providerService.addProvider(webHook);
-
 	expect(() => {
 		providerService.addProvider(webHook);
 	}).toThrowError('Provider webhook already exists');
@@ -87,9 +81,6 @@ test('Provider Service - Add Provider Exists', () => {
 
 test('Provider Service - Remove Provider', () => {
 	const providerService = new ProviderService();
-	const webHook = new WebHook();
-
-	providerService.addProvider(webHook);
 
 	expect(providerService.providers.length).toEqual(1);
 
@@ -100,9 +91,6 @@ test('Provider Service - Remove Provider', () => {
 
 test('Provider Service - Remove Provider Does Not Exist', () => {
 	const providerService = new ProviderService();
-	const webHook = new WebHook();
-
-	providerService.addProvider(webHook);
 
 	expect(providerService.providers.length).toEqual(1);
 
@@ -115,8 +103,6 @@ test('Provider Service - Update Provider', () => {
 	const providerService = new ProviderService();
 	const webHook = new WebHook();
 
-	providerService.addProvider(webHook);
-
 	providerService.updateProvider(webHook);
 
 	expect(providerService.providers.length).toEqual(1);
@@ -124,6 +110,8 @@ test('Provider Service - Update Provider', () => {
 
 test('Provider Service - Update Provider Does Not Exist', () => {
 	const providerService = new ProviderService();
+	providerService.removeProvider('webhook');
+
 	const webHook = new WebHook();
 
 	providerService.updateProvider(webHook);
