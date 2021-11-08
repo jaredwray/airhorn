@@ -23,7 +23,16 @@ test('Template Service - Load Templates', () => {
 	});
 
 	templateService.loadTemplates();
-
 	expect(templateService.templates.length).toEqual(3);
+});
+
+test('Template Service - Get Template Returning Undefined', () => {
+	const templateService = new TemplateService();
+	templateService.config = new Config({
+		templatePath: './test/templates',
+	});
+
+	templateService.loadTemplates();
+	expect(templateService.getTemplate('foo')).toEqual(undefined);
 });
 
