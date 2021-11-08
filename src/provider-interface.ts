@@ -1,5 +1,7 @@
-interface ProviderInterface {
+import {ProviderType} from './provider-type';
+
+export interface ProviderInterface {
 	name: string;
-	types: ProviderType[];
+	type: ProviderType;
 	send(): Promise<void>;
 }

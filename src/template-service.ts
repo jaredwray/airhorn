@@ -9,7 +9,8 @@ export class TemplateService {
 	config = new Config();
 	templates = new Array<Template>();
 
-	constructor() {
+	constructor(options?: any) {
+		this.config = new Config(options);
 		this.loadTemplates();
 	}
 

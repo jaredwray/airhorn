@@ -1,4 +1,4 @@
-enum ProviderType {
+export enum ProviderType {
 	SMTP = 'SMTP',
 	SMS = 'SMS',
 	WEBHOOK = 'WEBHOOK',
