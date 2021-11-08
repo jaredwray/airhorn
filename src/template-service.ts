@@ -19,12 +19,22 @@ export class TemplateService {
 			const templateDirs = fs.readdirSync(this.config.templatePath);
 
 			for (const templateDirPath of templateDirs) {
-				const template = new Template(templateDirPath);
+				const template = new Template(this.config.templatePath + '/' + templateDirPath);
 
 				this.templates.push(template);
 			}
 		} else {
 			log.error('The template path does not exist: ' + this.config.templatePath);
 		}
+	}
+
+	public getTemplate(templateName: string): Template | undefined {
+		for (const template of this.templates) {
+			if (template.name === templateName) {
+				return template;
+			}
+		}
+
+		return undefined;
 	}
 }

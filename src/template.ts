@@ -59,7 +59,7 @@ export class Template {
 		const ecto = new Ecto();
 
 		if (this.filePath !== undefined) {
-			const templateText = this.getText(serviceType, languageCode);
+			const templateText = this.getText(serviceType.toLowerCase(), languageCode);
 
 			result = await ecto.render(templateText.text, data, templateText.format);
 		}
@@ -81,17 +81,19 @@ export class Template {
 	}
 
 	public generateKey(languageCode: string, serviceType: string): string {
+		languageCode = languageCode.toLowerCase().trim();
+		serviceType = serviceType.toLowerCase().trim();
 		return `${languageCode}-${serviceType}`;
 	}
 
-	private loadTemplateDirectory(filePath: string, languageCode: string) {
+	public loadTemplateDirectory(filePath: string, languageCode: string) {
 		const files = fs.readdirSync(filePath);
 		for (const fp of files) {
 			this.loadTemplateFile(filePath + '/' + fp, languageCode);
 		}
 	}
 
-	private loadTemplateFile(filePath: string, languageCode?: string) {
+	public loadTemplateFile(filePath: string, languageCode?: string) {
 		if (languageCode === undefined) {
 			languageCode = this.config.defaultTemplateLanguage;
 		}

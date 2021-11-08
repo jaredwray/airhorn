@@ -1,6 +1,7 @@
 import {Config} from './config';
 import {TemplateService} from './template-service';
 import {ProviderService} from './provider-service';
+import {ProviderType} from './provider-type';
 
 export class Airhorn {
 	config = new Config();
@@ -22,5 +23,29 @@ export class Airhorn {
 
 	public get providers(): ProviderService {
 		return this._providerService;
+	}
+
+	public async send(templateName: string, providerType: ProviderType, data?: any): Promise<boolean> {
+		let result = false;
+
+		const template = this._templateService.getTemplate(templateName);
+
+		if (template) {
+			const providers = this._providerService.getProviderByType(providerType);
+
+			console.log(providers);
+
+			if (providers.length > 0) {
+				const message = await template.render(providerType, data);
+
+				if (message) {
+					const rand = Math.floor(Math.random() * providers.length);
+					await providers[rand].send(message);
+					result = true;
+				}
+			}
+		}
+
+		return result;
 	}
 }

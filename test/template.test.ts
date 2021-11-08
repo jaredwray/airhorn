@@ -22,6 +22,7 @@ test('Template - Load Multi Lingual ', () => {
 	const template = new Template(templateCoolMultiLingual);
 
 	expect(template.name).toEqual('cool-multi-lingual');
+	expect(template.getText('smtp', 'en').text).toContain('<p>Click here to download the following files from this email: </p>');
 });
 
 test('Template - Load Generic Template ', () => {
@@ -103,7 +104,7 @@ test('Template - Get File Name - File', async () => {
 
 	const filePath = './foo/bar/you.hbs';
 
-	expect(template.getFileName(filePath)).toContain('you.hbs');
+	expect(template.getFileName(filePath)).toEqual('you.hbs');
 });
 
 test('Template - Get File Name - Dir', async () => {
@@ -111,5 +112,31 @@ test('Template - Get File Name - Dir', async () => {
 
 	const filePath = './foo/bar/';
 
-	expect(template.getFileName(filePath)).toContain('');
+	expect(template.getFileName(filePath)).toEqual('');
+});
+
+test('Template - Get File Name - Dir2', async () => {
+	const template = new Template();
+
+	const filePath = './foo/bar';
+
+	expect(template.getFileName(filePath)).toEqual('bar');
+});
+
+test('Template - Load Template File', async () => {
+	const template = new Template();
+
+	const filePath = templateCoolMultiLingual + '/en/webhook.hbs';
+	template.loadTemplateFile(filePath);
+
+	expect(template.getText('webhook').text).toContain('{{#each downloads}}');
+});
+
+test('Template - Load Template Directory', async () => {
+	const template = new Template();
+
+	const filePath = templateCoolMultiLingual + '/en';
+	template.loadTemplateDirectory(filePath, 'en');
+
+	expect(template.getText('smtp', 'en').text).toContain('{{#each downloads}}');
 });
