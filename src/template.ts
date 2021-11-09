@@ -59,7 +59,7 @@ export class Template {
 		const ecto = new Ecto();
 
 		if (this.filePath !== undefined) {
-			const templateText = this.getText(serviceType.toLowerCase(), languageCode);
+			const templateText = this.getText(serviceType, languageCode);
 
 			result = await ecto.render(templateText.text, data, templateText.format);
 		}
