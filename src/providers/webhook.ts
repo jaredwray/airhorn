@@ -6,7 +6,7 @@ export class WebHook implements ProviderInterface {
 	name = 'webhook';
 	type = ProviderType.WEBHOOK;
 
-	public async send(message: string): Promise<boolean> {
+	public async send(to: string, from: string, message: string): Promise<boolean> {
 		await axios.post('https://httpbin.org/post', message);
 
 		return true;
