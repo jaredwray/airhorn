@@ -40,7 +40,7 @@ export class Airhorn {
 
 				if (message) {
 					const rand = Math.floor(Math.random() * providers.length);
-					await providers[rand].send(message);
+					await providers[rand].send('', '', message);
 					result = true;
 				}
 			}
