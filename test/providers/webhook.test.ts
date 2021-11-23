@@ -6,5 +6,5 @@ test('WebHook - Init', () => {
 
 test('WebHook - Send', async () => {
 	const webhook = new WebHook();
-	expect(await webhook.send('', '', '{answer: 42}')).toEqual(true);
+	expect(await webhook.send('https://httpbin.org/post', '', '{answer: 42}')).toEqual(true);
 });
