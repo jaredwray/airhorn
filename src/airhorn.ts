@@ -25,7 +25,9 @@ export class Airhorn {
 		return this._providerService;
 	}
 
-	public async send(templateName: string, providerType: ProviderType, data?: any): Promise<boolean> {
+	/* eslint max-params: [2, 6] */
+
+	public async send(to: string, from: string, templateName: string, providerType: ProviderType, data?: any): Promise<boolean> {
 		let result = false;
 
 		const template = this._templateService.getTemplate(templateName);
@@ -40,7 +42,7 @@ export class Airhorn {
 
 				if (message) {
 					const rand = Math.floor(Math.random() * providers.length);
-					await providers[rand].send('', '', message);
+					await providers[rand].send(to, from, message);
 					result = true;
 				}
 			}

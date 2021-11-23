@@ -44,5 +44,5 @@ test('Airhorn - Send WebHook', async () => {
 	const airhorn = new Airhorn(options);
 	const userData = new TestingData();
 
-	expect(await airhorn.send('cool-multi-lingual', ProviderType.WEBHOOK, userData.users[0])).toEqual(true);
+	expect(await airhorn.send('https://httpbin.org/post', '', 'cool-multi-lingual', ProviderType.WEBHOOK, userData.users[0])).toEqual(true);
 });
