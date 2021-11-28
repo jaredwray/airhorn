@@ -1,9 +1,0 @@
-{
-	"name": "airhorn",
-	"eslintConfig": {
-		"extends": [
-			"xo",
-			"xo-typescript"
-		]
-	}
-}
