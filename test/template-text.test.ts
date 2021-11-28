@@ -26,7 +26,7 @@ test('Template Text - Setting Values on Constructor', () => {
 	expect(text.language).toEqual('en');
 });
 
-test('Template Text - Setting Values on Constructor', () => {
+test('Template Text - Setting Values on Constructor with single undefined', () => {
 	const text = new TemplateText(undefined, 'bar', 'en');
 
 	expect(text.text).toEqual('');
@@ -34,7 +34,7 @@ test('Template Text - Setting Values on Constructor', () => {
 	expect(text.language).toEqual('en');
 });
 
-test('Template Text - Constructor - ', () => {
+test('Template Text - Constructor -  Setting values on constructor with two undefined', () => {
 	const text = new TemplateText(undefined, undefined, 'en');
 
 	expect(text.text).toEqual('');
@@ -42,8 +42,8 @@ test('Template Text - Constructor - ', () => {
 	expect(text.language).toEqual('en');
 });
 
-test('Template Text - Setting Values on Constructor', () => {
-	const text = new TemplateText(undefined, undefined, undefined);
+test('Template Text - Setting Values on Constructor - no values', () => {
+	const text = new TemplateText();
 
 	expect(text.text).toEqual('');
 	expect(text.format).toEqual('');
