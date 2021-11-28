@@ -12,20 +12,20 @@ test('Template Init', () => {
 	expect(template).toEqual(new Template());
 });
 
-test('Template - Load Generic Template ', () => {
+test('Template - Load Generic Template', () => {
 	const template = new Template(templateGenericTemplateFoo);
 
 	expect(template.name).toEqual('generic-template-foo');
 });
 
-test('Template - Load Multi Lingual ', () => {
+test('Template - Load Multilingual', () => {
 	const template = new Template(templateCoolMultiLingual);
 
 	expect(template.name).toEqual('cool-multi-lingual');
 	expect(template.getText('smtp', 'en').text).toContain('<p>Click here to download the following files from this email: </p>');
 });
 
-test('Template - Load Generic Template ', () => {
+test('Template - Load Generic Template with multiple types', () => {
 	const template = new Template(templateMultipleTypesBar);
 
 	expect(template.name).toEqual('multiple-types-bar');
@@ -55,7 +55,7 @@ test('Template - Multilingual Text - es-smtp', () => {
 	expect(template.getText('smtp', 'es').text).toContain('<p>Haga clic aquí para descargar los siguientes archivos: </p>');
 });
 
-test('Template - Set/Get Text ', () => {
+test('Template - Set/Get Text', () => {
 	const template = new Template(templateMultipleTypesBar);
 
 	template.setText('sms', 'es', 'sms es', 'handlebars');
