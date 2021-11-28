@@ -25,8 +25,7 @@ export class Airhorn {
 		return this._providerService;
 	}
 
-	/* eslint max-params: [2, 6] */
-
+	/* eslint max-params: [2, 5] */
 	public async send(to: string, from: string, templateName: string, providerType: ProviderType, data?: any): Promise<boolean> {
 		let result = false;
 
@@ -34,8 +33,6 @@ export class Airhorn {
 
 		if (template) {
 			const providers = this._providerService.getProviderByType(providerType);
-
-			console.log(providers);
 
 			if (providers.length > 0) {
 				const message = await template.render(providerType, data);
