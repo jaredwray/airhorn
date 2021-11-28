@@ -53,7 +53,7 @@ test('Config - defaultTemplateLanguage Should Not Be Default en', () => {
 	expect(config.defaultTemplateLanguage).toEqual('en');
 });
 
-test('Config - settings on constructor', () => {
+test('Config - settings on constructor as language es', () => {
 	const object = {
 		defaultTemplateLanguage: 'es',
 	};
