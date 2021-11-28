@@ -1,7 +1,7 @@
-import {Config} from './config';
-import {ProviderInterface} from './provider-interface';
-import {ProviderType} from './provider-type';
-import {WebHook} from './providers/webhook';
+import { Config } from './config';
+import { ProviderInterface } from './provider-interface';
+import { ProviderType } from './provider-type';
+import { WebHook } from './providers/webhook';
 
 export class ProviderService {
 	config = new Config();
