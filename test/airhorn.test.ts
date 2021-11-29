@@ -21,16 +21,16 @@ test('Airhorn - Get Providers', () => {
 
 test('Airhorn - Options Validated in Config', () => {
 	const options = {
-		templatePath: './test/templates',
+		TEMPLATE_PATH: './test/templates',
 	};
 	const airhorn = new Airhorn(options);
 
-	expect(airhorn.config.templatePath).toEqual(options.templatePath);
+	expect(airhorn.config.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
 });
 
 test('Airhorn - Get Provider By Type', () => {
 	const options = {
-		templatePath: './test/templates',
+		TEMPLATE_PATH: './test/templates',
 	};
 	const airhorn = new Airhorn(options);
 
@@ -39,7 +39,7 @@ test('Airhorn - Get Provider By Type', () => {
 
 test('Airhorn - Send WebHook', async () => {
 	const options = {
-		templatePath: './test/templates',
+		TEMPLATE_PATH: './test/templates',
 	};
 	const airhorn = new Airhorn(options);
 	const userData = new TestingData();

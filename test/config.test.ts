@@ -8,58 +8,60 @@ test('Config - init', () => {
 test('Config - default settings', () => {
 	const config = new Config();
 
-	expect(config.templatePath).toEqual('./templates');
-	expect(config.defaultTemplateLanguage).toEqual('en');
+	expect(config.TEMPLATE_PATH).toEqual('./templates');
+	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual('en');
 });
 
 test('Config - test if environment defaults to development', () => {
 	process.env.NODE_ENV = undefined;
 	const config = new Config();
 
-	expect(config.environment).toEqual('development');
+	expect(config.ENVIRONMENT).toEqual('development');
 });
 
 test('Config - settings on constructor', () => {
 	const object = {
-		templatePath: './foo',
-		defaultTemplateLanguage: 'es',
+		TEMPLATE_PATH: './foo',
+		DEFAULT_TEMPLATE_LANGUAGE: 'es',
 	};
 
 	const config = new Config(object);
 
-	expect(config.templatePath).toEqual(object.templatePath);
+	expect(config.TEMPLATE_PATH).toEqual(object.TEMPLATE_PATH);
+	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual(object.DEFAULT_TEMPLATE_LANGUAGE);
 });
 
 test('Config - parse with object', () => {
 	const object = {
-		templatePath: './foo',
-		defaultTemplateLanguage: 'es',
+		TEMPLATE_PATH: './foo',
+		DEFAULT_TEMPLATE_LANGUAGE: 'es',
 	};
 
 	const config = new Config();
 	config.parse(object);
 
-	expect(config.templatePath).toEqual(object.templatePath);
+	expect(config.TEMPLATE_PATH).toEqual(object.TEMPLATE_PATH);
+	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual(object.DEFAULT_TEMPLATE_LANGUAGE);
 });
 
 test('Config - defaultTemplateLanguage Should Not Be Default en', () => {
 	const object = {
-		templatePath: './foo',
+		TEMPLATE_PATH: './foo',
 	};
 
 	const config = new Config();
 	config.parse(object);
 
-	expect(config.defaultTemplateLanguage).toEqual('en');
+	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual('en');
 });
 
 test('Config - settings on constructor as language es', () => {
 	const object = {
-		defaultTemplateLanguage: 'es',
+		DEFAULT_TEMPLATE_LANGUAGE: 'es',
 	};
 
 	const config = new Config();
 	config.parse(object);
 
-	expect(config.defaultTemplateLanguage).toEqual(object.defaultTemplateLanguage);
+	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual(object.DEFAULT_TEMPLATE_LANGUAGE);
 });

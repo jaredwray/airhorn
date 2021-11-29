@@ -31,6 +31,7 @@
     "dotenv": "^10.0.0",
     "ecto": "^1.1.0",
     "fs-extra": "^10.0.0",
+    "twilio": "^3.71.2",
     "winston": "^3.3.3"
   },
   "files": [
@@ -45,6 +46,7 @@
       "plugin:jest/recommended"
     ],
     "rules": {
+      "@typescript-eslint/naming-convention": 0,
       "@typescript-eslint/object-curly-spacing": 0,
       "no-console": 1,
       "import/extensions": [

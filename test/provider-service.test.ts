@@ -9,10 +9,10 @@ test('Provider Service Init', () => {
 });
 
 test('Provider Service - Options', () => {
-	const options = {templatePath: './test/templates/'};
+	const options = {TEMPLATE_PATH: './test/templates/'};
 	const providerService = new ProviderService(options);
 
-	expect(providerService.config.templatePath).toEqual(options.templatePath);
+	expect(providerService.config.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
 });
 
 test('Provider Service - Get Providers', () => {
@@ -117,4 +117,13 @@ test('Provider Service - Update Provider Does Not Exist', () => {
 	providerService.updateProvider(webHook);
 
 	expect(providerService.providers.length).toEqual(1);
+});
+
+test('Provider Service - Load Twilio SMS Service from Config', () => {
+	const providerService = new ProviderService({
+		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+		TWILIO_SMS_AUTH_TOKEN: 'your_auth_token',
+	});
+
+	expect(providerService.providers.length).toEqual(2);
 });
