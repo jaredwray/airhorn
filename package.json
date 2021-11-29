@@ -46,6 +46,7 @@
       "plugin:jest/recommended"
     ],
     "rules": {
+      "@typescript-eslint/naming-convention": 0,
       "@typescript-eslint/object-curly-spacing": 0,
       "no-console": 1,
       "import/extensions": [
