@@ -18,7 +18,7 @@ export class Template {
 
 	public getText(serviceType: string, languageCode?: string): TemplateText {
 		if (languageCode === undefined) {
-			languageCode = this.config.defaultTemplateLanguage;
+			languageCode = this.config.DEFAULT_TEMPLATE_LANGUAGE;
 		}
 
 		let result = this.text.get(this.generateKey(languageCode, serviceType));
@@ -95,7 +95,7 @@ export class Template {
 
 	public loadTemplateFile(filePath: string, languageCode?: string) {
 		if (languageCode === undefined) {
-			languageCode = this.config.defaultTemplateLanguage;
+			languageCode = this.config.DEFAULT_TEMPLATE_LANGUAGE;
 		}
 
 		const fileText = fs.readFileSync(filePath).toString();
