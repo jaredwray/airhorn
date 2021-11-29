@@ -4,7 +4,7 @@ import {Config} from './config';
 export function create() {
 	const log = winston.createLogger({transports: [new winston.transports.Console()]});
 	const config = new Config();
-	if (config.environment === 'test') {
+	if (config.ENVIRONMENT === 'test') {
 		log.silent = true;
 	}
 
