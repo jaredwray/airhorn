@@ -2,6 +2,7 @@ import { Config } from './config';
 import { ProviderInterface } from './provider-interface';
 import { ProviderType } from './provider-type';
 import { WebHook } from './providers/webhook';
+import { TwilioSMS } from './providers/twilio-sms';
 
 export class ProviderService {
 	config = new Config();
@@ -89,5 +90,9 @@ export class ProviderService {
 
 	public loadProviders() {
 		this._providers.push(new WebHook());
+
+		if (this.config.TWILIO_SMS_ACCOUNT_SID.length > 0 && this.config.TWILIO_SMS_AUTH_TOKEN.length > 0) {
+			this._providers.push(new TwilioSMS(this.config.TWILIO_SMS_ACCOUNT_SID, this.config.TWILIO_SMS_AUTH_TOKEN));
+		}
 	}
 }
