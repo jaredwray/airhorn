@@ -15,16 +15,16 @@ export class TemplateService {
 	}
 
 	public loadTemplates() {
-		if (fs.pathExistsSync(this.config.templatePath)) {
-			const templateDirs = fs.readdirSync(this.config.templatePath);
+		if (fs.pathExistsSync(this.config.TEMPLATE_PATH)) {
+			const templateDirs = fs.readdirSync(this.config.TEMPLATE_PATH);
 
 			for (const templateDirPath of templateDirs) {
-				const template = new Template(this.config.templatePath + '/' + templateDirPath);
+				const template = new Template(this.config.TEMPLATE_PATH + '/' + templateDirPath);
 
 				this.templates.push(template);
 			}
 		} else {
-			log.error('The template path does not exist: ' + this.config.templatePath);
+			log.error('The template path does not exist: ' + this.config.TEMPLATE_PATH);
 		}
 	}
 

@@ -10,16 +10,16 @@ test('Template Service Init', () => {
 test('Template Service - Config Updated', () => {
 	const templateService = new TemplateService();
 	templateService.config = new Config({
-		templatePath: './test/templates',
+		TEMPLATE_PATH: './test/templates',
 	});
 
-	expect(templateService.config.templatePath).toEqual('./test/templates');
+	expect(templateService.config.TEMPLATE_PATH).toEqual('./test/templates');
 });
 
 test('Template Service - Load Templates', () => {
 	const templateService = new TemplateService();
 	templateService.config = new Config({
-		templatePath: './test/templates',
+		TEMPLATE_PATH: './test/templates',
 	});
 
 	templateService.loadTemplates();
@@ -29,7 +29,7 @@ test('Template Service - Load Templates', () => {
 test('Template Service - Get Template Returning Undefined', () => {
 	const templateService = new TemplateService();
 	templateService.config = new Config({
-		templatePath: './test/templates',
+		TEMPLATE_PATH: './test/templates',
 	});
 
 	templateService.loadTemplates();
