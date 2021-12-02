@@ -6,6 +6,7 @@ export class Config {
 
 	TWILIO_SMS_ACCOUNT_SID = '';
 	TWILIO_SMS_AUTH_TOKEN = '';
+	TWILIO_SENDGRID_API_KEY = '';
 
 	constructor(options?: any) {
 		if (options) {
@@ -27,9 +28,23 @@ export class Config {
 			this.DEFAULT_TEMPLATE_LANGUAGE = this.cleanValue(options.DEFAULT_TEMPLATE_LANGUAGE);
 		}
 
-		this.TWILIO_SMS_ACCOUNT_SID = options.TWILIO_SMS_ACCOUNT_SID ? this.cleanValue(options.TWILIO_SMS_ACCOUNT_SID) : process.env.TWILIO_SMS_ACCOUNT_SID ?? '';
+		if (options.TWILIO_SMS_ACCOUNT_SID) {
+			this.TWILIO_SMS_ACCOUNT_SID = this.cleanValue(options.TWILIO_SMS_ACCOUNT_SID);
+		} else if (process.env.TWILIO_SMS_ACCOUNT_SID) {
+			this.TWILIO_SMS_ACCOUNT_SID = process.env.TWILIO_SMS_ACCOUNT_SID;
+		}
 
-		this.TWILIO_SMS_AUTH_TOKEN = options.TWILIO_SMS_AUTH_TOKEN ? this.cleanValue(options.TWILIO_SMS_AUTH_TOKEN) : process.env.TWILIO_SMS_AUTH_TOKEN ?? '';
+		if (options.TWILIO_SMS_AUTH_TOKEN) {
+			this.TWILIO_SMS_AUTH_TOKEN = this.cleanValue(options.TWILIO_SMS_AUTH_TOKEN);
+		} else if (process.env.TWILIO_SMS_AUTH_TOKEN) {
+			this.TWILIO_SMS_AUTH_TOKEN = process.env.TWILIO_SMS_AUTH_TOKEN;
+		}
+
+		if (options.TWILIO_SENDGRID_API_KEY) {
+			this.TWILIO_SENDGRID_API_KEY = this.cleanValue(options.TWILIO_SENDGRID_API_KEY);
+		} else if (process.env.TWILIO_SENDGRID_API_KEY) {
+			this.TWILIO_SENDGRID_API_KEY = process.env.TWILIO_SENDGRID_API_KEY;
+		}
 	}
 
 	private cleanValue(value: string) {

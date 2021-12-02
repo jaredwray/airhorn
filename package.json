@@ -27,10 +27,12 @@
     "xo": "^0.47.0"
   },
   "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "ecto": "^1.1.0",
     "fs-extra": "^10.0.0",
+    "gray-matter": "^4.0.3",
     "twilio": "^3.71.2",
     "winston": "^3.3.3"
   },

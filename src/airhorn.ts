@@ -39,8 +39,15 @@ export class Airhorn {
 
 				if (message) {
 					const rand = Math.floor(Math.random() * providers.length);
-					await providers[rand].send(to, from, message);
-					result = true;
+					const provider = providers[rand];
+
+					if (providerType === ProviderType.SMTP) {
+						const subject = template.getProperty(providerType, 'subject');
+
+						result = await provider.send(to, from, message, subject);
+					} else {
+						result = await provider.send(to, from, message);
+					}
 				}
 			}
 		}
