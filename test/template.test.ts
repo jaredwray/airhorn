@@ -140,3 +140,16 @@ test('Template - Load Template Directory', async () => {
 
 	expect(template.getText('smtp', 'en').text).toContain('{{#each downloads}}');
 });
+
+test('Template - Set/Get Text with Matter Subject', () => {
+	const template = new Template(templateCoolMultiLingual);
+
+	expect(template.getProperty('smtp', 'subject', 'es')).toEqual('Hola');
+	expect(template.getProperty('smtp', 'subject')).toEqual('Hello');
+});
+
+test('Template - Set/Get Text with Matter Subject Undefined', () => {
+	const template = new Template(templateCoolMultiLingual);
+
+	expect(template.getProperty('smtp', 'foo', 'es')).toEqual('');
+});
