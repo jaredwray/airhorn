@@ -1,7 +1,8 @@
-import {Ecto} from 'ecto';
+import { Ecto } from 'ecto';
 import * as fs from 'fs-extra';
-import {Config} from './config';
-import {TemplateText} from './template-text';
+import * as matter from 'gray-matter';
+import { Config } from './config';
+import { TemplateText } from './template-text';
 
 export class Template {
 	config = new Config();
@@ -30,8 +31,19 @@ export class Template {
 		return result;
 	}
 
-	public setText(serviceType: string, languageCode: string, text: string, format: string) {
-		this.text.set(this.generateKey(languageCode, serviceType), new TemplateText(text, format, languageCode));
+	public getProperty(serviceType: string, propertyName: string, languageCode?: string): string {
+		const text = this.getText(serviceType, languageCode);
+		const result = text.properties.get(propertyName);
+		if (result) {
+			return result.toString();
+		}
+
+		return '';
+	}
+
+	/* eslint max-params: [2, 5] */
+	public setText(serviceType: string, languageCode: string, text: string, format: string, properties?: any) {
+		this.text.set(this.generateKey(languageCode, serviceType), new TemplateText(text, format, languageCode, properties));
 	}
 
 	public loadTemplate(filePath?: string) {
@@ -99,12 +111,13 @@ export class Template {
 		}
 
 		const fileText = fs.readFileSync(filePath).toString();
+		const fileData = matter(fileText);
 		const fileServiceType = this.getFileName(filePath).split('.')[0] ?? '';
 
 		const ecto = new Ecto();
 		const format = ecto.getEngineByFilePath(filePath);
 
-		this.setText(fileServiceType, languageCode, fileText, format);
+		this.setText(fileServiceType, languageCode, fileData.content, format, fileData.data);
 	}
 }
 
