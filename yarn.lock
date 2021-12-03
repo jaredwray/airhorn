@@ -6101,10 +6101,10 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-twilio@^3.71.2:
-  version "3.71.2"
-  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.71.2.tgz#b14c901a3bd7922de06014fbf7626436d0a14185"
-  integrity sha512-aHyq0ofeD0M9O8WbV4ASs9JglkwlnLRWQRLF+9GnKDMoerXKewOLYPhQXhEm1ZydywiGjhgBu7fqEpIbnP/3PA==
+twilio@^3.71.3:
+  version "3.71.3"
+  resolved "https://registry.yarnpkg.com/twilio/-/twilio-3.71.3.tgz#a446d2b49f8c1ed60b0dd830c919921358c17203"
+  integrity sha512-m9eda9fvkHxMMDHRtXj8WKI0ViP4EG4xS5au5ay3ScfModhBZ1ZtyfWZ0AfWI++A7a1T1j3ZVNIZ+AMLwxSffw==
   dependencies:
     axios "^0.21.4"
     dayjs "^1.8.29"
