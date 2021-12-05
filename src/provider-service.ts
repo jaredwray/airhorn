@@ -4,6 +4,7 @@ import { ProviderType } from './provider-type';
 import { WebHook } from './providers/webhook';
 import { TwilioSMS } from './providers/twilio-sms';
 import { TwilioSendgrid } from './providers/twilio-sendgrid';
+import { AWSSES } from './providers/aws-ses';
 
 export class ProviderService {
 	config = new Config();
@@ -96,8 +97,12 @@ export class ProviderService {
 			this._providers.push(new TwilioSMS(this.config.TWILIO_SMS_ACCOUNT_SID, this.config.TWILIO_SMS_AUTH_TOKEN));
 		}
 
-		if (this.config.TWILIO_SENDGRID_API_KEY) {
+		if (this.config.TWILIO_SENDGRID_API_KEY.length > 0) {
 			this._providers.push(new TwilioSendgrid(this.config.TWILIO_SENDGRID_API_KEY));
+		}
+
+		if (this.config.AWS_SES_REGION.length > 0) {
+			this._providers.push(new AWSSES(this.config.AWS_SES_REGION));
 		}
 	}
 }
