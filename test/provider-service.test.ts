@@ -127,3 +127,13 @@ test('Provider Service - Load Twilio SMS Service from Config', () => {
 
 	expect(providerService.providers.length).toEqual(2);
 });
+
+test('Provider Service - Load AWS SES and Twilio Service from Config', () => {
+	const providerService = new ProviderService({
+		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+		TWILIO_SMS_AUTH_TOKEN: 'your_auth_token',
+		AWS_SES_REGION: 'us-east-1',
+	});
+
+	expect(providerService.providers.length).toEqual(3);
+});
