@@ -31,7 +31,7 @@
     "@sendgrid/mail": "^7.6.0",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
-    "ecto": "^1.1.0",
+    "ecto": "^1.1.2",
     "fs-extra": "^10.0.0",
     "gray-matter": "^4.0.3",
     "twilio": "^3.71.3",
