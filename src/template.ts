@@ -112,7 +112,7 @@ export class Template {
 
 		const fileText = fs.readFileSync(filePath).toString();
 		const fileData = matter(fileText);
-		const fileServiceType = this.getFileName(filePath).split('.')[0] ?? '';
+		const fileServiceType = this.getFileName(filePath).split('.')[0];
 
 		const ecto = new Ecto();
 		const format = ecto.getEngineByFilePath(filePath);
