@@ -66,6 +66,14 @@ test('Config - settings on constructor as language es', () => {
 	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual(object.DEFAULT_TEMPLATE_LANGUAGE);
 });
 
+test('Config - clean value', () => {
+	const config = new Config();
+
+	expect(config.cleanValue('test')).toEqual('test');
+	expect(config.cleanValue('test ')).toEqual('test');
+	expect(config.cleanValue()).toEqual('');
+});
+
 test('Config - settings as object', () => {
 	const object = {
 		TWILIO_SMS_ACCOUNT_SID: 'foo',
