@@ -66,12 +66,13 @@ test('Config - settings on constructor as language es', () => {
 	expect(config.DEFAULT_TEMPLATE_LANGUAGE).toEqual(object.DEFAULT_TEMPLATE_LANGUAGE);
 });
 
-test('Config - settings twilio sms and sendgrid', () => {
+test('Config - settings as object', () => {
 	const object = {
 		TWILIO_SMS_ACCOUNT_SID: 'foo',
 		TWILIO_SMS_AUTH_TOKEN: 'bar',
 		TWILIO_SENDGRID_API_KEY: 'baz',
 		AWS_SES_REGION: 'eu-west-1',
+		AWS_SMS_REGION: 'us-west-1',
 	};
 
 	const config = new Config();
@@ -81,13 +82,15 @@ test('Config - settings twilio sms and sendgrid', () => {
 	expect(config.TWILIO_SMS_AUTH_TOKEN).toEqual(object.TWILIO_SMS_AUTH_TOKEN);
 	expect(config.TWILIO_SENDGRID_API_KEY).toEqual(object.TWILIO_SENDGRID_API_KEY);
 	expect(config.AWS_SES_REGION).toEqual(object.AWS_SES_REGION);
+	expect(config.AWS_SMS_REGION).toEqual(object.AWS_SMS_REGION);
 });
 
-test('Config - settings twilio sms and sendgrid on process', () => {
+test('Config - settings on process', () => {
 	process.env.TWILIO_SMS_ACCOUNT_SID = 'foo';
 	process.env.TWILIO_SMS_AUTH_TOKEN = 'bar';
 	process.env.TWILIO_SENDGRID_API_KEY = 'baz';
 	process.env.AWS_SES_REGION = 'eu-west-1';
+	process.env.AWS_SMS_REGION = 'us-west-1';
 
 	const config = new Config();
 	config.parse({});
@@ -96,4 +99,5 @@ test('Config - settings twilio sms and sendgrid on process', () => {
 	expect(config.TWILIO_SMS_AUTH_TOKEN).toEqual(process.env.TWILIO_SMS_AUTH_TOKEN);
 	expect(config.TWILIO_SENDGRID_API_KEY).toEqual(process.env.TWILIO_SENDGRID_API_KEY);
 	expect(config.AWS_SES_REGION).toEqual(process.env.AWS_SES_REGION);
+	expect(config.AWS_SMS_REGION).toEqual(process.env.AWS_SMS_REGION);
 });
