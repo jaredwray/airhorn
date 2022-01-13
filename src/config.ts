@@ -37,7 +37,7 @@ export class Config {
 		this.AWS_SMS_REGION = this.getValueFromOptionsOrEnv(options, 'AWS_SMS_REGION', this.AWS_SMS_REGION);
 	}
 
-	private cleanValue(value?: string) {
+	public cleanValue(value?: string) {
 		if (value) {
 			return value.toString().trim();
 		}
@@ -45,7 +45,7 @@ export class Config {
 		return '';
 	}
 
-	private getValueFromOptionsOrEnv(options: any, env: string, defaultValue: string): string {
+	public getValueFromOptionsOrEnv(options: any, env: string, defaultValue: string): string {
 		if (options[env]) {
 			return this.cleanValue(options[env]);
 		}
