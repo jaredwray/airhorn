@@ -5,6 +5,7 @@ import { WebHook } from './providers/webhook';
 import { TwilioSMS } from './providers/twilio-sms';
 import { TwilioSendgrid } from './providers/twilio-sendgrid';
 import { AWSSES } from './providers/aws-ses';
+import { AWSSMS } from './providers/aws-sms';
 
 export class ProviderService {
 	config = new Config();
@@ -103,6 +104,10 @@ export class ProviderService {
 
 		if (this.config.AWS_SES_REGION.length > 0) {
 			this._providers.push(new AWSSES(this.config.AWS_SES_REGION));
+		}
+
+		if (this.config.AWS_SMS_REGION.length > 0) {
+			this._providers.push(new AWSSMS(this.config.AWS_SMS_REGION));
 		}
 	}
 }

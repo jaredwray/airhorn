@@ -133,7 +133,8 @@ test('Provider Service - Load AWS SES and Twilio Service from Config', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'your_auth_token',
 		AWS_SES_REGION: 'us-east-1',
+		AWS_SMS_REGION: 'us-west-1',
 	});
 
-	expect(providerService.providers.length).toEqual(3);
+	expect(providerService.providers.length).toEqual(4);
 });
