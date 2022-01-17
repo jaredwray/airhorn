@@ -31,11 +31,11 @@
     "@sendgrid/mail": "^7.6.0",
     "aws-sdk": "^2.1058.0",
     "axios": "^0.24.0",
-    "dotenv": "^14.1.0",
+    "dotenv": "^14.2.0",
     "ecto": "^1.1.2",
     "fs-extra": "^10.0.0",
     "gray-matter": "^4.0.3",
-    "twilio": "^3.72.0",
+    "twilio": "^3.73.0",
     "winston": "^3.3.3"
   },
   "files": [
