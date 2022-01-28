@@ -3,6 +3,14 @@ import {Config} from '../src/config';
 import {ProviderType} from '../src/provider-type';
 import {TestingData} from './testing-data';
 
+jest.mock('firebase-admin', () => ({
+	messaging: jest.fn().mockImplementation(() => ({})),
+	initializeApp: jest.fn(),
+	credential: {
+		cert: jest.fn(),
+	},
+}));
+
 test('Airhorn - Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
 });
@@ -53,9 +61,10 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
+		FIREBASE_CERT_PATH: './test/firebase-cert.json',
 	});
 
-	expect(airhorn.providers.providers.length).toEqual(3);
+	expect(airhorn.providers.providers.length).toEqual(4);
 });
 
 test('Airhorn - Send SMTP', async () => {
@@ -72,4 +81,25 @@ test('Airhorn - Send SMTP', async () => {
 	});
 
 	expect(await airhorn.send('me@you.com', 'you@me.com', 'cool-multi-lingual', ProviderType.SMTP, userData.users[0])).toEqual(true);
+});
+
+test('Airhorn - Send Mobile Push', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+		FIREBASE_CERT_PATH: './test/firebase-cert.json',
+	};
+	const airhorn = new Airhorn(options);
+
+	const notification = {
+		title: 'Airhorn',
+		body: 'It\'s time to airhorn!',
+	};
+
+	airhorn.providers.addProvider({
+		type: ProviderType.MOBILE_PUSH,
+		name: 'firebase-messaging',
+		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+	});
+
+	expect(await airhorn.send('deviceToken', '', 'generic-template-foo', ProviderType.MOBILE_PUSH, notification)).toEqual(true);
 });

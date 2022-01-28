@@ -17,32 +17,11 @@ const notification = {
 test('Firebase Messaging to Device  - Send', async () => {
 	const firebaseAdmin = new FirebaseMessaging('path-to-certificate');
 	const token = 'deviceIdToken';
-
-	const message = {
-		notification,
-		token,
-	};
+	const message = JSON.stringify(notification);
 
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;
 
-	expect(await firebaseAdmin.send(message)).toEqual(true);
-});
-
-test('Firebase Messaging to Topic  - Send', async () => {
-	const firebaseAdmin = new FirebaseMessaging('path-to-certificate');
-
-	const topic = 'firebaseTopicName';
-
-	const message = {
-		notification,
-		topic,
-	};
-
-	firebaseAdmin.client = {
-		send: jest.fn().mockReturnValue({}),
-	} as any;
-
-	expect(await firebaseAdmin.send(message)).toEqual(true);
+	expect(await firebaseAdmin.send(token, '', message)).toEqual(true);
 });

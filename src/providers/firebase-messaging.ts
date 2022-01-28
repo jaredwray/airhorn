@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import * as firebase from 'firebase-admin';
+import {Message} from 'firebase-admin/messaging';
 import {ProviderInterface} from '../provider-interface';
 import {ProviderType} from '../provider-type';
 
@@ -17,20 +19,18 @@ export class FirebaseMessaging implements ProviderInterface {
 		this.client = firebase.messaging();
 	}
 
-	public async send(to: string, from: string, message: string, subject?: string) {
-		const notification = JSON.parse(message);
+	public async send(to: string, from: string, message: string) {
+		const {title, body} = JSON.parse(message);
 
-		const params = {
-			notification,
-			token: to
-		}
+		const parameters: Message = {
+			notification: {
+				title,
+				body,
+			},
+			token: to,
+		};
 
-		/*{
-			title: subject,
-				body: message,
-		},*/
-
-		await this.client.send(params);
+		await this.client.send(parameters);
 		return true;
 	}
 }

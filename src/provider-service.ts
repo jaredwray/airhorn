@@ -6,7 +6,7 @@ import { TwilioSMS } from './providers/twilio-sms';
 import { TwilioSendgrid } from './providers/twilio-sendgrid';
 import { AWSSES } from './providers/aws-ses';
 import { AWSSMS } from './providers/aws-sms';
-import { FirebaseMessaging } from "./providers/firebase-messaging";
+import { FirebaseMessaging } from './providers/firebase-messaging';
 
 export class ProviderService {
 	config = new Config();
@@ -111,7 +111,7 @@ export class ProviderService {
 			this._providers.push(new AWSSMS(this.config.AWS_SMS_REGION));
 		}
 
-		if (this.config.FIREBASE_CERT_PATH.length) {
+		if (this.config.FIREBASE_CERT_PATH.length > 0) {
 			this._providers.push(new FirebaseMessaging(this.config.FIREBASE_CERT_PATH));
 		}
 	}
