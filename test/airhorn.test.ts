@@ -4,7 +4,9 @@ import {ProviderType} from '../src/provider-type';
 import {TestingData} from './testing-data';
 
 jest.mock('firebase-admin', () => ({
-	messaging: jest.fn().mockImplementation(() => ({})),
+	messaging: jest.fn().mockImplementation(() => ({
+		send: jest.fn().mockImplementation(() => Promise.resolve()),
+	})),
 	initializeApp: jest.fn(),
 	credential: {
 		cert: jest.fn(),
@@ -94,12 +96,6 @@ test('Airhorn - Send Mobile Push', async () => {
 		title: 'Airhorn',
 		body: 'It\'s time to airhorn!',
 	};
-
-	airhorn.providers.addProvider({
-		type: ProviderType.MOBILE_PUSH,
-		name: 'firebase-messaging',
-		send: jest.fn().mockReturnValue(Promise.resolve(true)),
-	});
 
 	expect(await airhorn.send('deviceToken', '', 'generic-template-foo', ProviderType.MOBILE_PUSH, notification)).toEqual(true);
 });
