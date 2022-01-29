@@ -5,7 +5,7 @@ import {TestingData} from './testing-data';
 
 jest.mock('firebase-admin', () => ({
 	messaging: jest.fn().mockImplementation(() => ({
-		send: jest.fn().mockImplementation(() => Promise.resolve()),
+		send: jest.fn().mockImplementation(async () => Promise.resolve()),
 	})),
 	initializeApp: jest.fn(),
 	credential: {
