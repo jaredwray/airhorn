@@ -81,6 +81,7 @@ test('Config - settings as object', () => {
 		TWILIO_SENDGRID_API_KEY: 'baz',
 		AWS_SES_REGION: 'eu-west-1',
 		AWS_SMS_REGION: 'us-west-1',
+		FIREBASE_CERT: './foo',
 	};
 
 	const config = new Config();
@@ -91,6 +92,7 @@ test('Config - settings as object', () => {
 	expect(config.TWILIO_SENDGRID_API_KEY).toEqual(object.TWILIO_SENDGRID_API_KEY);
 	expect(config.AWS_SES_REGION).toEqual(object.AWS_SES_REGION);
 	expect(config.AWS_SMS_REGION).toEqual(object.AWS_SMS_REGION);
+	expect(config.FIREBASE_CERT).toEqual(object.FIREBASE_CERT);
 });
 
 test('Config - settings on process', () => {
@@ -99,6 +101,7 @@ test('Config - settings on process', () => {
 	process.env.TWILIO_SENDGRID_API_KEY = 'baz';
 	process.env.AWS_SES_REGION = 'eu-west-1';
 	process.env.AWS_SMS_REGION = 'us-west-1';
+	process.env.FIREBASE_CERT = './foo';
 
 	const config = new Config();
 	config.parse({});
@@ -108,4 +111,5 @@ test('Config - settings on process', () => {
 	expect(config.TWILIO_SENDGRID_API_KEY).toEqual(process.env.TWILIO_SENDGRID_API_KEY);
 	expect(config.AWS_SES_REGION).toEqual(process.env.AWS_SES_REGION);
 	expect(config.AWS_SMS_REGION).toEqual(process.env.AWS_SMS_REGION);
+	expect(config.FIREBASE_CERT).toEqual(process.env.FIREBASE_CERT);
 });
