@@ -9,12 +9,12 @@ export class FirebaseMessaging implements ProviderInterface {
 	name = 'firebase-messaging';
 	type = ProviderType.MOBILE_PUSH;
 
-	private readonly certPath: string;
+	private readonly cert: string;
 
-	constructor(certPath: string) {
-		this.certPath = certPath;
+	constructor(cert: string) {
+		this.cert = cert;
 		firebase.initializeApp({
-			credential: firebase.credential.cert(JSON.parse(this.certPath)),
+			credential: firebase.credential.cert(JSON.parse(this.cert)),
 		});
 		this.client = firebase.messaging();
 	}

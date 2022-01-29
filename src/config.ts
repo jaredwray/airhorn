@@ -9,7 +9,7 @@ export class Config {
 	TWILIO_SENDGRID_API_KEY = '';
 	AWS_SES_REGION = '';
 	AWS_SMS_REGION = '';
-	FIREBASE_CERT_PATH = '';
+	FIREBASE_CERT = '';
 
 	constructor(options?: any) {
 		if (options) {
@@ -37,7 +37,7 @@ export class Config {
 
 		this.AWS_SMS_REGION = this.getValueFromOptionsOrEnv(options, 'AWS_SMS_REGION', this.AWS_SMS_REGION);
 
-		this.FIREBASE_CERT_PATH = this.getValueFromOptionsOrEnv(options, 'FIREBASE_CERT_PATH', this.FIREBASE_CERT_PATH);
+		this.FIREBASE_CERT = this.getValueFromOptionsOrEnv(options, 'FIREBASE_CERT', this.FIREBASE_CERT);
 	}
 
 	public cleanValue(value?: string) {

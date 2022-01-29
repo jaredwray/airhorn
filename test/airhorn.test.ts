@@ -13,6 +13,20 @@ jest.mock('firebase-admin', () => ({
 	},
 }));
 
+const firebaseCertContent = JSON.stringify({
+	type: 'service_account',
+	project_id: 'airhorn-sample',
+	private_key_id: 'private_key_',
+	private_key: '-----BEGIN PRIVATE KEY-----\ncertificateContent\n-----END PRIVATE KEY-----\n',
+	client_email: 'user@project.iam.gserviceaccount.com',
+	client_id: '1234567890',
+	auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+	token_uri: 'https://oauth2.googleapis.com/token',
+	auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+	client_x509_cert_url: 'https://www.googleapis.com/robot/v1/metadata/x509/user%40project.iam.gserviceaccount.com',
+},
+);
+
 test('Airhorn - Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
 });
@@ -63,7 +77,7 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
-		FIREBASE_CERT_PATH: './test/firebase-cert.json',
+		FIREBASE_CERT: firebaseCertContent,
 	});
 
 	expect(airhorn.providers.providers.length).toEqual(4);
@@ -86,23 +100,9 @@ test('Airhorn - Send SMTP', async () => {
 });
 
 test('Airhorn - Send Mobile Push', async () => {
-	const certContent = JSON.stringify({
-		type: 'service_account',
-		project_id: 'airhorn-sample',
-		private_key_id: 'private_key_',
-		private_key: '-----BEGIN PRIVATE KEY-----\ncertificateContent\n-----END PRIVATE KEY-----\n',
-		client_email: 'user@project.iam.gserviceaccount.com',
-		client_id: '1234567890',
-		auth_uri: 'https://accounts.google.com/o/oauth2/auth',
-		token_uri: 'https://oauth2.googleapis.com/token',
-		auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
-		client_x509_cert_url: 'https://www.googleapis.com/robot/v1/metadata/x509/user%40project.iam.gserviceaccount.com',
-	},
-	);
-
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT_PATH: certContent,
+		FIREBASE_CERT: firebaseCertContent,
 	};
 	const airhorn = new Airhorn(options);
 

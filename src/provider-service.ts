@@ -111,8 +111,8 @@ export class ProviderService {
 			this._providers.push(new AWSSMS(this.config.AWS_SMS_REGION));
 		}
 
-		if (this.config.FIREBASE_CERT_PATH.length > 0) {
-			this._providers.push(new FirebaseMessaging(this.config.FIREBASE_CERT_PATH));
+		if (this.config.FIREBASE_CERT.length > 0) {
+			this._providers.push(new FirebaseMessaging(this.config.FIREBASE_CERT));
 		}
 	}
 }
