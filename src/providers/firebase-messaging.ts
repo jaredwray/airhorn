@@ -14,7 +14,7 @@ export class FirebaseMessaging implements ProviderInterface {
 	constructor(certPath: string) {
 		this.certPath = certPath;
 		firebase.initializeApp({
-			credential: firebase.credential.cert(this.certPath),
+			credential: firebase.credential.cert(JSON.parse(this.certPath)),
 		});
 		this.client = firebase.messaging();
 	}
