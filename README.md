@@ -10,7 +10,7 @@
 
 ## Cloud Native Notifications Library
 
-Airhorn is built to enable a mor robist notification system. We focused on making it cloud native by default (using cloud services) and also scalable with queue management and retry rate so that you can scale to hundreds if not thousands of instances. 
+Airhorn is built to enable a more robust notification system. We focused on making it cloud native by default (using cloud services).
 
 ## Features
 
@@ -26,19 +26,34 @@ Airhorn is built to enable a mor robist notification system. We focused on makin
 
 templatePath
 defaultTemplateLanguage
-
-## Library API
-
-- Templates
-- Channels
-
-### Airhorn
-
-* send()
-* Providers
-* Templates
+...
 
 ## Cloud Services
 * Email: Twilio Sendgrid and AWS SES
 * SMS: Twilio and AWS SNS
 * Mobile Push: Google Firebase and AWS SNS
+
+## Library API
+
+- Templates
+- Providers
+- send()
+
+## Examples on how to use
+- sending a simple email
+
+```javascript
+const airhorn = require('airhorn');
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
+```
+
+- sending a simple webhook
+- using two email providers
+- creating a template and sending it
+- how the template forlder structure works
+- how template overrides work `subject` in the template
+
+## How to Contribute 
+
+
+
