@@ -9,6 +9,7 @@ export class Config {
 	TWILIO_SENDGRID_API_KEY = '';
 	AWS_SES_REGION = '';
 	AWS_SMS_REGION = '';
+	AWS_SNS_REGION = '';
 	FIREBASE_CERT = '';
 
 	constructor(options?: any) {
@@ -36,6 +37,8 @@ export class Config {
 		this.AWS_SES_REGION = this.getValueFromOptionsOrEnv(options, 'AWS_SES_REGION', this.AWS_SES_REGION);
 
 		this.AWS_SMS_REGION = this.getValueFromOptionsOrEnv(options, 'AWS_SMS_REGION', this.AWS_SMS_REGION);
+
+		this.AWS_SNS_REGION = this.getValueFromOptionsOrEnv(options, 'AWS_SNS_REGION', this.AWS_SNS_REGION);
 
 		this.FIREBASE_CERT = this.getValueFromOptionsOrEnv(options, 'FIREBASE_CERT', this.FIREBASE_CERT);
 	}

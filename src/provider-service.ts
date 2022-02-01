@@ -7,6 +7,7 @@ import { TwilioSendgrid } from './providers/twilio-sendgrid';
 import { AWSSES } from './providers/aws-ses';
 import { AWSSMS } from './providers/aws-sms';
 import { FirebaseMessaging } from './providers/firebase-messaging';
+import { AWSSNS } from './providers/aws-sns';
 
 export class ProviderService {
 	config = new Config();
@@ -109,6 +110,10 @@ export class ProviderService {
 
 		if (this.config.AWS_SMS_REGION.length > 0) {
 			this._providers.push(new AWSSMS(this.config.AWS_SMS_REGION));
+		}
+
+		if (this.config.AWS_SNS_REGION.length > 0) {
+			this._providers.push(new AWSSNS(this.config.AWS_SNS_REGION));
 		}
 
 		if (this.config.FIREBASE_CERT.length > 0) {

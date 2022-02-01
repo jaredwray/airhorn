@@ -138,3 +138,11 @@ test('Provider Service - Load AWS SES and Twilio Service from Config', () => {
 
 	expect(providerService.providers.length).toEqual(4);
 });
+
+test('Provider service - Load AWS SNS from Config', () => {
+	const providerService = new ProviderService({
+		AWS_SNS_REGION: 'us-west-1',
+	});
+
+	expect(providerService.providers.length).toEqual(2);
+});
