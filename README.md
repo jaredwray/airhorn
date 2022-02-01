@@ -53,6 +53,14 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 - how the template forlder structure works
 - how template overrides work `subject` in the template
 
+## How to setup Firebase for Mobile Push
+
+To implement Firebase in your application, you will need to create a new project in the Firebase console and integrate
+the Firebase SDK according to the [Firebase documentation](https://firebase.google.com/docs/cloud-messaging).
+
+In your Firebase Project Settings, go to the `Service accounts` tab to generate your `private key` as a json file and 
+put the content of the file as `FIREBASE_CERT` environment variable.
+
 ## How to Contribute 
 
 
