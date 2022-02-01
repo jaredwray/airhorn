@@ -61,6 +61,26 @@ the Firebase SDK according to the [Firebase documentation](https://firebase.goog
 In your Firebase Project Settings, go to the `Service accounts` tab to generate your `private key` as a json file and 
 put the content of the file as `FIREBASE_CERT` environment variable.
 
+## How to setup AWS SNS for Mobile Push
+
+To implement AWS SNS you will need to create a new SNS application in the AWS console and integrate the AWS SNS SDK in 
+your application. 
+
+### User notification overview 
+
+1. [Obtain the credentials and device token](https://docs.aws.amazon.com/sns/latest/dg/sns-prerequisites-for-mobile-push-notifications.html) for the mobile platforms that you want to support.
+2. Use the credentials to create a platform application object (PlatformApplicationArn) using Amazon SNS. For more information, see [Creating a platform endpoint](https://docs.aws.amazon.com/sns/latest/dg/mobile-platform-endpoint.html). 
+3. Use the returned credentials to request a device token for your mobile app and device from the mobile platforms. The token you receive represents your mobile app and device.
+4. Use the device token and the PlatformApplicationArn to create a platform endpoint object (EndpointArn) using Amazon SNS. For more information, see [Creating a platform endpoint](https://docs.aws.amazon.com/sns/latest/dg/mobile-platform-endpoint.html).
+5. Send the push message to the device endpoint (EndpointArn) using `airhorn`. 
+
+```javascript
+const airhorn = require('airhorn');
+await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
+```
+
+---- 
+
 ## How to Contribute 
 
 
