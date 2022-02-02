@@ -113,3 +113,19 @@ test('Airhorn - Send Mobile Push', async () => {
 
 	expect(await airhorn.send('deviceToken', '', 'generic-template-foo', ProviderType.MOBILE_PUSH, notification)).toEqual(true);
 });
+
+test('Airhorn - Send SNS Push', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+
+	const airhorn = new Airhorn(options);
+
+	airhorn.providers.addProvider({
+		type: ProviderType.MOBILE_PUSH,
+		name: 'aws-sns',
+		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+	});
+
+	expect(await airhorn.send('topicArnFromSns', '', 'generic-template-foo', ProviderType.MOBILE_PUSH)).toEqual(true);
+});
