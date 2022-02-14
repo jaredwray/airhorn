@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {Airhorn} from '../src/airhorn';
 import {Config} from '../src/config';
 import {ProviderType} from '../src/provider-type';
