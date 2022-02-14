@@ -25,8 +25,8 @@ export class Airhorn {
 		return this._providerService;
 	}
 
-	/* eslint max-params: [2, 5] */
-	public async send(to: string, from: string, templateName: string, providerType: ProviderType, data?: any): Promise<boolean> {
+	/* eslint max-params: [2, 6] */
+	public async send(to: string, from: string, templateName: string, providerType: ProviderType, data?: any, languageCode?: string): Promise<boolean> {
 		let result = false;
 
 		const template = this._templateService.getTemplate(templateName);
@@ -35,7 +35,7 @@ export class Airhorn {
 			const providers = this._providerService.getProviderByType(providerType);
 
 			if (providers.length > 0) {
-				const message = await template.render(providerType, data);
+				const message = await template.render(providerType, data, languageCode);
 
 				if (message) {
 					const rand = Math.floor(Math.random() * providers.length);
