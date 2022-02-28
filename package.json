@@ -34,7 +34,7 @@
     "dotenv": "^16.0.0",
     "ecto": "^1.2.0",
     "firebase-admin": "^10.0.2",
-    "fs-extra": "^10.0.0",
+    "fs-extra": "^10.0.1",
     "gray-matter": "^4.0.3",
     "twilio": "^3.75.0",
     "winston": "^3.6.0"
