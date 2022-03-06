@@ -44,7 +44,7 @@ The `send()` function, located in `airhorn.ts`, is used to send notifications. I
 
 ### `config`
 
-The `Config` class, found in `config.ts`, can be used to customize the behavior of your notification system. This is also where authentication information should be populated. This class contains constant configuration values that can be set directly within the file itself:
+The `Config` class, enables you to configure the settings of Airhorn. It accepts the following parameters:
 
 * `TEMPLATE_PATH` (string): The path where the notification system checks for templates. By default, this is set to './templates'
 * `DEFAULT_TEMPLATE_LANGUAGE` (string): The default language code the notification system uses for localization, if a language code is not provided. By default, this is set to 'en' for English localization.
@@ -56,6 +56,26 @@ The `Config` class, found in `config.ts`, can be used to customize the behavior 
 * `AWS_SMS_REGION` (string): For AWS, The endpoint region where an SMS is sent. By default, this value is a null string.
 * `AWS_SNS_REGION` (string): For AWS, the endpoint region where a push notification is sent. By default, this value is a null string.
 * `FIREBASE_CERT` (string): The certificate for sending push notifications through Google Firebase. By default, this value is a null string.
+
+These settings can be overridden by passing them in when you create a new instance of `Airnorn`:
+
+```javascript
+const airhorn = new Airhorn({
+    TEMPLATE_PATH: './templates',
+    DEFAULT_TEMPLATE_LANGUAGE: 'en',
+    ENVIRONMENT: 'development',
+    TWILIO_SMS_ACCOUNT_SID: '',
+    TWILIO_SMS_AUTH_TOKEN: '',
+    TWILIO_SENDGRID_API_KEY: '',
+    AWS_SES_REGION: '',
+    AWS_SMS_REGION: '',
+    AWS_SNS_REGION: '',
+    FIREBASE_CERT: ''
+    });
+});
+```
+
+You can also pass these settings via your `process.env` at the start of your application.
 
 ### Templates
 
@@ -99,7 +119,7 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 Here, we'll send a simple webhook to the URL 'https://httpbin.org/post':
 
 ``` javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn();
 airhorn.send('https://httpbin.org/post', 'foo', 'bar', ProviderType.WEBHOOK);
 ```
 
@@ -112,9 +132,10 @@ In this example, we'll send a message using multiple email providers:
 3. Send the message and it will randomly balance between the two providers.
 
 ```javascript
-const airhorn = require('airhorn');
-airhorn.config.AWS_SES_REGION = 'us-east-1';
-airhorn.config.TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY';
+const airhorn = new Airhorn({
+        AWS_SES_REGION = 'us-east-1',
+        TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
+	});
 
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 
@@ -140,7 +161,9 @@ This library supports sending emails via AWS SES and Twilio Sendgrid.
 After configuring your system to use AWS SES, you can easily use `airhorn` to send emails. In this example, we'll email 'john@doe.org' from 'hello@testing.com' using the email template 'generic-template-foo'. We'll list the provider type as `ProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn({
+        AWS_SES_REGION = 'us-east-1',
+	});
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 ```
 
@@ -149,7 +172,9 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value in `config.ts`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
 
 ```javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn({
+        TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
+	});
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 ```
 
@@ -162,16 +187,21 @@ This library supports sending SMS using AWS SMS and Twilio.
 Once your system is configured to use AWS SMS, you can send SMS notifications through AWS SMS. In this example, we'll send the notification to the phone number '5555555555' from the number '5552223333' with the raw text data 'Test message text'. Then, we'll list the provider type as `ProviderType.SMS`.
 
 ```javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn({
+        AWS_SMS_REGION = 'us-east-1',
+    });
 await airhorn.send('5555555555', '5552223333', 'Test message text', ProviderType.SMS);
 ```
 
 ### Twilio SMS
 
-To send SMS notifications via Twilio SMS, first update the `TWILIO_SMS_ACCOUNT_SID` and the `TWILIO_SMS_AUTH_TOKEN` values in `config.ts`. Then, we can send an SMS notification using the same syntax as above:
+To send SMS notifications via Twilio SMS, first update the `TWILIO_SMS_ACCOUNT_SID` and the `TWILIO_SMS_AUTH_TOKEN` values via the `options` as shown below. Then, we can send an SMS notification using the same syntax as above:
 
 ```javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn({
+        TWILIO_SMS_ACCOUNT_SID = 'TWILIO_SMS_ACCOUNT_SID',
+        TWILIO_SMS_AUTH_TOKEN = 'TWILIO_SMS_AUTH_TOKEN'
+    });
 await airhorn.send('5555555555', '5552223333', 'Test message text', ProviderType.SMS);
 ```
 
@@ -191,7 +221,9 @@ To use AWS SNS you will need to create a new SNS application in the AWS console 
 Then, you can send the push message to the device endpoint using `airhorn`:
 
 ```javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn({
+        AWS_SNS_REGION = 'us-east-1',
+    });
 await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
 ```
 
@@ -204,7 +236,9 @@ In your Firebase Project Settings, go to the `Service accounts` tab to generate 
 Then, you can send the push message to the device endpoint using `airhorn`:
 
 ```javascript
-const airhorn = require('airhorn');
+const airhorn = new Airhorn({
+        FIREBASE_CERT = 'FIREBASE_CERT'
+    });
 await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
 ```
 
