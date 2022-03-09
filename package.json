@@ -29,7 +29,7 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.53.0",
     "@sendgrid/mail": "^7.6.1",
-    "aws-sdk": "^2.1083.0",
+    "aws-sdk": "^2.1089.0",
     "axios": "^0.26.1",
     "dotenv": "^16.0.0",
     "ecto": "^1.2.0",
