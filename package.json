@@ -32,7 +32,7 @@
     "aws-sdk": "^2.1089.0",
     "axios": "^0.26.1",
     "dotenv": "^16.0.0",
-    "ecto": "^1.2.0",
+    "ecto": "^1.2.1",
     "firebase-admin": "^10.0.2",
     "fs-extra": "^10.0.1",
     "gray-matter": "^4.0.3",
