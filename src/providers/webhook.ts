@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import axios from 'axios';
+import got from 'got';
 import {ProviderInterface} from '../provider-interface';
 import {ProviderType} from '../provider-type';
 
@@ -14,9 +14,9 @@ export class WebHook implements ProviderInterface {
 			messageData.subject = subject;
 		}
 
-		const messageString = JSON.stringify(messageData);
-
-		await axios.post(to, messageString);
+		await got.post(to, {
+			json: {...messageData},
+		});
 
 		return true;
 	}
