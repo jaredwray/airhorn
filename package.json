@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.78.0",
-    "@sendgrid/mail": "^7.6.2",
+    "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1122.0",
     "dotenv": "^16.0.0",
     "ecto": "^1.2.2",
@@ -36,7 +36,7 @@
     "fs-extra": "^10.1.0",
     "got": "^11.8.2",
     "gray-matter": "^4.0.3",
-    "twilio": "^3.76.1",
+    "twilio": "^3.77.1",
     "winston": "^3.7.2"
   },
   "files": [
