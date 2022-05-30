@@ -23,16 +23,16 @@ export class AWSSES implements ProviderInterface {
 			Message: {
 				Body: {
 					Html: {
-						Charset: 'UTF-8',
+						Charset: 'utf8',
 						Data: message,
 					},
 					Text: {
-						Charset: 'UTF-8',
+						Charset: 'utf8',
 						Data: message,
 					},
 				},
 				Subject: {
-					Charset: 'UTF-8',
+					Charset: 'utf8',
 					Data: subject ?? '',
 				},
 			},

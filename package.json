@@ -24,7 +24,7 @@
     "jest": "^28.1.0",
     "ts-jest": "^28.0.3",
     "typescript": "^4.6.3",
-    "xo": "^0.48.0"
+    "xo": "^0.49.0"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.78.0",
@@ -53,6 +53,7 @@
     "rules": {
       "@typescript-eslint/naming-convention": 0,
       "@typescript-eslint/object-curly-spacing": 0,
+      "@typescript-eslint/parameter-properties": 0,
       "no-console": 1,
       "import/extensions": [
         "error",
