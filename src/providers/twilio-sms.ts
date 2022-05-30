@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import * as twilio from 'twilio';
 import {ProviderInterface} from '../provider-interface';
 import {ProviderType} from '../provider-type';
