@@ -30,6 +30,7 @@
     "@aws-sdk/client-ses": "^3.100.0",
     "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1145.0",
+    "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "ecto": "^1.2.3",
     "firebase-admin": "^10.2.0",
