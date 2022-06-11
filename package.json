@@ -2,8 +2,8 @@
   "name": "airhorn",
   "version": "0.7.2",
   "description": "Cloud Notification Library",
-  "main": "./dist/airhorn",
-  "types": "./dist/airhorn",
+  "main": "./dist/src/airhorn.js",
+  "types": "./dist/src/airhorn.d.ts",
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
   "license": "MIT",
@@ -35,7 +35,6 @@
     "ecto": "^1.2.3",
     "firebase-admin": "^10.2.0",
     "fs-extra": "^10.1.0",
-    "got": "^11.8.2",
     "gray-matter": "^4.0.3",
     "twilio": "^3.77.1",
     "winston": "^3.7.2"

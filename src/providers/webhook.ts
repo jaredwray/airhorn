@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import got from 'got';
 import axios from 'axios';
 import {ProviderInterface} from '../provider-interface';
 import {ProviderType} from '../provider-type';
