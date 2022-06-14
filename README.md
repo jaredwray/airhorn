@@ -110,7 +110,7 @@ This library can be used to easily send a variety of notifications. In this sect
 Using the send function, we can email 'john@doe.org' from 'hello@testing.com' using the generic template 'generic-template-foo'. We'll also use the provider type `ProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
-const airhorn = require('airhorn');
+import { Airhorn, ProviderType } from 'airhorn';
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 ```
 
