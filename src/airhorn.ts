@@ -56,4 +56,4 @@ export class Airhorn {
 	}
 }
 
-export { ProviderType };
+export { ProviderType } from './provider-type';
