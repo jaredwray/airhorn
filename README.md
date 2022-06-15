@@ -110,9 +110,9 @@ This library can be used to easily send a variety of notifications. In this sect
 Using the send function, we can email 'john@doe.org' from 'hello@testing.com' using the generic template 'generic-template-foo'. We'll also use the provider type `ProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
-import { Airhorn } from 'airhorn';
+import { Airhorn, ProviderType } from 'airhorn';
 const airhorn = new Airhorn();
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', airhorn.providers.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 ```
 
 #### Sending a simple webhook
@@ -121,7 +121,7 @@ Here, we'll send a simple webhook to the URL 'https://httpbin.org/post':
 
 ``` javascript
 const airhorn = new Airhorn();
-airhorn.send('https://httpbin.org/post', 'foo', 'bar', airhorn.providers.WEBHOOK);
+airhorn.send('https://httpbin.org/post', 'foo', 'bar', ProviderType.WEBHOOK);
 ```
 
 #### Using multiple providers
@@ -138,7 +138,7 @@ const airhorn = new Airhorn({
         TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
 	});
 
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', airhorn.providers.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 
 ```
 
@@ -165,7 +165,7 @@ After configuring your system to use AWS SES, you can easily use `airhorn` to se
 const airhorn = new Airhorn({
         AWS_SES_REGION = 'us-east-1',
 	});
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', airhorn.providers.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 ```
 
 #### Twilio Sendgrid
@@ -176,7 +176,7 @@ To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` v
 const airhorn = new Airhorn({
         TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
 	});
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', airhorn.providers.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
 ```
 
 ### SMS providers
@@ -191,7 +191,7 @@ Once your system is configured to use AWS SMS, you can send SMS notifications th
 const airhorn = new Airhorn({
         AWS_SMS_REGION = 'us-east-1',
     });
-await airhorn.send('5555555555', '5552223333', 'Test message text', airhorn.providers.SMS);
+await airhorn.send('5555555555', '5552223333', 'Test message text', ProviderType.SMS);
 ```
 
 ### Twilio SMS
@@ -203,7 +203,7 @@ const airhorn = new Airhorn({
         TWILIO_SMS_ACCOUNT_SID = 'TWILIO_SMS_ACCOUNT_SID',
         TWILIO_SMS_AUTH_TOKEN = 'TWILIO_SMS_AUTH_TOKEN'
     });
-await airhorn.send('5555555555', '5552223333', 'Test message text', airhorn.providers.SMS);
+await airhorn.send('5555555555', '5552223333', 'Test message text', ProviderType.SMS);
 ```
 
 ### Mobile push providers
@@ -225,7 +225,7 @@ Then, you can send the push message to the device endpoint using `airhorn`:
 const airhorn = new Airhorn({
         AWS_SNS_REGION = 'us-east-1',
     });
-await airhorn.send('endpointArn', '', 'generic-template-foo', airhorn.providers.MOBILE_PUSH);
+await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
 ```
 
 ### Firebase for Mobile Push
@@ -240,7 +240,7 @@ Then, you can send the push message to the device endpoint using `airhorn`:
 const airhorn = new Airhorn({
         FIREBASE_CERT = 'FIREBASE_CERT'
     });
-await airhorn.send('endpointArn', '', 'generic-template-foo', airhorn.providers.MOBILE_PUSH);
+await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
 ```
 
 ## How to Contribute 
