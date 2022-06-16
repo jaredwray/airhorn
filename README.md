@@ -42,6 +42,46 @@ The `send()` function, located in `airhorn.ts`, is used to send notifications. I
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
+### `sendSMTP()`
+
+The `sendSMTP()` function, located in `airhorn.ts`, is used to send `SMTP` notifications. It accepts the following parameters:
+
+* `to` (string): The address to send the message to. Based on the message provider, this address can be either a phone number, an email address, or a web address.
+* `from` (string): The address of the sender of the message.
+* `templateName` (string): The name of the template to use for the message.
+* `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
+* `languageCode` (string): The language code of the message template to be sent.
+
+### `sendSMS()`
+
+The `sendSMS()` function, located in `airhorn.ts`, is used to send `SMS` notifications. It accepts the following parameters:
+
+* `to` (string): The address to send the message to. Based on the message provider, this address can be either a phone number, an email address, or a web address.
+* `from` (string): The address of the sender of the message.
+* `templateName` (string): The name of the template to use for the message.
+* `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
+* `languageCode` (string): The language code of the message template to be sent.
+
+### `sendWebhook()`
+
+The `sendWebhook()` function, located in `airhorn.ts`, is used to send `Webhook` notifications. It accepts the following parameters:
+
+* `to` (string): The address to send the message to. Based on the message provider, this address can be either a phone number, an email address, or a web address.
+* `from` (string): The address of the sender of the message.
+* `templateName` (string): The name of the template to use for the message.
+* `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
+* `languageCode` (string): The language code of the message template to be sent.
+
+### `sendMobilePush()`
+
+The `sendMobilePush()` function, located in `airhorn.ts`, is used to send `Mobile Push` notifications. It accepts the following parameters:
+
+* `to` (string): The address to send the message to. Based on the message provider, this address can be either a phone number, an email address, or a web address.
+* `from` (string): The address of the sender of the message.
+* `templateName` (string): The name of the template to use for the message.
+* `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
+* `languageCode` (string): The language code of the message template to be sent.
+
 ### `config`
 
 The `Config` class, enables you to configure the settings of Airhorn. It accepts the following parameters:

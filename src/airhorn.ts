@@ -54,6 +54,22 @@ export class Airhorn {
 
 		return result;
 	}
+
+	public async sendSMTP(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+		return this.send(to, from, templateName, ProviderType.SMTP, data, languageCode);
+	}
+
+	public async sendSMS(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+		return this.send(to, from, templateName, ProviderType.SMS, data, languageCode);
+	}
+
+	public async sendWebhook(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+		return this.send(to, from, templateName, ProviderType.WEBHOOK, data, languageCode);
+	}
+
+	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+		return this.send(to, from, templateName, ProviderType.MOBILE_PUSH, data, languageCode);
+	}
 }
 
 export { ProviderType } from './provider-type';
