@@ -1,17 +1,17 @@
 {
   "name": "airhorn",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Cloud Notification Library",
-  "main": "./dist/airhorn.js",
-  "types": "./dist/airhorn.d.ts",
+  "main": "./dist/src/airhorn.js",
+  "types": "./dist/src/airhorn.d.ts",
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
     "test": "xo && jest --coverage",
-    "clean": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules",
-    "build": "tsc -p ."
+    "clean": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules && rm -rf ./package-lock.json",
+    "build": "tsc --project tsconfig.dist.json"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
