@@ -72,6 +72,16 @@ test('Airhorn - Send WebHook', async () => {
 	expect(await airhorn.send('https://httpbin.org/post', '', 'cool-multi-lingual', ProviderType.WEBHOOK, userData.users[0])).toEqual(true);
 });
 
+test('Airhorn - Send Friendly WebHook', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+	const airhorn = new Airhorn(options);
+	const userData = new TestingData();
+
+	expect(await airhorn.sendWebhook('https://httpbin.org/post', '', 'cool-multi-lingual', userData.users[0])).toEqual(true);
+});
+
 test('Airhorn - Get Loaded Providers', () => {
 	const airhorn = new Airhorn({
 		TEMPLATE_PATH: './test/templates',
@@ -100,7 +110,39 @@ test('Airhorn - Send SMTP', async () => {
 	expect(await airhorn.send('me@you.com', 'you@me.com', 'cool-multi-lingual', ProviderType.SMTP, userData.users[0])).toEqual(true);
 });
 
-test('Airhorn - Send Mobile Push', async () => {
+test('Airhorn - Send Friendly SMTP', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+	const airhorn = new Airhorn(options);
+	const userData = new TestingData();
+
+	airhorn.providers.addProvider({
+		type: ProviderType.SMTP,
+		name: 'smtp',
+		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+	});
+
+	expect(await airhorn.sendSMTP('me@you.com', 'you@me.com', 'cool-multi-lingual', userData.users[0])).toEqual(true);
+});
+
+test('Airhorn - Send Friendly SMS', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+	const airhorn = new Airhorn(options);
+	const userData = new TestingData();
+
+	airhorn.providers.addProvider({
+		type: ProviderType.SMS,
+		name: 'sms',
+		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+	});
+
+	expect(await airhorn.sendSMS('5555555555', '5552223333', 'cool-multi-lingual', userData.users[0])).toEqual(true);
+});
+
+test('Airhorn - Send Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
 		FIREBASE_CERT: firebaseCertContent,
@@ -115,7 +157,22 @@ test('Airhorn - Send Mobile Push', async () => {
 	expect(await airhorn.send('deviceToken', '', 'generic-template-foo', ProviderType.MOBILE_PUSH, notification)).toEqual(true);
 });
 
-test('Airhorn - Send SNS Push', async () => {
+test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+		FIREBASE_CERT: firebaseCertContent,
+	};
+	const airhorn = new Airhorn(options);
+
+	const notification = {
+		title: 'Airhorn',
+		body: 'Welcome to airhorn!',
+	};
+
+	expect(await airhorn.sendMobilePush('deviceToken', '', 'generic-template-foo', notification)).toEqual(true);
+});
+
+test('Airhorn - Send Mobile Push', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
 	};
@@ -129,4 +186,20 @@ test('Airhorn - Send SNS Push', async () => {
 	});
 
 	expect(await airhorn.send('topicArnFromSns', '', 'generic-template-foo', ProviderType.MOBILE_PUSH)).toEqual(true);
+});
+
+test('Airhorn - Send Friendly Mobile Push', async () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+
+	const airhorn = new Airhorn(options);
+
+	airhorn.providers.addProvider({
+		type: ProviderType.MOBILE_PUSH,
+		name: 'aws-sns',
+		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+	});
+
+	expect(await airhorn.sendMobilePush('topicArnFromSns', '', 'generic-template-foo')).toEqual(true);
 });
