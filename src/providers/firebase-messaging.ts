@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable n/file-extension-in-import */
 import * as firebase from 'firebase-admin';
 import {Message} from 'firebase-admin/messaging';
 import {ProviderInterface} from '../provider-interface';

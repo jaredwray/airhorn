@@ -1,4 +1,4 @@
-/* eslint-disable node/prefer-global/process */
+/* eslint-disable n/prefer-global/process */
 import {Config} from '../src/config';
 
 test('Config - init', () => {

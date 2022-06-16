@@ -1,4 +1,4 @@
-/* eslint-disable node/prefer-global/process */
+/* eslint-disable n/prefer-global/process */
 export class Config {
 	TEMPLATE_PATH = './templates';
 	DEFAULT_TEMPLATE_LANGUAGE = 'en';

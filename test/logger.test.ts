@@ -1,4 +1,4 @@
-/* eslint-disable node/prefer-global/process */
+/* eslint-disable n/prefer-global/process */
 import * as Logger from '../src/logger';
 
 test('Logger - silence with foo env', () => {
