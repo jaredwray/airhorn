@@ -1,6 +1,6 @@
 {
   "name": "airhorn",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "description": "Cloud Notification Library",
   "main": "./dist/airhorn.js",
   "types": "./dist/airhorn.d.ts",
