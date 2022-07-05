@@ -1,5 +1,5 @@
-import {Template} from '../src/template';
-import {TestingData} from './testing-data';
+import {Template} from '../src/template.js';
+import {TestingData} from './testing-data.js';
 
 const templateCoolMultiLingual = './test/templates/cool-multi-lingual';
 const templateGenericTemplateFoo = './test/templates/generic-template-foo';

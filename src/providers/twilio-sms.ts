@@ -1,7 +1,7 @@
 
-import * as twilio from 'twilio';
-import {ProviderInterface} from '../provider-interface';
-import {ProviderType} from '../provider-type';
+import twilio from 'twilio';
+import {ProviderInterface} from '../provider-interface.js';
+import {ProviderType} from '../provider-type.js';
 
 export class TwilioSMS implements ProviderInterface {
 	name = 'twilio-sms';

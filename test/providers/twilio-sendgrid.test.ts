@@ -1,4 +1,4 @@
-import { TwilioSendgrid } from '../../src/providers/twilio-sendgrid';
+import { TwilioSendgrid } from '../../src/providers/twilio-sendgrid.js';
 
 const TWILIO_SENGRID_API_KEY = 'SG_TWILIO_SENGRID_API_KEY';
 

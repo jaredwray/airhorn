@@ -1,8 +1,9 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
-import {Airhorn} from '../src/airhorn';
-import {Config} from '../src/config';
-import {ProviderType} from '../src/provider-type';
-import {TestingData} from './testing-data';
+import {jest} from '@jest/globals';
+import {Airhorn} from '../src/airhorn.js';
+import {Config} from '../src/config.js';
+import {ProviderType} from '../src/provider-type.js';
+import {TestingData} from './testing-data.js';
 
 jest.mock('firebase-admin', () => ({
 	messaging: jest.fn().mockImplementation(() => ({
@@ -104,7 +105,9 @@ test('Airhorn - Send SMTP', async () => {
 	airhorn.providers.addProvider({
 		type: ProviderType.SMTP,
 		name: 'smtp',
-		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+		async send() {
+			return Promise.resolve(true);
+		},
 	});
 
 	expect(await airhorn.send('me@you.com', 'you@me.com', 'cool-multi-lingual', ProviderType.SMTP, userData.users[0])).toEqual(true);
@@ -120,7 +123,9 @@ test('Airhorn - Send Friendly SMTP', async () => {
 	airhorn.providers.addProvider({
 		type: ProviderType.SMTP,
 		name: 'smtp',
-		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+		async send() {
+			return Promise.resolve(true);
+		},
 	});
 
 	expect(await airhorn.sendSMTP('me@you.com', 'you@me.com', 'cool-multi-lingual', userData.users[0])).toEqual(true);
@@ -136,7 +141,9 @@ test('Airhorn - Send Friendly SMS', async () => {
 	airhorn.providers.addProvider({
 		type: ProviderType.SMS,
 		name: 'sms',
-		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+		async send() {
+			return Promise.resolve(true);
+		},
 	});
 
 	expect(await airhorn.sendSMS('5555555555', '5552223333', 'cool-multi-lingual', userData.users[0])).toEqual(true);
@@ -182,7 +189,9 @@ test('Airhorn - Send Mobile Push', async () => {
 	airhorn.providers.addProvider({
 		type: ProviderType.MOBILE_PUSH,
 		name: 'aws-sns',
-		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+		async send() {
+			return Promise.resolve(true);
+		},
 	});
 
 	expect(await airhorn.send('topicArnFromSns', '', 'generic-template-foo', ProviderType.MOBILE_PUSH)).toEqual(true);
@@ -198,7 +207,9 @@ test('Airhorn - Send Friendly Mobile Push', async () => {
 	airhorn.providers.addProvider({
 		type: ProviderType.MOBILE_PUSH,
 		name: 'aws-sns',
-		send: jest.fn().mockReturnValue(Promise.resolve(true)),
+		async send() {
+			return Promise.resolve(true);
+		},
 	});
 
 	expect(await airhorn.sendMobilePush('topicArnFromSns', '', 'generic-template-foo')).toEqual(true);

@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {FirebaseMessaging} from '../../src/providers/firebase-messaging';
+import {FirebaseMessaging} from '../../src/providers/firebase-messaging.js';
 
 jest.mock('firebase-admin', () => ({
 	messaging: jest.fn().mockImplementation(() => ({})),

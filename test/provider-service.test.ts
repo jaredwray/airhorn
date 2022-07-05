@@ -1,6 +1,6 @@
-import {ProviderService} from '../src/provider-service';
-import {ProviderType} from '../src/provider-type';
-import {WebHook} from '../src/providers/webhook';
+import {ProviderService} from '../src/provider-service.js';
+import {ProviderType} from '../src/provider-type.js';
+import {WebHook} from '../src/providers/webhook.js';
 
 test('Provider Service Init', () => {
 	const providerService = new ProviderService();

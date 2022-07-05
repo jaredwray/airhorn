@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { AWSSNS } from '../../src/providers/aws-sns';
+import { AWSSNS } from '../../src/providers/aws-sns.js';
 
 const AWS_SNS_REGION = 'us-east-1';
 

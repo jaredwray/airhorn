@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable n/file-extension-in-import */
 import * as firebase from 'firebase-admin';
 import {Message} from 'firebase-admin/messaging';
-import {ProviderInterface} from '../provider-interface';
-import {ProviderType} from '../provider-type';
+import {ProviderInterface} from '../provider-interface.js';
+import {ProviderType} from '../provider-type.js';
 
 export class FirebaseMessaging implements ProviderInterface {
 	client: firebase.messaging.Messaging;

@@ -1,5 +1,5 @@
 /* eslint-disable n/prefer-global/process */
-import {Config} from '../src/config';
+import {Config} from '../src/config.js';
 
 test('Config - init', () => {
 	expect(new Config()).toEqual(new Config());

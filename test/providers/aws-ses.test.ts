@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { AWSSES } from '../../src/providers/aws-ses';
+import { AWSSES } from '../../src/providers/aws-ses.js';
 
 const AWS_SES_REGION = 'us-east-1';
 

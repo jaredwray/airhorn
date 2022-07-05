@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { AWSSMS } from '../../src/providers/aws-sms';
+import { AWSSMS } from '../../src/providers/aws-sms.js';
 
 const AWS_SES_REGION = 'us-east-1';
 

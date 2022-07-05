@@ -1,5 +1,5 @@
-import {Config} from '../src/config';
-import {TemplateService} from '../src/template-service';
+import {Config} from '../src/config.js';
+import {TemplateService} from '../src/template-service.js';
 
 test('Template Service Init', () => {
 	const templateService = new TemplateService();

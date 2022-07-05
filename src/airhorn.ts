@@ -1,7 +1,7 @@
-import { Config } from './config';
-import { TemplateService } from './template-service';
-import { ProviderService } from './provider-service';
-import { ProviderType } from './provider-type';
+import { Config } from './config.js';
+import { TemplateService } from './template-service.js';
+import { ProviderService } from './provider-service.js';
+import { ProviderType } from './provider-type.js';
 
 export class Airhorn {
 	config = new Config();
@@ -72,4 +72,4 @@ export class Airhorn {
 	}
 }
 
-export { ProviderType } from './provider-type';
+export { ProviderType } from './provider-type.js';
