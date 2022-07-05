@@ -37,7 +37,7 @@
     "fs-extra": "^10.1.0",
     "gray-matter": "^4.0.3",
     "twilio": "^3.78.0",
-    "winston": "^3.7.2"
+    "winston": "^3.8.1"
   },
   "files": [
     "dist",
