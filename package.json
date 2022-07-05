@@ -33,7 +33,7 @@
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "ecto": "^2.0.1",
-    "firebase-admin": "^10.3.0",
+    "firebase-admin": "^11.0.0",
     "fs-extra": "^10.1.0",
     "gray-matter": "^4.0.3",
     "twilio": "^3.77.3",
