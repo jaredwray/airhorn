@@ -36,7 +36,7 @@
     "firebase-admin": "^11.0.0",
     "fs-extra": "^10.1.0",
     "gray-matter": "^4.0.3",
-    "twilio": "^3.77.3",
+    "twilio": "^3.78.0",
     "winston": "^3.7.2"
   },
   "files": [
