@@ -1,5 +1,5 @@
 /* eslint-disable n/file-extension-in-import */
-import * as firebase from 'firebase-admin';
+import firebase from 'firebase-admin';
 import {Message} from 'firebase-admin/messaging';
 import {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
@@ -13,9 +13,13 @@ export class FirebaseMessaging implements ProviderInterface {
 
 	constructor(cert: string) {
 		this.cert = cert;
-		firebase.initializeApp({
-			credential: firebase.credential.cert(JSON.parse(this.cert)),
-		});
+
+		if (firebase.apps.length === 0) {
+			firebase.initializeApp({
+				credential: firebase.credential.cert('./firebase-test-cert.json'),
+			});
+		}
+
 		this.client = firebase.messaging();
 	}
 
