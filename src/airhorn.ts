@@ -30,7 +30,7 @@ export class Airhorn {
 		let result = false;
 
 		const template = this._templateService.getTemplate(templateName);
-
+		console.log(template);
 		if (template) {
 			const providers = this._providerService.getProviderByType(providerType);
 
