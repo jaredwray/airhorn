@@ -33,9 +33,9 @@
     "xo": "^0.50.0"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.121.0",
+    "@aws-sdk/client-ses": "^3.137.0",
     "@sendgrid/mail": "^7.7.0",
-    "aws-sdk": "^2.1167.0",
+    "aws-sdk": "^2.1184.0",
     "dotenv": "^16.0.1",
     "ecto": "^2.0.1",
     "firebase-admin": "^11.0.0",
