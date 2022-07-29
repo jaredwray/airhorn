@@ -1,4 +1,4 @@
-import * as AWS from 'aws-sdk';
+import AWS from 'aws-sdk';
 import {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
