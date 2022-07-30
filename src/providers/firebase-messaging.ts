@@ -1,26 +1,25 @@
 /* eslint-disable n/file-extension-in-import */
-import firebase from 'firebase-admin';
+import firebase, { ServiceAccount } from 'firebase-admin';
 import {Message} from 'firebase-admin/messaging';
 import {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
 export class FirebaseMessaging implements ProviderInterface {
-	client: firebase.messaging.Messaging;
+	client: firebase.messaging.Messaging | undefined;
 	name = 'firebase-messaging';
 	type = ProviderType.MOBILE_PUSH;
 
-	private readonly cert: string;
+	private readonly cert: string | ServiceAccount;
 
-	constructor(cert: string) {
+	constructor(cert: string | ServiceAccount) {
 		this.cert = cert;
 
 		if (firebase.apps.length === 0) {
 			firebase.initializeApp({
-				credential: firebase.credential.cert('./firebase-test-cert.json'),
+				credential: firebase.credential.cert(this.cert),
 			});
+			this.client = firebase.messaging();
 		}
-
-		this.client = firebase.messaging();
 	}
 
 	public async send(to: string, from: string, message: string) {
@@ -34,7 +33,11 @@ export class FirebaseMessaging implements ProviderInterface {
 			token: to,
 		};
 
-		await this.client.send(parameters);
-		return true;
+		if (this.client) {
+			await this.client.send(parameters);
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -1,3 +1,4 @@
+import {jest} from '@jest/globals';
 import { AWSSES } from '../../src/providers/aws-ses.js';
 
 const AWS_SES_REGION = 'us-east-1';

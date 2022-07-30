@@ -1,3 +1,4 @@
+import {jest} from '@jest/globals';
 import { TwilioSMS } from '../../src/providers/twilio-sms.js';
 
 const TWILIO_SMS_ACCOUNT_SID = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';

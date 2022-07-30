@@ -54,7 +54,7 @@ export class Template {
 				const dirs = fs.readdirSync(this.filePath);
 
 				for (const d of dirs) {
-					const dFilePath = this.filePath + '/' + d;
+					const dFilePath = `${this.filePath}/${d}`;
 					if (fs.statSync(dFilePath).isDirectory()) {
 						const dirLangCode = this.getFileName(dFilePath);
 						this.loadTemplateDirectory(dFilePath, dirLangCode);

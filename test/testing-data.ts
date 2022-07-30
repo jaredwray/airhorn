@@ -1,3 +1,7 @@
+/* eslint-disable n/prefer-global/process */
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export class TestingData {
 	public users = new Array<TestingUser>();
@@ -22,4 +26,20 @@ export class TestingUser {
 		this.email = email;
 		this.downloads = downloads;
 	}
+}
+
+export function getFirebaseCert(): string {
+	if (!process.env.FIREBASE_CERT) {
+		throw new Error('FIREBASE_CERT not defined. Please refer to the README.md under Testing Integrations.');
+	}
+
+	return process.env.FIREBASE_CERT;
+}
+
+export function getSendgridAPIKey(): string {
+	if (!process.env.TWILIO_SENDGRID_API_KEY) {
+		throw new Error('TWILIO_SENDGRID_API_KEY not defined. Please refer to the README.md under Testing Integrations.');
+	}
+
+	return process.env.TWILIO_SENDGRID_API_KEY;
 }

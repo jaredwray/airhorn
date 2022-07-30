@@ -17,8 +17,13 @@ export class TwilioSendgrid implements ProviderInterface {
 		const smtpMessage = {
 			to,
 			from,
-			subject: subject ?? '',
+			subject: subject ?? 'no subject',
 			html: message,
+			mail_settings: {
+				sandbox_mode: {
+					enable: process.env.NODE_ENV === 'test', // eslint-disable-line n/prefer-global/process
+				},
+			},
 		};
 
 		this.client.setApiKey(this.apiKey);
