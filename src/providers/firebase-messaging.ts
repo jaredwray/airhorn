@@ -1,4 +1,5 @@
 /* eslint-disable n/file-extension-in-import */
+/* eslint-disable no-negated-condition */
 import firebase, { ServiceAccount } from 'firebase-admin';
 import {Message} from 'firebase-admin/messaging';
 import {ProviderInterface} from '../provider-interface.js';
@@ -9,14 +10,16 @@ export class FirebaseMessaging implements ProviderInterface {
 	name = 'firebase-messaging';
 	type = ProviderType.MOBILE_PUSH;
 
-	private readonly cert: string | ServiceAccount;
+	private readonly cert: string;
 
-	constructor(cert: string | ServiceAccount) {
+	constructor(cert: string) {
 		this.cert = cert;
 
 		if (firebase.apps.length === 0) {
+			const certSource = !this.cert.endsWith('.json') ? JSON.parse(this.cert) as ServiceAccount : this.cert;
+
 			firebase.initializeApp({
-				credential: firebase.credential.cert(this.cert),
+				credential: firebase.credential.cert(certSource),
 			});
 			this.client = firebase.messaging();
 		}
