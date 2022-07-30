@@ -23,6 +23,7 @@
     "@types/jest": "^28.1.4",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
+    "dotenv": "^16.0.1",
     "eslint-config-xo": "^0.41.0",
     "eslint-config-xo-typescript": "^0.51.1",
     "eslint-plugin-jest": "^26.5.3",
@@ -36,7 +37,6 @@
     "@aws-sdk/client-ses": "^3.137.0",
     "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1184.0",
-    "dotenv": "^16.0.1",
     "ecto": "^2.0.1",
     "firebase-admin": "^11.0.0",
     "fs-extra": "^10.1.0",
@@ -96,7 +96,8 @@
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [
-      "**/test/*.test.(ts)"
+      "**/test/*.test.(ts)",
+      "**/test/providers/*.test.(ts)"
     ],
     "testEnvironment": "node"
   }
