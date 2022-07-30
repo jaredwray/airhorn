@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
+  TWILIO_SENDGRID_API_KEY: ${{ secrets.TWILIO_SENDGRID_API_KEY }}
+
 jobs:
   build:
 

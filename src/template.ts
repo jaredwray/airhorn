@@ -1,8 +1,8 @@
 import { Ecto } from 'ecto';
-import * as fs from 'fs-extra';
-import * as matter from 'gray-matter';
-import { Config } from './config';
-import { TemplateText } from './template-text';
+import fs from 'fs-extra';
+import matter from 'gray-matter';
+import { Config } from './config.js';
+import { TemplateText } from './template-text.js';
 
 export class Template {
 	config = new Config();
@@ -54,7 +54,7 @@ export class Template {
 				const dirs = fs.readdirSync(this.filePath);
 
 				for (const d of dirs) {
-					const dFilePath = this.filePath + '/' + d;
+					const dFilePath = `${this.filePath}/${d}`;
 					if (fs.statSync(dFilePath).isDirectory()) {
 						const dirLangCode = this.getFileName(dFilePath);
 						this.loadTemplateDirectory(dFilePath, dirLangCode);

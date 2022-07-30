@@ -1,6 +1,6 @@
-import * as sendgrid from '@sendgrid/mail';
-import {ProviderInterface} from '../provider-interface';
-import {ProviderType} from '../provider-type';
+import sendgrid from '@sendgrid/mail';
+import {ProviderInterface} from '../provider-interface.js';
+import {ProviderType} from '../provider-type.js';
 
 export class TwilioSendgrid implements ProviderInterface {
 	client = sendgrid;
@@ -17,8 +17,13 @@ export class TwilioSendgrid implements ProviderInterface {
 		const smtpMessage = {
 			to,
 			from,
-			subject: subject ?? '',
+			subject: subject ?? 'no subject',
 			html: message,
+			mail_settings: {
+				sandbox_mode: {
+					enable: process.env.NODE_ENV === 'test', // eslint-disable-line n/prefer-global/process
+				},
+			},
 		};
 
 		this.client.setApiKey(this.apiKey);

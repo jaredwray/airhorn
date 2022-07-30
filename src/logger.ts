@@ -1,5 +1,5 @@
 import * as winston from 'winston';
-import {Config} from './config';
+import {Config} from './config.js';
 
 export function create() {
 	const log = winston.createLogger({transports: [new winston.transports.Console()]});

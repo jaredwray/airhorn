@@ -1,6 +1,6 @@
-import * as AWS from 'aws-sdk';
-import {ProviderInterface} from '../provider-interface';
-import {ProviderType} from '../provider-type';
+import AWS from 'aws-sdk';
+import {ProviderInterface} from '../provider-interface.js';
+import {ProviderType} from '../provider-type.js';
 
 export class AWSSMS implements ProviderInterface {
 	client: AWS.SNS;
@@ -11,7 +11,7 @@ export class AWSSMS implements ProviderInterface {
 	constructor(region?: string) {
 		this.region = region;
 
-		AWS.config.update({region});
+		AWS.config.update({region: this.region});
 		this.client = new AWS.SNS({apiVersion: '2010-03-31'});
 	}
 

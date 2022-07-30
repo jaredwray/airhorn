@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { AWSSMS } from '../../src/providers/aws-sms';
+import {jest} from '@jest/globals';
+import { AWSSMS } from '../../src/providers/aws-sms.js';
 
 const AWS_SES_REGION = 'us-east-1';
 
@@ -12,7 +12,7 @@ test('AWS SMS - Send', async () => {
 
 	awsSMS.client = {
 		publish: jest.fn().mockReturnValue({
-			promise: jest.fn().mockResolvedValue({}),
+			promise: jest.fn(),
 		}),
 	} as any;
 

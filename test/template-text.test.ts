@@ -1,4 +1,4 @@
-import {TemplateText} from '../src/template-text';
+import {TemplateText} from '../src/template-text.js';
 
 test('Template Text Init', () => {
 	const text = new TemplateText();

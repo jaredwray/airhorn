@@ -2,46 +2,51 @@
   "name": "airhorn",
   "version": "0.8.0",
   "description": "Cloud Notification Library",
-  "main": "./dist/airhorn.js",
-  "types": "./dist/airhorn.d.ts",
+  "type": "module",
+  "exports": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "engines": {
+    "node": ">=14.16"
+  },
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "xo && jest --coverage",
+    "test": "xo && NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "clean": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "build": "tsc --project tsconfig.dist.json"
   },
   "devDependencies": {
+    "@jest/globals": "^28.1.2",
     "@types/fs-extra": "^9.0.13",
     "@types/jest": "^28.1.4",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
+    "dotenv": "^16.0.1",
     "eslint-config-xo": "^0.41.0",
     "eslint-config-xo-typescript": "^0.51.1",
     "eslint-plugin-jest": "^26.5.3",
     "jest": "^28.1.2",
     "ts-jest": "^28.0.5",
+    "ts-jest-resolver": "^2.0.0",
     "typescript": "^4.7.4",
     "xo": "^0.50.0"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.121.0",
+    "@aws-sdk/client-ses": "^3.137.0",
     "@sendgrid/mail": "^7.7.0",
-    "aws-sdk": "^2.1167.0",
-    "axios": "^0.27.2",
-    "dotenv": "^16.0.1",
+    "aws-sdk": "^2.1184.0",
     "ecto": "^2.0.1",
     "firebase-admin": "^11.0.0",
     "fs-extra": "^10.1.0",
+    "got": "^12.1.0",
     "gray-matter": "^4.0.3",
     "twilio": "^3.78.0",
     "winston": "^3.8.1"
   },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "xo": {
     "plugins": [
@@ -54,6 +59,10 @@
       "@typescript-eslint/naming-convention": 0,
       "@typescript-eslint/object-curly-spacing": 0,
       "@typescript-eslint/parameter-properties": 0,
+      "@typescript-eslint/no-unsafe-call": 0,
+      "@typescript-eslint/no-unsafe-assignment": 0,
+      "@typescript-eslint/no-unsafe-return": 0,
+      "@typescript-eslint/no-redundant-type-constituents": 0,
       "no-console": 1,
       "import/extensions": [
         "error",
@@ -69,9 +78,14 @@
     }
   },
   "jest": {
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "resolver": "ts-jest-resolver",
     "globals": {
       "ts-jest": {
-        "tsconfig": "./tsconfig.json"
+        "tsconfig": "./tsconfig.json",
+        "useESM": true
       }
     },
     "moduleFileExtensions": [
@@ -82,7 +96,8 @@
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [
-      "**/test/**/*.test.(ts)"
+      "**/test/*.test.(ts)",
+      "**/test/providers/*.test.(ts)"
     ],
     "testEnvironment": "node"
   }

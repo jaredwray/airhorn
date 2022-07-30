@@ -1,6 +1,6 @@
-import * as AWS from 'aws-sdk';
-import {ProviderInterface} from '../provider-interface';
-import {ProviderType} from '../provider-type';
+import AWS from 'aws-sdk';
+import {ProviderInterface} from '../provider-interface.js';
+import {ProviderType} from '../provider-type.js';
 
 export class AWSSNS implements ProviderInterface {
 	client: AWS.SNS;

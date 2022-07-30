@@ -106,3 +106,7 @@ dist
 # package managers
 yarn.lock
 package-lock.json
+
+# Configuration files
+.env
+firebase-cert.json

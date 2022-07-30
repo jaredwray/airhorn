@@ -1,5 +1,5 @@
 /* eslint-disable n/prefer-global/process */
-import * as Logger from '../src/logger';
+import * as Logger from '../src/logger.js';
 
 test('Logger - silence with foo env', () => {
 	process.env.NODE_ENV = 'foo';

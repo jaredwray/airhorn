@@ -316,3 +316,14 @@ Now that you've set up your workspace, you're ready to contribute changes to the
 8) Once the pull request has been reviewed, those with write access to the branch will be able to merge your changes into the `airhorn` repository.
 
 If you need more information on the steps to create a pull request, you can find a detailed walkthrough in the [Github documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
+
+### Testing Integrations
+
+Do to some of the complexities of testing certain integrations and making sure they are valid we require that you provide a valid `FIREBASE_CERT` and `SENDGRID_API_KEY` environment variables to run the tests.
+
+These are only used for validation of auth and using the sandbox environment on Sendgrid. You can do this by providing an `.env` file in the root of the project with the following contents:
+
+```
+FIREBASE_CERT="YOUR_FIREBASE_CERT_AS_JSON_STRING"
+TWILIO_SENDGRID_API_KEY="YOUR_SENDGRID_API_KEY"
+```

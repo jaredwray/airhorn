@@ -1,13 +1,13 @@
-import { Config } from './config';
-import { ProviderInterface } from './provider-interface';
-import { ProviderType } from './provider-type';
-import { WebHook } from './providers/webhook';
-import { TwilioSMS } from './providers/twilio-sms';
-import { TwilioSendgrid } from './providers/twilio-sendgrid';
-import { AWSSES } from './providers/aws-ses';
-import { AWSSMS } from './providers/aws-sms';
-import { FirebaseMessaging } from './providers/firebase-messaging';
-import { AWSSNS } from './providers/aws-sns';
+import { Config } from './config.js';
+import { ProviderInterface } from './provider-interface.js';
+import { ProviderType } from './provider-type.js';
+import { WebHook } from './providers/webhook.js';
+import { TwilioSMS } from './providers/twilio-sms.js';
+import { TwilioSendgrid } from './providers/twilio-sendgrid.js';
+import { AWSSES } from './providers/aws-ses.js';
+import { AWSSMS } from './providers/aws-sms.js';
+import { FirebaseMessaging } from './providers/firebase-messaging.js';
+import { AWSSNS } from './providers/aws-sns.js';
 
 export class ProviderService {
 	config = new Config();
@@ -62,7 +62,7 @@ export class ProviderService {
 
 	public addProvider(provider: ProviderInterface) {
 		if (this.providerExists(provider.name)) {
-			throw new Error(`Provider ${provider.name} already exists`);
+			throw new Error(`Provider ${String(provider.name)} already exists`);
 		} else {
 			this._providers.push(provider);
 		}

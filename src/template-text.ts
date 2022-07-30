@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 export class TemplateText {
 	text = '';
 	format = '';

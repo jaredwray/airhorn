@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { AWSSNS } from '../../src/providers/aws-sns';
+import {jest} from '@jest/globals';
+import { AWSSNS } from '../../src/providers/aws-sns.js';
 
 const AWS_SNS_REGION = 'us-east-1';
 
@@ -13,7 +13,7 @@ test('AWS SNS - Send to TopicArn', async () => {
 
 	awsSNS.client = {
 		publish: jest.fn().mockReturnValue({
-			promise: jest.fn().mockResolvedValue({}),
+			promise: jest.fn(),
 		}),
 	} as any;
 

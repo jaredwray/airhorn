@@ -1,5 +1,5 @@
-import {Config} from '../src/config';
-import {TemplateService} from '../src/template-service';
+import {Config} from '../src/config.js';
+import {TemplateService} from '../src/template-service.js';
 
 test('Template Service Init', () => {
 	const templateService = new TemplateService();
@@ -24,6 +24,36 @@ test('Template Service - Load Templates', () => {
 
 	templateService.loadTemplates();
 	expect(templateService.templates.length).toEqual(3);
+});
+
+test('Template Service - Load Templates from Options', () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+	const templateService = new TemplateService(options);
+
+	expect(templateService.templates.length).toEqual(3);
+});
+
+test('Template Service - Template Load Resets Each Time', () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+	const templateService = new TemplateService(options);
+	expect(templateService.templates.length).toEqual(3);
+
+	templateService.loadTemplates();
+
+	expect(templateService.templates.length).toEqual(3);
+});
+
+test('Template Service - Get Template from Options', () => {
+	const options = {
+		TEMPLATE_PATH: './test/templates',
+	};
+	const templateService = new TemplateService(options);
+
+	expect(templateService.getTemplate('cool-multi-lingual')?.name).toEqual('cool-multi-lingual');
 });
 
 test('Template Service - Get Template Returning Undefined', () => {

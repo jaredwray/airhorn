@@ -1,6 +1,6 @@
-import {ProviderService} from '../src/provider-service';
-import {ProviderType} from '../src/provider-type';
-import {WebHook} from '../src/providers/webhook';
+import {ProviderService} from '../src/provider-service.js';
+import {ProviderType} from '../src/provider-type.js';
+import {WebHook} from '../src/providers/webhook.js';
 
 test('Provider Service Init', () => {
 	const providerService = new ProviderService();
@@ -125,7 +125,7 @@ test('Provider Service - Load Twilio SMS Service from Config', () => {
 		TWILIO_SMS_AUTH_TOKEN: 'your_auth_token',
 	});
 
-	expect(providerService.providers.length).toEqual(2);
+	expect(providerService.getProvider('twilio-sms')?.name).toEqual('twilio-sms');
 });
 
 test('Provider Service - Load AWS SES and Twilio Service from Config', () => {
@@ -136,7 +136,8 @@ test('Provider Service - Load AWS SES and Twilio Service from Config', () => {
 		AWS_SMS_REGION: 'us-west-1',
 	});
 
-	expect(providerService.providers.length).toEqual(4);
+	expect(providerService.getProvider('aws-ses')?.name).toEqual('aws-ses');
+	expect(providerService.getProvider('twilio-sms')?.name).toEqual('twilio-sms');
 });
 
 test('Provider service - Load AWS SNS from Config', () => {
@@ -144,5 +145,5 @@ test('Provider service - Load AWS SNS from Config', () => {
 		AWS_SNS_REGION: 'us-west-1',
 	});
 
-	expect(providerService.providers.length).toEqual(2);
+	expect(providerService.getProvider('aws-sns')?.name).toEqual('aws-sns');
 });

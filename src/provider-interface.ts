@@ -1,4 +1,4 @@
-import {ProviderType} from './provider-type';
+import {ProviderType} from './provider-type.js';
 
 export interface ProviderInterface {
 	name: string;
