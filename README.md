@@ -12,6 +12,10 @@
 
 Airhorn is built to enable a more robust notification system. We focused on making it cloud native by default (using cloud services).
 
+## Now Native ESM
+
+This package is native ESM and no longer provides a CommonJS export. If your project uses CommonJS, you'll have to convert to ESM or use the dynamic import() function. Please don't open issues for questions regarding CommonJS / ESM. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
 ## Features
 
 * GitOps Based Templating System - email, SMS, mobile push, and webhooks all in one place!
