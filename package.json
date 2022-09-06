@@ -42,7 +42,7 @@
     "fs-extra": "^10.1.0",
     "got": "^12.4.1",
     "gray-matter": "^4.0.3",
-    "twilio": "^3.80.0",
+    "twilio": "^3.81.0",
     "winston": "^3.8.1"
   },
   "files": [
