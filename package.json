@@ -23,7 +23,7 @@
     "@types/jest": "^28.1.6",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.2",
     "eslint-config-xo": "^0.41.0",
     "eslint-config-xo-typescript": "^0.52.0",
     "eslint-plugin-jest": "^26.7.0",
