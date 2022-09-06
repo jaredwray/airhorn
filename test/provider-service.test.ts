@@ -74,7 +74,7 @@ test('Provider Service - Add Provider Exists', () => {
 
 	expect(() => {
 		providerService.addProvider(webHook);
-	}).toThrowError('Provider webhook already exists');
+	}).toThrow('Provider webhook already exists');
 
 	expect(providerService.providers.length).toEqual(1);
 });
