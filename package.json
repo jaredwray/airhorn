@@ -34,7 +34,7 @@
     "xo": "^0.51.0"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.142.0",
+    "@aws-sdk/client-ses": "^3.163.0",
     "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1209.0",
     "ecto": "^2.1.1",
