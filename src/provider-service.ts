@@ -1,5 +1,5 @@
 import { Config } from './config.js';
-import { ProviderInterface } from './provider-interface.js';
+import type { ProviderInterface } from './provider-interface.js';
 import { ProviderType } from './provider-type.js';
 import { WebHook } from './providers/webhook.js';
 import { TwilioSMS } from './providers/twilio-sms.js';

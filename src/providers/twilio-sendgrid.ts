@@ -1,5 +1,5 @@
 import sendgrid from '@sendgrid/mail';
-import {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
 export class TwilioSendgrid implements ProviderInterface {

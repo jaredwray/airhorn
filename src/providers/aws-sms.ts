@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
 export class AWSSMS implements ProviderInterface {

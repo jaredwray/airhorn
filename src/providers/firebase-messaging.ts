@@ -1,8 +1,9 @@
 /* eslint-disable n/file-extension-in-import */
 /* eslint-disable no-negated-condition */
-import firebase, { ServiceAccount } from 'firebase-admin';
-import {Message} from 'firebase-admin/messaging';
-import {ProviderInterface} from '../provider-interface.js';
+import type { ServiceAccount } from 'firebase-admin';
+import firebase from 'firebase-admin';
+import type {Message} from 'firebase-admin/messaging';
+import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
 export class FirebaseMessaging implements ProviderInterface {
