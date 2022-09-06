@@ -1,5 +1,5 @@
 import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses';
-import {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
 export class AWSSES implements ProviderInterface {
