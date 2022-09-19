@@ -12,11 +12,14 @@
 
 Airhorn is built to enable a more robust notification system. We focused on making it cloud native by default (using cloud services).
 
-## Now Native ESM
+## Table of Contents
+* [Features](#features)
+* [Library API and Examples](#library-api)
+* [Supported Cloud Service Providers](#supported-cloud-service-providers)
+* [How to Contribute](#how-to-contribute)
+* [Licensing](#licensing)
 
-This package is native ESM and no longer provides a CommonJS export. If your project uses CommonJS, you'll have to convert to ESM or use the dynamic import() function. Please don't open issues for questions regarding CommonJS / ESM. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
-
-## Features
+# Features
 
 * GitOps Based Templating System - email, SMS, mobile push, and webhooks all in one place!
 * Email Notifications - easily send email across multiple providers and even load balance or active/passive fail over. 
@@ -25,15 +28,9 @@ This package is native ESM and no longer provides a CommonJS export. If your pro
 * Webhook Notifications - Built right into the system as a native feature with retry support.
 * 100% Code Coverage / Tested with Integration Tests
 * Built using [ecto](https://github.org/jaredwray/ecto) for handling multiple templates
+* This package is native ESM and no longer provides a CommonJS export. If your project uses CommonJS, you'll have to convert to ESM or use the dynamic import() function. Please don't open issues for questions regarding CommonJS / ESM. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99
 
-# Settings / Opts
-
-## Cloud Services
-* Email: AWS SES and Twilio Sendgrid
-* SMS: AWS SMS and Twilio
-* Mobile Push: AWS SNS and Google Firebase
-
-## Library API
+# Library API
 
 ### `send()`
 
@@ -187,7 +184,7 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 ```
 
 
-## Cloud Service Providers
+# Supported Cloud Service Providers
 
 This library supports sending notifications via email, SMS, and Mobile Push for the following providers:
 
@@ -289,45 +286,8 @@ await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBIL
 
 ## How to Contribute 
 
-In this section of the documentation we will cover:
+Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository you can refer to the [CONTRIBUTING](CONTRIBUTING.md) guide. If you have any questions please feel free to ask by creating an issue and label it `question`.
 
-1) How to set up this repository locally
-2) How to contribute changes using Pull Requests
+# Licensing
 
-### Dependencies
-
-This package requires [Node.js](https://nodejs.org/en/download/) to run.
-
-### Setting up your workspace
-
-To contribute to this repository, start by setting up this project locally:
-
-1) Fork this repository into your Git account
-2) Clone the forked repository to your local directory using `git clone`
-3) From the root directory of your project, run the `npm install` command to install any dependencies.
-
-### Contributing Changes
-
-Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository.
-
-1) Make any changes that you would like to contribute in your local workspace.
-2) After making these changes, ensure that the project's tests still pass by executing the `npm test` command in the root directory.
-3) Commit your changes and push them to your forked repository.
-4) Navigate to the original `airhorn` repository and go the *Pull Requests* tab.
-5) Click the *New pull request* button, and open a pull request for the branch in your repository that contains your changes.
-6) Once your pull request is created, ensure that all checks have passed and that your branch has no conflicts with the base branch. If there are any issues, resolve these changes in your local repository, and then commit and push them to git.
-7) Similarly, respond to any reviewer comments or requests for changes by making edits to your local repository and pushing them to Git.
-8) Once the pull request has been reviewed, those with write access to the branch will be able to merge your changes into the `airhorn` repository.
-
-If you need more information on the steps to create a pull request, you can find a detailed walkthrough in the [Github documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
-
-### Testing Integrations
-
-Do to some of the complexities of testing certain integrations and making sure they are valid we require that you provide a valid `FIREBASE_CERT` and `SENDGRID_API_KEY` environment variables to run the tests.
-
-These are only used for validation of auth and using the sandbox environment on Sendgrid. You can do this by providing an `.env` file in the root of the project with the following contents:
-
-```
-FIREBASE_CERT="YOUR_FIREBASE_CERT_AS_JSON_STRING"
-TWILIO_SENDGRID_API_KEY="YOUR_SENDGRID_API_KEY"
-```
+This project is licensed under [MIT](LICENSE) and copyright by Jared Wray 2021-future. 
