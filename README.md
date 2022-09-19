@@ -19,7 +19,6 @@ Airhorn is built to enable a more robust notification system. We focused on maki
 * [How to Contribute](#how-to-contribute)
 * [Licensing](#licensing)
 
-
 # Features
 
 * GitOps Based Templating System - email, SMS, mobile push, and webhooks all in one place!
