@@ -33,7 +33,7 @@ jobs:
       run: npm run build
 
     - name: Testing    
-      run: npm run test
+      run: FIREBASE_CERT=$FIREBASE_CERT npm run test
       
     - name: Code Coverage
       uses: codecov/codecov-action@v1.0.15
