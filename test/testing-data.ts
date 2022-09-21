@@ -29,7 +29,6 @@ export class TestingUser {
 }
 
 export function getFirebaseCert(): string {
-	console.log(process.env.FIREBASE_CERT);
 	if (!process.env.FIREBASE_CERT) {
 		throw new Error('FIREBASE_CERT not defined. Please refer to the README.md under Testing Integrations.');
 	}
@@ -38,7 +37,6 @@ export function getFirebaseCert(): string {
 }
 
 export function getSendgridAPIKey(): string {
-	console.log(process.env.FIREBASE_CERT);
 	if (!process.env.TWILIO_SENDGRID_API_KEY) {
 		throw new Error('TWILIO_SENDGRID_API_KEY not defined. Please refer to the README.md under Testing Integrations.');
 	}

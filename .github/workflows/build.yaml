@@ -25,6 +25,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+      run: echo "key=$FIREBASE_CERT APIKEY=$TWILIO_SENDGRID_API_KEY!"
 
     - name: Install Dependencies
       run: npm install
