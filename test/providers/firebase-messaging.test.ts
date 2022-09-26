@@ -1,19 +1,10 @@
 import {jest} from '@jest/globals';
-import {FirebaseMessaging} from '../../src/providers/firebase-messaging.js';
 
 jest.mock('firebase-admin', () => ({
-	...jest.mock('firebase-admin'),
-	credential: {
-		cert: jest.fn(),
-	},
-	initializeApp: jest.fn(),
-	firestore: jest.fn(),
-	messaging: jest.fn().mockImplementation(() => ({
-		send: jest.fn().mockImplementation(async () => true),
-	})),
-
-	apps: jest.fn().mockImplementation(() => ['apps']),
+	apps: ['testAppId'],
 }));
+
+const {FirebaseMessaging} = await import ('../../src/providers/firebase-messaging.js');
 
 const notification = {
 	title: 'Sample notification Title',

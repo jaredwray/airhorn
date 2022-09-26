@@ -1,20 +1,15 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {jest} from '@jest/globals';
-import {Airhorn} from '../src/airhorn.js';
 import {Config} from '../src/config.js';
 import {ProviderType} from '../src/provider-type.js';
-import { FirebaseMessaging } from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
 
 jest.mock('firebase-admin', () => ({
-	messaging: jest.fn().mockImplementation(() => ({
-		send: jest.fn().mockImplementation(async () => Promise.resolve()),
-	})),
-	initializeApp: jest.fn(),
-	credential: {
-		cert: jest.fn(),
-	},
+	apps: ['testAppId'],
 }));
+
+const {FirebaseMessaging} = await import ('../src/providers/firebase-messaging.js');
+const {Airhorn} = await import('../src/airhorn.js');
 
 test('Airhorn - Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
