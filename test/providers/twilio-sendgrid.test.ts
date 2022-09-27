@@ -1,7 +1,7 @@
+import {jest} from '@jest/globals';
 import { TwilioSendgrid } from '../../src/providers/twilio-sendgrid.js';
-import {getSendgridAPIKey} from '../testing-data.js';
 
-const TWILIO_SENGRID_API_KEY = getSendgridAPIKey();
+const TWILIO_SENGRID_API_KEY = 'SG.test-key';
 
 test('TwilioSendgrid - Init', () => {
 	expect(new TwilioSendgrid(TWILIO_SENGRID_API_KEY)).toEqual(new TwilioSendgrid(TWILIO_SENGRID_API_KEY));
@@ -13,6 +13,10 @@ test('TwilioSendgrid - Init with No Api Key', () => {
 
 test('TwilioSMS - Send', async () => {
 	const twilioSendgrid = new TwilioSendgrid(TWILIO_SENGRID_API_KEY);
+	twilioSendgrid.client = {
+		setApiKey: jest.fn().mockReturnValue({}),
+		send: jest.fn().mockReturnValue({}),
+	} as any;
 
 	expect(await twilioSendgrid.send('john@doe.com', 'me@you.com', 'just testing this send', 'subject')).toEqual(true);
 });
@@ -20,5 +24,9 @@ test('TwilioSMS - Send', async () => {
 test('TwilioSMS - Send with undefined subject will replace with `no subject` in  the field', async () => {
 	const twilioSendgrid = new TwilioSendgrid(TWILIO_SENGRID_API_KEY);
 
+	twilioSendgrid.client = {
+		setApiKey: jest.fn().mockReturnValue({}),
+		send: jest.fn().mockReturnValue({}),
+	} as any;
 	expect(await twilioSendgrid.send('john@doe.com', 'me@you.com', 'just testing this send', undefined)).toEqual(true);
 });

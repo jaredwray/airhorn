@@ -1,20 +1,15 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {jest} from '@jest/globals';
-import {Airhorn} from '../src/airhorn.js';
 import {Config} from '../src/config.js';
 import {ProviderType} from '../src/provider-type.js';
-import { FirebaseMessaging } from '../src/providers/firebase-messaging.js';
-import {TestingData, getFirebaseCert, getSendgridAPIKey} from './testing-data.js';
+import {TestingData} from './testing-data.js';
 
 jest.mock('firebase-admin', () => ({
-	messaging: jest.fn().mockImplementation(() => ({
-		send: jest.fn().mockImplementation(async () => Promise.resolve()),
-	})),
-	initializeApp: jest.fn(),
-	credential: {
-		cert: jest.fn(),
-	},
+	apps: ['testAppId'],
 }));
+
+const {FirebaseMessaging} = await import ('../src/providers/firebase-messaging.js');
+const {Airhorn} = await import('../src/airhorn.js');
 
 test('Airhorn - Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
@@ -103,10 +98,12 @@ test('Airhorn - Send SMTP', async () => {
 test('Airhorn - Send Friendly SMTP', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		TWILIO_SENDGRID_API_KEY: getSendgridAPIKey(),
+		TWILIO_SENDGRID_API_KEY: 'SG.test-key',
 	};
 
 	const airhorn = new Airhorn(options);
+
+	airhorn.send = jest.fn().mockReturnValue(true) as any;
 	const userData = new TestingData();
 
 	expect(await airhorn.sendSMTP('me@you.com', 'you@me.com', 'cool-multi-lingual', userData.users[0])).toEqual(true);
@@ -133,7 +130,7 @@ test('Airhorn - Send Friendly SMS', async () => {
 test('Airhorn - Send Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT: getFirebaseCert(),
+		FIREBASE_CERT: 'this.json',
 	};
 	const airhorn = new Airhorn(options);
 
@@ -143,7 +140,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 	};
 
 	airhorn.providers.removeProvider('firebase-messaging');
-	const firebaseAdmin = new FirebaseMessaging(getFirebaseCert());
+	const firebaseAdmin = new FirebaseMessaging('this.json');
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;
@@ -155,7 +152,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT: getFirebaseCert(),
+		FIREBASE_CERT: 'this.json',
 	};
 	const airhorn = new Airhorn(options);
 
@@ -165,7 +162,7 @@ test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	};
 
 	airhorn.providers.removeProvider('firebase-messaging');
-	const firebaseAdmin = new FirebaseMessaging(getFirebaseCert());
+	const firebaseAdmin = new FirebaseMessaging('this.json');
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;

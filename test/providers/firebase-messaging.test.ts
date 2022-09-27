@@ -1,6 +1,15 @@
 import {jest} from '@jest/globals';
-import {FirebaseMessaging} from '../../src/providers/firebase-messaging.js';
-import {getFirebaseCert} from '../testing-data.js';
+
+jest.mock('firebase-admin', () => ({
+	initializeApp: jest.fn(),
+	messaging: jest.fn(),
+	apps: [],
+	credential: {
+		cert: jest.fn(),
+	},
+}));
+
+const {FirebaseMessaging} = await import ('../../src/providers/firebase-messaging.js');
 
 const notification = {
 	title: 'Sample notification Title',
@@ -8,7 +17,12 @@ const notification = {
 };
 
 test('Firebase Messaging to Device  - Send', async () => {
-	const firebaseAdmin = new FirebaseMessaging(getFirebaseCert());
+	const serviceAccount = {
+		projectId: 'test-project-id',
+		clientEmail: 'test-client-email',
+		privateKey: 'test-private-key',
+	};
+	const firebaseAdmin = new FirebaseMessaging(`${JSON.stringify(serviceAccount)}`);
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
@@ -20,7 +34,7 @@ test('Firebase Messaging to Device  - Send', async () => {
 });
 
 test('Firebase Messaging to Device  - JSON', async () => {
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging('file.json');
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
@@ -32,7 +46,7 @@ test('Firebase Messaging to Device  - JSON', async () => {
 });
 
 test('Firebase Messaging - No Client to Send too', async () => {
-	const firebaseAdmin = new FirebaseMessaging(getFirebaseCert());
+	const firebaseAdmin = new FirebaseMessaging('file.json');
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
