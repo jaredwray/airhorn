@@ -50,7 +50,7 @@ export class Template {
 		if (filePath !== undefined) {
 			this.filePath = filePath;
 
-			if (fs.pathExistsSync(this.filePath) && this.filePath !== './test/templates/.DS_Store') {
+			if (fs.pathExistsSync(this.filePath)) {
 				const dirs = fs.readdirSync(this.filePath);
 
 				for (const d of dirs) {

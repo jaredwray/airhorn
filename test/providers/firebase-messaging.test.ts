@@ -17,7 +17,12 @@ const notification = {
 };
 
 test('Firebase Messaging to Device  - Send', async () => {
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const serviceAccount = {
+		projectId: 'test-project-id',
+		clientEmail: 'test-client-email',
+		privateKey: 'test-private-key',
+	};
+	const firebaseAdmin = new FirebaseMessaging(`${JSON.stringify(serviceAccount)}`);
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
@@ -29,7 +34,7 @@ test('Firebase Messaging to Device  - Send', async () => {
 });
 
 test('Firebase Messaging to Device  - JSON', async () => {
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging('file.json');
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
@@ -41,7 +46,7 @@ test('Firebase Messaging to Device  - JSON', async () => {
 });
 
 test('Firebase Messaging - No Client to Send too', async () => {
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging('file.json');
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
