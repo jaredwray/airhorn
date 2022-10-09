@@ -10,7 +10,7 @@
 
 ## Cloud Native Notifications Library
 
-Airhorn is built to enable a more robust notification system. We focused on making it cloud native by default (using cloud services).
+Airhorn enables a more robust notification system. We focused on making it cloud native by default (using cloud services).
 
 ## Table of Contents
 * [Features](#features)
