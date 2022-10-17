@@ -110,3 +110,4 @@ package-lock.json
 # Configuration files
 .env
 firebase-cert.json
+.DS_Store
