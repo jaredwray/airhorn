@@ -38,7 +38,7 @@
     "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1228.0",
     "ecto": "^2.1.2",
-    "firebase-admin": "^11.0.1",
+    "firebase-admin": "^11.2.0",
     "fs-extra": "^10.1.0",
     "got": "^12.5.2",
     "gray-matter": "^4.0.3",
