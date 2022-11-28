@@ -10,7 +10,7 @@
 
 ## Cloud Native Notifications Library
 
-Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications easily using templates and your standard cloud providers. We focused on making it cloud native by default (using cloud services).
+Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications easily using templates through your standard cloud providers. We focused on making it cloud native by default (using cloud services).
 
 ## Table of Contents
 * [Features](#features)
