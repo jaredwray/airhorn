@@ -40,7 +40,7 @@
     "ecto": "^2.1.7",
     "firebase-admin": "^11.5.0",
     "fs-extra": "^11.1.0",
-    "got": "^12.5.3",
+    "got": "^12.6.0",
     "gray-matter": "^4.0.3",
     "twilio": "^4.8.0",
     "winston": "^3.8.2"
