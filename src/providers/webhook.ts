@@ -14,7 +14,7 @@ export class WebHook implements ProviderInterface {
 		}
 
 		const messageString = JSON.stringify(messageData);
-		await got.post(to, { json: messageString });
+		await got.post(to, {json: messageString});
 
 		return true;
 	}

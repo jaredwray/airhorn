@@ -1,9 +1,9 @@
-import AWS from 'aws-sdk';
+import {SNS} from '@aws-sdk/client-sns';
 import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
 export class AWSSMS implements ProviderInterface {
-	client: AWS.SNS;
+	client: SNS;
 	name = 'aws-sms';
 	type = ProviderType.SMS;
 	region?: string;
@@ -11,8 +11,7 @@ export class AWSSMS implements ProviderInterface {
 	constructor(region?: string) {
 		this.region = region;
 
-		AWS.config.update({region: this.region});
-		this.client = new AWS.SNS({apiVersion: '2010-03-31'});
+		this.client = new SNS({apiVersion: '2010-03-31', region: this.region});
 	}
 
 	public async send(to: string, from: string, message: string): Promise<boolean> {
@@ -21,7 +20,7 @@ export class AWSSMS implements ProviderInterface {
 			PhoneNumber: to,
 		};
 
-		await this.client.publish(parameters).promise();
+		await this.client.publish(parameters);
 
 		return true;
 	}
