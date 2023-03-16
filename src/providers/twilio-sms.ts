@@ -25,7 +25,7 @@ export class TwilioSMS implements ProviderInterface {
 	}
 
 	public async send(to: string, from: string, message: string, subject?: string): Promise<boolean> {
-		await this.client.messages.create({ from, to, body: message});
+		await this.client.messages.create({from, to, body: message});
 
 		return true;
 	}
