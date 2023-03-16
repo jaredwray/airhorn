@@ -20,7 +20,7 @@
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "@types/fs-extra": "^11.0.1",
-    "@types/jest": "^29.4.4",
+    "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "dotenv": "^16.0.3",
@@ -34,7 +34,7 @@
     "xo": "^0.53.1"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.282.0",
+    "@aws-sdk/client-ses": "^3.292.0",
     "@aws-sdk/client-sns": "^3.292.0",
     "@sendgrid/mail": "^7.7.0",
     "ecto": "^2.1.8",
