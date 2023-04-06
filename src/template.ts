@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Ecto } from 'ecto';
 import fs from 'fs-extra';
 import matter from 'gray-matter';
