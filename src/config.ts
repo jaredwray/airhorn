@@ -1,4 +1,5 @@
 /* eslint-disable n/prefer-global/process */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 export class Config {
 	TEMPLATE_PATH = './templates';
 	DEFAULT_TEMPLATE_LANGUAGE = 'en';
