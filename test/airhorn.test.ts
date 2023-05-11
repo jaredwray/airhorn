@@ -46,7 +46,6 @@ test('Airhorn - Get Provider By Type', () => {
 });
 
 test('Airhorn - Send Friendly WebHook', async () => {
-	jest.setTimeout(20_000);
 	const options = {
 		TEMPLATE_PATH: './test/templates',
 	};
@@ -54,7 +53,7 @@ test('Airhorn - Send Friendly WebHook', async () => {
 	const userData = new TestingData();
 
 	expect(await airhorn.sendWebhook('https://httpbin.org/post', '', 'cool-multi-lingual', userData.users[0])).toEqual(true);
-});
+}, 20_000);
 
 test('Airhorn - Get Loaded Providers', () => {
 	const airhorn = new Airhorn({
