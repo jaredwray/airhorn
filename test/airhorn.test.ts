@@ -46,7 +46,7 @@ test('Airhorn - Get Provider By Type', () => {
 });
 
 test('Airhorn - Send Friendly WebHook', async () => {
-	jest.setTimeout(10_000);
+	jest.setTimeout(20_000);
 	const options = {
 		TEMPLATE_PATH: './test/templates',
 	};
