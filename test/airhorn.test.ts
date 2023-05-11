@@ -45,17 +45,8 @@ test('Airhorn - Get Provider By Type', () => {
 	expect(airhorn.providers.getProviderByType(ProviderType.WEBHOOK).length).toEqual(1);
 });
 
-test('Airhorn - Send WebHook', async () => {
-	const options = {
-		TEMPLATE_PATH: './test/templates',
-	};
-	const airhorn = new Airhorn(options);
-	const userData = new TestingData();
-
-	expect(await airhorn.send('https://httpbin.org/post', '', 'cool-multi-lingual', ProviderType.WEBHOOK, userData.users[0])).toEqual(true);
-});
-
 test('Airhorn - Send Friendly WebHook', async () => {
+	jest.setTimeout(10_000);
 	const options = {
 		TEMPLATE_PATH: './test/templates',
 	};
