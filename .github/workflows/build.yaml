@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 env:
-  WEBHOOK_MOCK_URL: http://localhost:8080
+  WEBHOOK_MOCK_URL: http://localhost:80/post
 
 jobs:
   build:
