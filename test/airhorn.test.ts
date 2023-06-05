@@ -11,6 +11,9 @@ jest.mock('firebase-admin', () => ({
 const {FirebaseMessaging} = await import ('../src/providers/firebase-messaging.js');
 const {Airhorn} = await import('../src/airhorn.js');
 
+// eslint-disable-next-line n/prefer-global/process
+const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://httpbin.org/post';
+
 test('Airhorn - Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
 });
@@ -52,7 +55,7 @@ test('Airhorn - Send Friendly WebHook', async () => {
 	const airhorn = new Airhorn(options);
 	const userData = new TestingData();
 
-	expect(await airhorn.sendWebhook('https://httpbin.org/post', '', 'cool-multi-lingual', userData.users[0])).toEqual(true);
+	expect(await airhorn.sendWebhook(WEBHOOK_MOCK_URL, '', 'cool-multi-lingual', userData.users[0])).toEqual(true);
 }, 20_000);
 
 test('Airhorn - Get Loaded Providers', () => {
