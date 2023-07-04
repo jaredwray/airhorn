@@ -1,8 +1,8 @@
-![Airhorn Logo](docs/images/logo-horizontal.png "Airhorn Logo")
+![Airhorn Logo](logo-horizontal.png "Airhorn Logo")
 
 -----
 
-[![build](https://github.com/jaredwray/airhorn/actions/workflows/build.yaml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/build.yaml)
+[![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yaml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yaml)
 [![release](https://github.com/jaredwray/airhorn/actions/workflows/release.yaml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/release.yaml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
