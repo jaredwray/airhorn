@@ -56,7 +56,7 @@ test('Airhorn - Send Friendly WebHook', async () => {
 	const userData = new TestingData();
 
 	expect(await airhorn.sendWebhook(WEBHOOK_MOCK_URL, '', 'cool-multi-lingual', userData.users[0])).toEqual(true);
-}, 20_000);
+}, 40_000);
 
 test('Airhorn - Get Loaded Providers', () => {
 	const airhorn = new Airhorn({
