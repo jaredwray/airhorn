@@ -43,7 +43,7 @@
     "got": "^13.0.0",
     "gray-matter": "^4.0.3",
     "twilio": "^4.13.0",
-    "winston": "^3.9.0"
+    "winston": "^3.10.0"
   },
   "files": [
     "dist"
