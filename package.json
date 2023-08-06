@@ -31,7 +31,7 @@
     "ts-jest": "^29.1.1",
     "ts-jest-resolver": "^2.0.1",
     "typescript": "^5.1.6",
-    "xo": "^0.54.2"
+    "xo": "^0.55.0"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.363.0",

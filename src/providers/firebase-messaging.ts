@@ -1,7 +1,6 @@
 /* eslint-disable n/file-extension-in-import */
 /* eslint-disable unicorn/no-negated-condition */
-import type {ServiceAccount} from 'firebase-admin';
-import firebase from 'firebase-admin';
+import firebase, { type ServiceAccount} from 'firebase-admin';
 import type {Message} from 'firebase-admin/messaging';
 import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
