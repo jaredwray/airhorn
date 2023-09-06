@@ -1,10 +1,10 @@
 import * as winston from 'winston';
-import {Config} from './config.js';
+import {Options} from './options.js';
 
 export function create() {
 	const log = winston.createLogger({transports: [new winston.transports.Console()]});
-	const config = new Config();
-	if (config.ENVIRONMENT === 'test') {
+	const options = new Options();
+	if (options.ENVIRONMENT === 'test') {
 		log.silent = true;
 	}
 

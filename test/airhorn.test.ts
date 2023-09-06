@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {jest} from '@jest/globals';
-import {Config} from '../src/config.js';
+import {Options} from '../src/options.js';
 import {ProviderType} from '../src/provider-type.js';
 import {TestingData} from './testing-data.js';
 
@@ -21,13 +21,13 @@ test('Airhorn - Init', () => {
 test('Airhorn - Get Templates', () => {
 	const airhorn = new Airhorn();
 
-	expect(airhorn.templates.config).toEqual(new Config());
+	expect(airhorn.templates.options).toEqual(new Options());
 });
 
 test('Airhorn - Get Providers', () => {
 	const airhorn = new Airhorn();
 
-	expect(airhorn.providers.config).toEqual(new Config());
+	expect(airhorn.providers.options).toEqual(new Options());
 });
 
 test('Airhorn - Options Validated in Config', () => {
@@ -36,7 +36,7 @@ test('Airhorn - Options Validated in Config', () => {
 	};
 	const airhorn = new Airhorn(options);
 
-	expect(airhorn.config.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
+	expect(airhorn.options.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
 });
 
 test('Airhorn - Get Provider By Type', () => {

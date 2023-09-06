@@ -1,4 +1,4 @@
-import { Config } from './config.js';
+import { Options } from './options.js';
 import type { ProviderInterface } from './provider-interface.js';
 import { ProviderType } from './provider-type.js';
 import { WebHook } from './providers/webhook.js';
@@ -10,12 +10,12 @@ import { FirebaseMessaging } from './providers/firebase-messaging.js';
 import { AWSSNS } from './providers/aws-sns.js';
 
 export class ProviderService {
-	config = new Config();
+	options = new Options();
 	private readonly _providers = new Array<ProviderInterface>();
 
 	constructor(options?: any) {
 		if (options) {
-			this.config = new Config(options);
+			this.options = new Options(options);
 		}
 
 		this.loadProviders();
@@ -96,28 +96,28 @@ export class ProviderService {
 	public loadProviders() {
 		this._providers.push(new WebHook());
 
-		if (this.config.TWILIO_SMS_ACCOUNT_SID.length > 0 && this.config.TWILIO_SMS_AUTH_TOKEN.length > 0) {
-			this._providers.push(new TwilioSMS(this.config.TWILIO_SMS_ACCOUNT_SID, this.config.TWILIO_SMS_AUTH_TOKEN));
+		if (this.options.TWILIO_SMS_ACCOUNT_SID.length > 0 && this.options.TWILIO_SMS_AUTH_TOKEN.length > 0) {
+			this._providers.push(new TwilioSMS(this.options.TWILIO_SMS_ACCOUNT_SID, this.options.TWILIO_SMS_AUTH_TOKEN));
 		}
 
-		if (this.config.TWILIO_SENDGRID_API_KEY.length > 0) {
-			this._providers.push(new TwilioSendgrid(this.config.TWILIO_SENDGRID_API_KEY));
+		if (this.options.TWILIO_SENDGRID_API_KEY.length > 0) {
+			this._providers.push(new TwilioSendgrid(this.options.TWILIO_SENDGRID_API_KEY));
 		}
 
-		if (this.config.AWS_SES_REGION.length > 0) {
-			this._providers.push(new AWSSES(this.config.AWS_SES_REGION));
+		if (this.options.AWS_SES_REGION.length > 0) {
+			this._providers.push(new AWSSES(this.options.AWS_SES_REGION));
 		}
 
-		if (this.config.AWS_SMS_REGION.length > 0) {
-			this._providers.push(new AWSSMS(this.config.AWS_SMS_REGION));
+		if (this.options.AWS_SMS_REGION.length > 0) {
+			this._providers.push(new AWSSMS(this.options.AWS_SMS_REGION));
 		}
 
-		if (this.config.AWS_SNS_REGION.length > 0) {
-			this._providers.push(new AWSSNS(this.config.AWS_SNS_REGION));
+		if (this.options.AWS_SNS_REGION.length > 0) {
+			this._providers.push(new AWSSNS(this.options.AWS_SNS_REGION));
 		}
 
-		if (this.config.FIREBASE_CERT.length > 0) {
-			this._providers.push(new FirebaseMessaging(this.config.FIREBASE_CERT));
+		if (this.options.FIREBASE_CERT.length > 0) {
+			this._providers.push(new FirebaseMessaging(this.options.FIREBASE_CERT));
 		}
 	}
 }
