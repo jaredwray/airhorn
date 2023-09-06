@@ -1,4 +1,4 @@
-import {Config} from '../src/config.js';
+import {Options} from '../src/options.js';
 import {TemplateService} from '../src/template-service.js';
 
 test('Template Service Init', () => {
@@ -7,18 +7,18 @@ test('Template Service Init', () => {
 	expect(templateService).toEqual(new TemplateService());
 });
 
-test('Template Service - Config Updated', () => {
+test('Template Service - options Updated', () => {
 	const templateService = new TemplateService();
-	templateService.config = new Config({
+	templateService.options = new Options({
 		TEMPLATE_PATH: './test/templates',
 	});
 
-	expect(templateService.config.TEMPLATE_PATH).toEqual('./test/templates');
+	expect(templateService.options.TEMPLATE_PATH).toEqual('./test/templates');
 });
 
 test('Template Service - Load Templates', () => {
 	const templateService = new TemplateService();
-	templateService.config = new Config({
+	templateService.options = new Options({
 		TEMPLATE_PATH: './test/templates',
 	});
 
@@ -58,7 +58,7 @@ test('Template Service - Get Template from Options', () => {
 
 test('Template Service - Get Template Returning Undefined', () => {
 	const templateService = new TemplateService();
-	templateService.config = new Config({
+	templateService.options = new Options({
 		TEMPLATE_PATH: './test/templates',
 	});
 

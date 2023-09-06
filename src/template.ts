@@ -2,11 +2,11 @@
 import { Ecto } from 'ecto';
 import fs from 'fs-extra';
 import matter from 'gray-matter';
-import { Config } from './config.js';
+import { Options } from './options.js';
 import { TemplateText } from './template-text.js';
 
 export class Template {
-	config = new Config();
+	options = new Options();
 	filePath?: string;
 	private readonly text = new Map<string, TemplateText>();
 
@@ -20,7 +20,7 @@ export class Template {
 
 	public getText(serviceType: string, languageCode?: string): TemplateText {
 		if (languageCode === undefined) {
-			languageCode = this.config.DEFAULT_TEMPLATE_LANGUAGE;
+			languageCode = this.options.DEFAULT_TEMPLATE_LANGUAGE;
 		}
 
 		let result = this.text.get(this.generateKey(languageCode, serviceType));
@@ -108,7 +108,7 @@ export class Template {
 
 	public loadTemplateFile(filePath: string, languageCode?: string) {
 		if (languageCode === undefined) {
-			languageCode = this.config.DEFAULT_TEMPLATE_LANGUAGE;
+			languageCode = this.options.DEFAULT_TEMPLATE_LANGUAGE;
 		}
 
 		const fileText = fs.readFileSync(filePath).toString();

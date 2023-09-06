@@ -1,17 +1,17 @@
-import { Config } from './config.js';
+import { Options } from './options.js';
 import { TemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { ProviderType } from './provider-type.js';
 
 export class Airhorn {
-	config = new Config();
+	options = new Options();
 
 	private readonly _templateService = new TemplateService();
 	private readonly _providerService = new ProviderService();
 
 	constructor(options?: any) {
 		if (options) {
-			this.config = new Config(options);
+			this.options = new Options(options);
 			this._templateService = new TemplateService(options);
 			this._providerService = new ProviderService(options);
 		}

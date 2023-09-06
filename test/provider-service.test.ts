@@ -12,7 +12,7 @@ test('Provider Service - Options', () => {
 	const options = {TEMPLATE_PATH: './test/templates/'};
 	const providerService = new ProviderService(options);
 
-	expect(providerService.config.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
+	expect(providerService.options.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
 });
 
 test('Provider Service - Get Providers', () => {

@@ -83,9 +83,9 @@ The `sendMobilePush()` function, located in `airhorn.ts`, is used to send `Mobil
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
-### `config`
+### `options`
 
-The `Config` class, enables you to configure the settings of Airhorn. It accepts the following parameters:
+The `Options` class, enables you to configure the settings of Airhorn. It accepts the following parameters:
 
 * `TEMPLATE_PATH` (string): The path where the notification system checks for templates. By default, this is set to './templates'
 * `DEFAULT_TEMPLATE_LANGUAGE` (string): The default language code the notification system uses for localization, if a language code is not provided. By default, this is set to 'en' for English localization.
@@ -211,7 +211,7 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 
 #### Twilio Sendgrid
 
-To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value in `config.ts`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
+To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value in `options.ts`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
 
 ```javascript
 const airhorn = new Airhorn({
