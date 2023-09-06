@@ -3,10 +3,11 @@
 -----
 
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yaml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yaml)
-[![release](https://github.com/jaredwray/airhorn/actions/workflows/release.yaml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/release.yaml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/dm/airhorn)](https://npmjs.com/package/airhorn)
+![npm](https://img.shields.io/npm/v/airhorn)
+
 
 ## Cloud Native Notifications Library
 
