@@ -5,6 +5,19 @@ import {ProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
 import {TestingData} from './testing-data.js';
 
+const FIREBASE_CERT = JSON.stringify({
+	type: 'service_account',
+	project_id: 'jw-integration-testing',
+	private_key_id: '',
+	private_key: '',
+	client_email: '',
+	client_id: '118126203046790821734',
+	auth_uri: 'https://accounts.google.com/o/oauth2/auth',
+	token_uri: 'https://oauth2.googleapis.com/token',
+	auth_provider_x509_cert_url: 'https://www.googleapis.com/oauth2/v1/certs',
+	client_x509_cert_url: '',
+});
+
 jest.mock('firebase-admin', () => ({
 	apps: ['testAppId'],
 }));
@@ -64,7 +77,7 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
-		FIREBASE_CERT: '{}',
+		FIREBASE_CERT,
 	});
 
 	expect(airhorn.providers.providers.length).toEqual(4);
@@ -123,7 +136,7 @@ test('Airhorn - Send Friendly SMS', async () => {
 test('Airhorn - Send Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT: 'this.json',
+		FIREBASE_CERT,
 	};
 	const airhorn = new Airhorn(options);
 
@@ -145,7 +158,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT: 'this.json',
+		FIREBASE_CERT,
 	};
 	const airhorn = new Airhorn(options);
 
