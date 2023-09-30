@@ -2,6 +2,7 @@
 import {jest} from '@jest/globals';
 import {Options} from '../src/options.js';
 import {ProviderType} from '../src/provider-type.js';
+import {Airhorn} from '../src/airhorn.js';
 import {TestingData} from './testing-data.js';
 
 jest.mock('firebase-admin', () => ({
@@ -9,7 +10,6 @@ jest.mock('firebase-admin', () => ({
 }));
 
 const {FirebaseMessaging} = await import ('../src/providers/firebase-messaging.js');
-const {Airhorn} = await import('../src/airhorn.js');
 
 // eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://httpbin.org/post';
