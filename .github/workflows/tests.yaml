@@ -36,7 +36,9 @@ jobs:
     - name: Build    
       run: npm run build
 
-    - name: Testing    
+    - name: Testing
+      env:
+        NODE_ENV: development    
       run: npm run test
       
     - name: Code Coverage
