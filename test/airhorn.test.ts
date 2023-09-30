@@ -2,14 +2,21 @@
 import {jest} from '@jest/globals';
 import {Options} from '../src/options.js';
 import {ProviderType} from '../src/provider-type.js';
+import {Airhorn} from '../src/airhorn.js';
+import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
 
-jest.mock('firebase-admin', () => ({
-	apps: ['testAppId'],
-}));
+// eslint-disable-next-line n/prefer-global/process
+const FIREBASE_CERT = process.env.FIREBASE_CERT ?? '{}';
 
-const {FirebaseMessaging} = await import ('../src/providers/firebase-messaging.js');
-const {Airhorn} = await import('../src/airhorn.js');
+jest.mock('firebase-admin', () => ({
+	initializeApp: jest.fn(),
+	messaging: jest.fn(),
+	apps: [],
+	credential: {
+		cert: jest.fn(),
+	},
+}));
 
 // eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://httpbin.org/post';
@@ -64,7 +71,7 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
-		FIREBASE_CERT: 'bar',
+		FIREBASE_CERT,
 	});
 
 	expect(airhorn.providers.providers.length).toEqual(4);
@@ -123,7 +130,7 @@ test('Airhorn - Send Friendly SMS', async () => {
 test('Airhorn - Send Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT: 'this.json',
+		FIREBASE_CERT,
 	};
 	const airhorn = new Airhorn(options);
 
@@ -133,7 +140,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 	};
 
 	airhorn.providers.removeProvider('firebase-messaging');
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging('{}');
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;
@@ -145,7 +152,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	const options = {
 		TEMPLATE_PATH: './test/templates',
-		FIREBASE_CERT: 'this.json',
+		FIREBASE_CERT,
 	};
 	const airhorn = new Airhorn(options);
 
@@ -155,7 +162,7 @@ test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	};
 
 	airhorn.providers.removeProvider('firebase-messaging');
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging(FIREBASE_CERT);
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;
