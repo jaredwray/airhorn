@@ -82,7 +82,6 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
-		FIREBASE_CERT,
 	});
 
 	expect(airhorn.providers.providers.length).toEqual(4);
