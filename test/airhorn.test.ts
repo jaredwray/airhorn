@@ -64,7 +64,7 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
-		FIREBASE_CERT: 'bar',
+		FIREBASE_CERT: '{}',
 	});
 
 	expect(airhorn.providers.providers.length).toEqual(4);
@@ -133,7 +133,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 	};
 
 	airhorn.providers.removeProvider('firebase-messaging');
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging('{}');
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;
