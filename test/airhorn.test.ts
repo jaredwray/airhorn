@@ -3,6 +3,7 @@ import {jest} from '@jest/globals';
 import {Options} from '../src/options.js';
 import {ProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
+import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
 
 const FIREBASE_CERT = JSON.stringify({
@@ -26,8 +27,6 @@ jest.mock('firebase-admin', () => ({
 		cert: jest.fn(),
 	},
 }));
-
-const {FirebaseMessaging} = await import ('../src/providers/firebase-messaging.js');
 
 // eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://httpbin.org/post';
@@ -82,6 +81,7 @@ test('Airhorn - Get Loaded Providers', () => {
 		TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 		TWILIO_SMS_AUTH_TOKEN: 'baz',
 		TWILIO_SENDGRID_API_KEY: 'foo',
+		FIREBASE_CERT: '',
 	});
 
 	expect(airhorn.providers.providers.length).toEqual(4);
@@ -172,7 +172,7 @@ test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	};
 
 	airhorn.providers.removeProvider('firebase-messaging');
-	const firebaseAdmin = new FirebaseMessaging('this.json');
+	const firebaseAdmin = new FirebaseMessaging(FIREBASE_CERT);
 	firebaseAdmin.client = {
 		send: jest.fn().mockReturnValue({}),
 	} as any;
