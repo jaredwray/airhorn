@@ -10,7 +10,7 @@ const FIREBASE_CERT = JSON.stringify({
 	project_id: 'jw-integration-testing',
 	private_key_id: '3ced989823434298afdca76bd25643303c',
 	private_key: '-----BEGIN PRIVATE KEY-----\nTHISISAFAKEKEY=\n-----END PRIVATE KEY-----\n',
-	client_email: '',
+	client_email: 'firebase-afake-account@jw-integration-testing.iam.gserviceaccount.com',
 	client_id: '118126203046790821734',
 	auth_uri: 'https://accounts.google.com/o/oauth2/auth',
 	token_uri: 'https://oauth2.googleapis.com/token',
