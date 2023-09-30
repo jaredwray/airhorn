@@ -36,7 +36,9 @@ jobs:
     - name: Build    
       run: npm run build
 
-    - name: Testing 
+    - name: Testing
+      env:
+        FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
       run: npm run test
       
     - name: Code Coverage
