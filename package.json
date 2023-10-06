@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@types/fs-extra": "^11.0.1",
+    "@types/fs-extra": "^11.0.2",
     "@types/jest": "^29.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
@@ -40,7 +40,7 @@
     "@aws-sdk/client-sns": "^3.405.0",
     "@sendgrid/mail": "^7.7.0",
     "ecto": "^2.2.2",
-    "firebase-admin": "^11.10.1",
+    "firebase-admin": "^11.11.0",
     "fs-extra": "^11.1.1",
     "got": "^13.0.0",
     "gray-matter": "^4.0.3",
