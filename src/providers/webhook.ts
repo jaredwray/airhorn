@@ -1,4 +1,4 @@
-import {got} from 'got';
+import axios from 'axios';
 import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
@@ -14,7 +14,7 @@ export class WebHook implements ProviderInterface {
 		}
 
 		const messageString = JSON.stringify(messageData);
-		await got.post(to, {json: messageString});
+		await axios.post(to, {json: messageString});
 
 		return true;
 	}

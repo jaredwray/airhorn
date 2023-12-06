@@ -13,7 +13,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "xo && NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
+    "test": "xo --fix && NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
     "clean": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "build": "tsc --project tsconfig.dist.json"
   },
@@ -39,10 +39,10 @@
     "@aws-sdk/client-ses": "^3.441.0",
     "@aws-sdk/client-sns": "^3.441.0",
     "@sendgrid/mail": "^7.7.0",
+    "axios": "^1.6.2",
     "ecto": "^2.2.3",
     "firebase-admin": "^11.11.0",
     "fs-extra": "^11.1.1",
-    "got": "^13.0.0",
     "gray-matter": "^4.0.3",
     "twilio": "^4.19.0",
     "winston": "^3.11.0"

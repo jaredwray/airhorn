@@ -1,7 +1,5 @@
-/* eslint-disable n/file-extension-in-import */
 /* eslint-disable unicorn/no-negated-condition */
 import firebase, { type ServiceAccount} from 'firebase-admin';
-import type {Message} from 'firebase-admin/messaging';
 import type {ProviderInterface} from '../provider-interface.js';
 import {ProviderType} from '../provider-type.js';
 
@@ -28,7 +26,7 @@ export class FirebaseMessaging implements ProviderInterface {
 	public async send(to: string, from: string, message: string) {
 		const {title, body} = JSON.parse(message);
 
-		const parameters: Message = {
+		const parameters: firebase.messaging.Message = {
 			notification: {
 				title,
 				body,
