@@ -13,7 +13,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "xo && NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
+    "test": "xo --fix && NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
     "clean": "rm -rf ./dist && rm -rf ./coverage && rm -rf ./node_modules && rm -rf ./package-lock.json",
     "build": "tsc --project tsconfig.dist.json"
   },
