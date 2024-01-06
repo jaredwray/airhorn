@@ -43,7 +43,7 @@
     "@sendgrid/mail": "^8.1.0",
     "axios": "^1.6.5",
     "ecto": "^2.2.5",
-    "firebase-admin": "^11.11.1",
+    "firebase-admin": "^12.0.0",
     "fs-extra": "^11.2.0",
     "gray-matter": "^4.0.3",
     "twilio": "^4.20.0",
