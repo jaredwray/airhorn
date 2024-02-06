@@ -37,8 +37,8 @@ export class Airhorn {
 				const message = await template.render(providerType, data, languageCode);
 
 				if (message) {
-					const rand = Math.floor(Math.random() * providers.length);
-					const provider = providers[rand];
+					const random = Math.floor(Math.random() * providers.length);
+					const provider = providers[random];
 
 					if (providerType === ProviderType.SMTP) {
 						const subject = template.getProperty(providerType, 'subject');

@@ -17,10 +17,10 @@ export class TemplateService {
 	public loadTemplates() {
 		this.templates = new Array<Template>();
 		if (fs.pathExistsSync(this.options.TEMPLATE_PATH)) {
-			const templateDirs = fs.readdirSync(this.options.TEMPLATE_PATH);
+			const templateDirectories = fs.readdirSync(this.options.TEMPLATE_PATH);
 
-			for (const templateDirPath of templateDirs) {
-				const templatePath = `${String(this.options.TEMPLATE_PATH)}/${String(templateDirPath)}`;
+			for (const templateDirectoryPath of templateDirectories) {
+				const templatePath = `${String(this.options.TEMPLATE_PATH)}/${String(templateDirectoryPath)}`;
 				const template = new Template(templatePath);
 
 				this.templates.push(template);
