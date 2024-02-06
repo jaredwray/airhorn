@@ -38,8 +38,8 @@
     "xo": "^0.57.0"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.485.0",
-    "@aws-sdk/client-sns": "^3.485.0",
+    "@aws-sdk/client-ses": "^3.507.0",
+    "@aws-sdk/client-sns": "^3.507.0",
     "@sendgrid/mail": "^8.1.0",
     "axios": "^1.6.7",
     "ecto": "^2.4.1",
