@@ -52,13 +52,13 @@ export class Template {
 			this.filePath = filePath;
 
 			if (fs.pathExistsSync(this.filePath)) {
-				const dirs = fs.readdirSync(this.filePath);
+				const directories = fs.readdirSync(this.filePath);
 
-				for (const d of dirs) {
+				for (const d of directories) {
 					const dFilePath = `${this.filePath}/${d}`;
 					if (fs.statSync(dFilePath).isDirectory()) {
-						const dirLangCode = this.getFileName(dFilePath);
-						this.loadTemplateDirectory(dFilePath, dirLangCode);
+						const directoryLangCode = this.getFileName(dFilePath);
+						this.loadTemplateDirectory(dFilePath, directoryLangCode);
 					} else {
 						this.loadTemplateFile(dFilePath);
 					}
