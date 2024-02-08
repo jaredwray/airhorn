@@ -1,6 +1,4 @@
-![Airhorn](site/logo.svg "Airhorn")
 
----
 
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yaml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yaml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)

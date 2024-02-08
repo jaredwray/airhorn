@@ -16,7 +16,9 @@
     "test": "xo --fix && NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
     "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock",
     "prepare": "yarn build",
-    "build": "tsc --project tsconfig.dist.json"
+    "build": "tsc --project tsconfig.dist.json",
+    "website:build": "rimraf ./site/readme.md && npx -y writr build -s ./site -o ./dist-site",
+    "website:serve": "rimraf ./site/readme.md && npx -y writr serve -s ./site -o ./dist-site"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
@@ -67,7 +69,7 @@
       "@typescript-eslint/no-unsafe-assignment": 0,
       "@typescript-eslint/no-unsafe-return": 0,
       "@typescript-eslint/no-redundant-type-constituents": 0,
-      "no-console": 1,
+      "no-console": 0,
       "import/extensions": [
         "error",
         "ignorePackages",
