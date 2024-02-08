@@ -111,3 +111,6 @@ package-lock.json
 .env
 firebase-cert.json
 .DS_Store
+
+# site
+dist-site

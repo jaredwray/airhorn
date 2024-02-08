@@ -44,7 +44,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_KEY }}
           verbose: true
-          files: ./coverage/lcov.info
+          files: ./coverage/coverage-final.json
 
       - name: Publish
         run: |
