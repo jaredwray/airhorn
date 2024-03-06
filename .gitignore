@@ -114,3 +114,4 @@ firebase-cert.json
 
 # site
 dist-site
+pnpm-lock.yaml

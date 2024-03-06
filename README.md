@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/dm/airhorn)](https://npmjs.com/package/airhorn)
-![npm](https://img.shields.io/npm/v/airhorn)
+[![npm](https://img.shields.io/npm/v/airhorn)](https://npmjs.com/package/airhorn)
 
 
 ## Cloud Native Notifications Library

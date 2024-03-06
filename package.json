@@ -14,7 +14,7 @@
   "private": false,
   "scripts": {
     "test": "xo --fix && NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
-    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock",
+    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock ./dist-site",
     "prepare": "yarn build",
     "build": "tsc --project tsconfig.dist.json",
     "website:build": "rimraf ./site/readme.md && npx -y writr build -s ./site -o ./dist-site",
