@@ -5,6 +5,8 @@ export default defineConfig({
 		coverage: {
 			exclude: [
 				'src/provider-interface.ts',
+				'dist-site/**',
+				'dist/**',
 				'site/**',
 			],
 		},
