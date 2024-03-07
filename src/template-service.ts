@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+import fs from 'node:fs';
 import {Options} from './options.js';
 import {Template} from './template.js';
 import * as logger from './logger.js';
@@ -16,7 +16,7 @@ export class TemplateService {
 
 	public loadTemplates() {
 		this.templates = new Array<Template>();
-		if (fs.pathExistsSync(this.options.TEMPLATE_PATH)) {
+		if (fs.existsSync(this.options.TEMPLATE_PATH)) {
 			const templateDirectories = fs.readdirSync(this.options.TEMPLATE_PATH);
 
 			for (const templateDirectoryPath of templateDirectories) {
