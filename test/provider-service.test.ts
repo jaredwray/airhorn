@@ -1,3 +1,4 @@
+import {test, expect} from 'vitest';
 import {ProviderService} from '../src/provider-service.js';
 import {ProviderType} from '../src/provider-type.js';
 import {WebHook} from '../src/providers/webhook.js';

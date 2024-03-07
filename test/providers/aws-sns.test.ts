@@ -1,4 +1,4 @@
-import {jest} from '@jest/globals';
+import {test, expect, vi} from 'vitest';
 import { AWSSNS } from '../../src/providers/aws-sns.js';
 
 const AWS_SNS_REGION = 'us-east-1';
@@ -12,8 +12,8 @@ test('AWS SNS - Send to TopicArn', async () => {
 	const topicArn = 'topicArnDeviceIdFromSns';
 
 	awsSNS.client = {
-		publish: jest.fn().mockReturnValue({
-			promise: jest.fn(),
+		publish: vi.fn().mockReturnValue({
+			promise: vi.fn(),
 		}),
 	} as any;
 

@@ -1,4 +1,4 @@
-import {jest} from '@jest/globals';
+import {test, expect, vi} from 'vitest';
 import { AWSSES } from '../../src/providers/aws-ses.js';
 
 const AWS_SES_REGION = 'us-east-1';
@@ -11,7 +11,7 @@ test('AWS SES - Send', async () => {
 	const awsSES = new AWSSES(AWS_SES_REGION);
 
 	awsSES.client = {
-		send: jest.fn().mockReturnValue({}),
+		send: vi.fn().mockReturnValue({}),
 	} as any;
 
 	expect(await awsSES.send('me@you.com', 'test@foo.org', 'just testing this send', 'testing message')).toEqual(true);
@@ -21,7 +21,7 @@ test('AWS SES - Send with no Subject', async () => {
 	const awsSES = new AWSSES(AWS_SES_REGION);
 
 	awsSES.client = {
-		send: jest.fn().mockReturnValue({}),
+		send: vi.fn().mockReturnValue({}),
 	} as any;
 
 	expect(await awsSES.send('me@you.com', 'test@foo.org', 'just testing this send')).toEqual(true);

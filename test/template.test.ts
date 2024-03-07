@@ -1,3 +1,4 @@
+import {test, expect} from 'vitest';
 import {Template} from '../src/template.js';
 import {TestingData} from './testing-data.js';
 
