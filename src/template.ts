@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+import fs from 'node:fs';
 import { Ecto } from 'ecto';
-import fs from 'fs-extra';
 import matter from 'gray-matter';
 import { Options } from './options.js';
 import { TemplateText } from './template-text.js';
@@ -51,7 +51,7 @@ export class Template {
 		if (filePath !== undefined) {
 			this.filePath = filePath;
 
-			if (fs.pathExistsSync(this.filePath)) {
+			if (fs.existsSync(this.filePath)) {
 				const directories = fs.readdirSync(this.filePath);
 
 				for (const d of directories) {

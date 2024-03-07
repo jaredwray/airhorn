@@ -1,4 +1,5 @@
 /* eslint-disable n/prefer-global/process */
+import {expect, test, vi} from 'vitest';
 import {Options} from '../src/options.js';
 
 test('Options - init', () => {

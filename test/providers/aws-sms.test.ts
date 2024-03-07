@@ -1,4 +1,4 @@
-import {jest} from '@jest/globals';
+import {test, expect, vi} from 'vitest';
 import { AWSSMS } from '../../src/providers/aws-sms.js';
 
 const AWS_SES_REGION = 'us-east-1';
@@ -11,8 +11,8 @@ test('AWS SMS - Send', async () => {
 	const awsSMS = new AWSSMS(AWS_SES_REGION);
 
 	awsSMS.client = {
-		publish: jest.fn().mockReturnValue({
-			promise: jest.fn(),
+		publish: vi.fn().mockReturnValue({
+			promise: vi.fn(),
 		}),
 	} as any;
 

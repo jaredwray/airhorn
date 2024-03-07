@@ -1,22 +1,31 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
-import {jest} from '@jest/globals';
+import {test, expect, vi} from 'vitest';
+import type * as admin from 'firebase-admin';
+// eslint-disable-next-line import/no-unassigned-import
+import 'dotenv/config';
 import {Options} from '../src/options.js';
 import {ProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
 
+vi.mock('firebase-admin', async () => {
+	const actual: typeof admin = await vi.importActual('firebase-admin'); // Import the actual module
+
+	return {
+		...actual, // Spread the actual implementations
+		initializeApp: vi.fn(),
+		messaging: vi.fn(),
+		apps: [],
+		auth: vi.fn(() => ({
+			...actual.auth(), // Use actual auth methods
+			verifyIdToken: vi.fn().mockResolvedValue({ uid: 'mocked-uid' }), // Mock specific methods
+		})),
+	};
+});
+
 // eslint-disable-next-line n/prefer-global/process
 const FIREBASE_CERT = process.env.FIREBASE_CERT ?? '{}';
-
-jest.mock('firebase-admin', () => ({
-	initializeApp: jest.fn(),
-	messaging: jest.fn(),
-	apps: [],
-	credential: {
-		cert: jest.fn(),
-	},
-}));
 
 // eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://httpbin.org/post';
@@ -103,7 +112,7 @@ test('Airhorn - Send Friendly SMTP', async () => {
 
 	const airhorn = new Airhorn(options);
 
-	airhorn.send = jest.fn().mockReturnValue(true) as any;
+	airhorn.send = vi.fn().mockReturnValue(true) as any;
 	const userData = new TestingData();
 
 	expect(await airhorn.sendSMTP('me@you.com', 'you@me.com', 'cool-multi-lingual', userData.users[0])).toEqual(true);
@@ -142,7 +151,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 	airhorn.providers.removeProvider('firebase-messaging');
 	const firebaseAdmin = new FirebaseMessaging('{}');
 	firebaseAdmin.client = {
-		send: jest.fn().mockReturnValue({}),
+		send: vi.fn().mockReturnValue({}),
 	} as any;
 	airhorn.providers.addProvider(firebaseAdmin);
 
@@ -164,7 +173,7 @@ test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
 	airhorn.providers.removeProvider('firebase-messaging');
 	const firebaseAdmin = new FirebaseMessaging(FIREBASE_CERT);
 	firebaseAdmin.client = {
-		send: jest.fn().mockReturnValue({}),
+		send: vi.fn().mockReturnValue({}),
 	} as any;
 	airhorn.providers.addProvider(firebaseAdmin);
 

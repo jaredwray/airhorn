@@ -1,3 +1,4 @@
+import {test, expect} from 'vitest';
 import {Options} from '../src/options.js';
 import {TemplateService} from '../src/template-service.js';
 

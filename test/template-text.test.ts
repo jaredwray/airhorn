@@ -1,3 +1,4 @@
+import {test, expect} from 'vitest';
 import {TemplateText} from '../src/template-text.js';
 
 test('Template Text Init', () => {

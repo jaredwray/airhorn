@@ -1,4 +1,4 @@
-import {jest} from '@jest/globals';
+import {test, expect, vi} from 'vitest';
 import { TwilioSMS } from '../../src/providers/twilio-sms.js';
 
 const TWILIO_SMS_ACCOUNT_SID = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
@@ -13,7 +13,7 @@ test('TwilioSMS - Send', async () => {
 
 	twilioSMS.client = {
 		messages: {
-			create: jest.fn().mockReturnValue({}),
+			create: vi.fn().mockReturnValue({}),
 		},
 	} as any;
 

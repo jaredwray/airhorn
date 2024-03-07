@@ -1,4 +1,5 @@
 /* eslint-disable n/prefer-global/process */
+import {test, expect} from 'vitest';
 import * as Logger from '../src/logger.js';
 
 test('Logger - silence with foo env', () => {
