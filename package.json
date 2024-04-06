@@ -25,7 +25,7 @@
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
     "@vitest/coverage-v8": "^1.4.0",
-    "docula": "^0.5.0",
+    "docula": "^0.5.2",
     "dotenv": "^16.4.5",
     "eslint": "^8.56.0",
     "eslint-config-xo": "^0.44.0",
