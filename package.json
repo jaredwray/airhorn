@@ -21,7 +21,7 @@
     "website:serve": "rimraf ./site/readme.md && npx -y docula serve -s ./site -o ./dist-site"
   },
   "devDependencies": {
-    "@types/node": "^20.12.8",
+    "@types/node": "^20.12.9",
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
     "@vitest/coverage-v8": "^1.6.0",
@@ -38,8 +38,8 @@
     "xo": "^0.58.0"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.549.0",
-    "@aws-sdk/client-sns": "^3.549.0",
+    "@aws-sdk/client-ses": "^3.569.0",
+    "@aws-sdk/client-sns": "^3.569.0",
     "@sendgrid/mail": "^8.1.3",
     "axios": "^1.6.8",
     "ecto": "^3.0.4",
