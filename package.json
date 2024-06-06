@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "^20.12.9",
     "@vitest/coverage-v8": "^1.6.0",
-    "docula": "^0.5.3",
+    "docula": "^0.5.4",
     "dotenv": "^16.4.5",
     "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
