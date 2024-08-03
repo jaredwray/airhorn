@@ -6,7 +6,7 @@
   "exports": "./dist/airhorn.js",
   "types": "./dist/airhorn.d.ts",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
