@@ -8,6 +8,8 @@ export default defineConfig({
 				'dist-site/**',
 				'dist/**',
 				'site/**',
+				'test/**',
+				'vite.config.mjs',
 			],
 		},
 	},
