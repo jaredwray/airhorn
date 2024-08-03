@@ -30,7 +30,7 @@
     "typescript": "^5.5.3",
     "vitest": "^1.6.0",
     "webpack": "^5.92.1",
-    "xo": "^0.58.0"
+    "xo": "^0.59.3"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.609.0",
