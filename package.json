@@ -21,13 +21,13 @@
     "website:serve": "rimraf ./site/readme.md && npx -y docula serve -s ./site -o ./dist-site"
   },
   "devDependencies": {
-    "@types/node": "^20.14.10",
+    "@types/node": "^22.1.0",
     "@vitest/coverage-v8": "^1.6.0",
     "docula": "^0.5.5",
     "dotenv": "^16.4.5",
     "rimraf": "^5.0.8",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "vitest": "^1.6.0",
     "webpack": "^5.92.1",
     "xo": "^0.59.3"
