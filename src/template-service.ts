@@ -1,9 +1,7 @@
 import fs from 'node:fs';
 import {Options} from './options.js';
 import {Template} from './template.js';
-import * as logger from './logger.js';
-
-const log = logger.create();
+import {log} from './logger.js';
 
 export class TemplateService {
 	options = new Options();
