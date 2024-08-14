@@ -1,14 +1,6 @@
 # Security Policy
 
-## Supported Versions
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 4.x.x   | :white_check_mark: |
-| 3.x.x   | :white_check_mark: |
-| 2.x.x   | :red_check_mark: |
-| 1.x.x   | :red_check_mark: |
-
+If you have found a security vulnerability, please report it to us. We update this library regularly to ensure that it is secure and up-to-date. Please use the `latest` version of the library to ensure that you are using the most secure version.
 
 ## Reporting a Vulnerability
 
