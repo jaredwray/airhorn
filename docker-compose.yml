@@ -5,8 +5,6 @@ services:
     ports:
       - "27017:27017"
     command: mongod --noauth
-    volumes:
-      - mongo-data:/data/db
 
   cockroachdb:
     image: cockroachdb/cockroach:latest
@@ -15,9 +13,3 @@ services:
     ports:
       - "26257:26257"
       - "8080:8080"
-    volumes:
-      - cockroach-data:/cockroach/cockroach-data
-
-volumes:
-  mongo-data:
-  cockroach-data:
