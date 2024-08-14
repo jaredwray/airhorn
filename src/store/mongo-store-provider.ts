@@ -3,7 +3,7 @@ import {
 } from 'mongodb';
 import { type AirhornContact, type AirhornStoreProvider } from './airhorn-store.js';
 
-export class MongodbProvider implements AirhornStoreProvider {
+export class MongoStoreProvider implements AirhornStoreProvider {
 	public collectionName = 'contacts';
 	private readonly db: Db;
 	private readonly collection: Collection;

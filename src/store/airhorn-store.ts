@@ -1,12 +1,11 @@
 import { type ProviderType } from '../provider-type.js';
-import { MongodbProvider } from './mongodb-provider.js';
 
 export type AirhornContact = {
-	id: string;
-	firstName: string;
-	lastName: string;
-	languageCode: string;
-	notifications: AirhornNotification[];
+	id?: string;
+	firstName?: string;
+	lastName?: string;
+	languageCode?: string;
+	notifications?: AirhornNotification[];
 	doNotContact: boolean;
 	created: Date;
 	modified: Date;
@@ -76,22 +75,28 @@ export class AirhornStore {
 			firstName: primary.firstName,
 			lastName: primary.lastName,
 			languageCode: primary.languageCode,
-			notifications: primary.notifications,
+			notifications: primary.notifications ?? [],
 			doNotContact: primary.doNotContact,
 			created: primary.created,
-			modified: primary.modified,
-			isDeleted: primary.isDeleted,
+			modified: new Date(),
+			isDeleted: false,
 		};
 
-		for (const notification of secondary.notifications) {
-			const found = primary.notifications.find(n => n.templateName === notification.templateName);
-			if (!found) {
-				mergedContact.notifications.push(notification);
+		if (secondary.notifications) {
+			for (const notification of secondary.notifications) {
+				const existingNotification = mergedContact.notifications?.find(
+					n => n.templateName === notification.templateName && n.providerType === notification.providerType,
+				);
+				if (!existingNotification) {
+					mergedContact.notifications?.push(notification);
+				}
 			}
 		}
 
 		await this.setContact(mergedContact);
-		await this.deleteContact(secondary.id);
+		if (secondary.id) {
+			await this.deleteContact(secondary.id);
+		}
 
 		return mergedContact;
 	}
@@ -102,7 +107,7 @@ export class AirhornStore {
 
 	public async setContactEmail(id: string, email: string): Promise<AirhornContact | undefined> {
 		const contact = await this.getContactById(id);
-		if (contact) {
+		if (contact?.notifications) {
 			for (const notification of contact.notifications) {
 				notification.email &&= email;
 			}
@@ -127,7 +132,7 @@ export class AirhornStore {
 
 	public async deleteContactByEmail(email: string): Promise<boolean> {
 		const contact = await this.getContactByEmail(email);
-		if (contact) {
+		if (contact?.id) {
 			return this.deleteContact(contact.id);
 		}
 
@@ -136,7 +141,7 @@ export class AirhornStore {
 
 	public async deleteContactByPhone(phone: string): Promise<boolean> {
 		const contact = await this.getContactByPhone(phone);
-		if (contact) {
+		if (contact?.id) {
 			return this.deleteContact(contact.id);
 		}
 

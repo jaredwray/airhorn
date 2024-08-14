@@ -72,4 +72,6 @@ export class Airhorn {
 }
 
 export { ProviderType } from './provider-type.js';
-export { AirhornStore } from './store/airhorn-store.js';
+export {
+	AirhornStore, type AirhornContact, type AirhornStoreProvider, type AirhornNotification,
+} from './store/airhorn-store.js';
