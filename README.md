@@ -18,6 +18,7 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 * [Library API and Examples](#library-api)
 * [Supported Cloud Service Providers](#supported-cloud-service-providers)
 * [How to Contribute](#how-to-contribute)
+* [Setting up your Development Environment](#setting-up-your-development-environment)
 * [Licensing](#licensing)
 
 # Features
