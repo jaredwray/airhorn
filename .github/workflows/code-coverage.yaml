@@ -11,7 +11,7 @@ env:
   WEBHOOK_MOCK_URL: http://localhost:80/post
 
 jobs:
-  build:
+  test-coverage:
 
     runs-on: ubuntu-latest
     services:
