@@ -1,11 +1,11 @@
 import {SNS} from '@aws-sdk/client-sns';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class AWSSMS implements ProviderInterface {
 	client: SNS;
 	name = 'aws-sms';
-	type = ProviderType.SMS;
+	type = AirhornProviderType.SMS;
 	region?: string;
 
 	constructor(region?: string) {

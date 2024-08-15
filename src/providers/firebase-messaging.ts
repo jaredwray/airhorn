@@ -1,12 +1,12 @@
 /* eslint-disable unicorn/no-negated-condition */
 import firebase, { type ServiceAccount} from 'firebase-admin';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class FirebaseMessaging implements ProviderInterface {
 	client: firebase.messaging.Messaging | undefined;
 	name = 'firebase-messaging';
-	type = ProviderType.MOBILE_PUSH;
+	type = AirhornProviderType.MOBILE_PUSH;
 
 	private readonly cert: string;
 

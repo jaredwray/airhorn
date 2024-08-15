@@ -1,4 +1,4 @@
-import { type ProviderType } from '../provider-type.js';
+import { type AirhornProviderType } from '../provider-type.js';
 
 export type AirhornContact = {
 	id?: string;
@@ -14,7 +14,7 @@ export type AirhornContact = {
 
 export type AirhornNotification = {
 	templateName: string;
-	providerType: ProviderType;
+	providerType: AirhornProviderType;
 	phone?: string;
 	email?: string;
 	url?: string;

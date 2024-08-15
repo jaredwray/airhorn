@@ -41,7 +41,7 @@ The `send()` function, located in `airhorn.ts`, is used to send notifications. I
 * `to` (string): The address to send the message to. Based on the message provider, this address can be either a phone number, an email address, or a web address.
 * `from` (string): The address of the sender of the message.
 * `templateName` (string): The name of the template to use for the message.
-* `providerType` (ProviderType): The type of message to be sent. `ProviderType` is an enum with the values `SMTP`, `SMS`, `WEBHOOK`, and `MOBILE_PUSH`.
+* `providerType` (AirhornProviderType): The type of message to be sent. `AirhornProviderType` is an enum with the values `SMTP`, `SMS`, `WEBHOOK`, and `MOBILE_PUSH`.
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
@@ -150,12 +150,12 @@ This library can be used to easily send a variety of notifications. In this sect
 
 #### Sending a simple email
 
-Using the send function, we can email 'john@doe.org' from 'hello@testing.com' using the generic template 'generic-template-foo'. We'll also use the provider type `ProviderType.SMTP` to indicate that we're sending an email:
+Using the send function, we can email 'john@doe.org' from 'hello@testing.com' using the generic template 'generic-template-foo'. We'll also use the provider type `AirhornProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
-import { Airhorn, ProviderType } from 'airhorn';
+import { Airhorn, AirhornProviderType } from 'airhorn';
 const airhorn = new Airhorn();
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
 #### Sending a simple webhook
@@ -164,7 +164,7 @@ Here, we'll send a simple webhook to the URL 'https://httpbin.org/post':
 
 ``` javascript
 const airhorn = new Airhorn();
-airhorn.send('https://httpbin.org/post', 'foo', 'bar', ProviderType.WEBHOOK);
+airhorn.send('https://httpbin.org/post', 'foo', 'bar', AirhornProviderType.WEBHOOK);
 ```
 
 #### Using multiple providers
@@ -181,7 +181,7 @@ const airhorn = new Airhorn({
         TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
 	});
 
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 
 ```
 
@@ -202,13 +202,13 @@ This library supports sending emails via AWS SES and Twilio Sendgrid.
 
 #### AWS SES
 
-After configuring your system to use AWS SES, you can easily use `airhorn` to send emails. In this example, we'll email 'john@doe.org' from 'hello@testing.com' using the email template 'generic-template-foo'. We'll list the provider type as `ProviderType.SMTP` to indicate that we're sending an email:
+After configuring your system to use AWS SES, you can easily use `airhorn` to send emails. In this example, we'll email 'john@doe.org' from 'hello@testing.com' using the email template 'generic-template-foo'. We'll list the provider type as `AirhornProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
 const airhorn = new Airhorn({
         AWS_SES_REGION = 'us-east-1',
 	});
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
 #### Twilio Sendgrid
@@ -219,7 +219,7 @@ To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` v
 const airhorn = new Airhorn({
         TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
 	});
-await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', ProviderType.SMTP);
+await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
 ### SMS providers
@@ -228,13 +228,13 @@ This library supports sending SMS using AWS SMS and Twilio.
 
 ### AWS SMS
 
-Once your system is configured to use AWS SMS, you can send SMS notifications through AWS SMS. In this example, we'll send the notification to the phone number '5555555555' from the number '5552223333' with the raw text data 'Test message text'. Then, we'll list the provider type as `ProviderType.SMS`.
+Once your system is configured to use AWS SMS, you can send SMS notifications through AWS SMS. In this example, we'll send the notification to the phone number '5555555555' from the number '5552223333' with the raw text data 'Test message text'. Then, we'll list the provider type as `AirhornProviderType.SMS`.
 
 ```javascript
 const airhorn = new Airhorn({
         AWS_SMS_REGION = 'us-east-1',
     });
-await airhorn.send('5555555555', '5552223333', 'Test message text', ProviderType.SMS);
+await airhorn.send('5555555555', '5552223333', 'Test message text', AirhornProviderType.SMS);
 ```
 
 ### Twilio SMS
@@ -246,7 +246,7 @@ const airhorn = new Airhorn({
         TWILIO_SMS_ACCOUNT_SID = 'TWILIO_SMS_ACCOUNT_SID',
         TWILIO_SMS_AUTH_TOKEN = 'TWILIO_SMS_AUTH_TOKEN'
     });
-await airhorn.send('5555555555', '5552223333', 'Test message text', ProviderType.SMS);
+await airhorn.send('5555555555', '5552223333', 'Test message text', AirhornProviderType.SMS);
 ```
 
 ### Mobile push providers
@@ -268,7 +268,7 @@ Then, you can send the push message to the device endpoint using `airhorn`:
 const airhorn = new Airhorn({
         AWS_SNS_REGION = 'us-east-1',
     });
-await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
+await airhorn.send('endpointArn', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH);
 ```
 
 ### Firebase for Mobile Push
@@ -283,7 +283,7 @@ Then, you can send the push message to the device endpoint using `airhorn`:
 const airhorn = new Airhorn({
         FIREBASE_CERT = 'FIREBASE_CERT'
     });
-await airhorn.send('endpointArn', '', 'generic-template-foo', ProviderType.MOBILE_PUSH);
+await airhorn.send('endpointArn', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH);
 ```
 
 ## How to Contribute 

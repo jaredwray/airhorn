@@ -1,11 +1,11 @@
 import sendgrid from '@sendgrid/mail';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class TwilioSendgrid implements ProviderInterface {
 	client = sendgrid;
 	name = 'twilio-sendgrid';
-	type = ProviderType.SMTP;
+	type = AirhornProviderType.SMTP;
 
 	private readonly apiKey: string;
 

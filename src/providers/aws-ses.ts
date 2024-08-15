@@ -1,11 +1,11 @@
 import {SendEmailCommand, SESClient} from '@aws-sdk/client-ses';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class AWSSES implements ProviderInterface {
 	client: SESClient;
 	name = 'aws-ses';
-	type = ProviderType.SMTP;
+	type = AirhornProviderType.SMTP;
 	region?: string;
 
 	constructor(region?: string) {

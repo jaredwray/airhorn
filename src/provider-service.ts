@@ -1,6 +1,6 @@
 import { Options } from './options.js';
 import type { ProviderInterface } from './provider-interface.js';
-import { ProviderType } from './provider-type.js';
+import { AirhornProviderType } from './provider-type.js';
 import { WebHook } from './providers/webhook.js';
 import { TwilioSMS } from './providers/twilio-sms.js';
 import { TwilioSendgrid } from './providers/twilio-sendgrid.js';
@@ -26,22 +26,22 @@ export class ProviderService {
 	}
 
 	public get sms(): ProviderInterface[] {
-		return this.getProviderByType(ProviderType.SMS);
+		return this.getProviderByType(AirhornProviderType.SMS);
 	}
 
 	public get smtp(): ProviderInterface[] {
-		return this.getProviderByType(ProviderType.SMTP);
+		return this.getProviderByType(AirhornProviderType.SMTP);
 	}
 
 	public get webhook(): ProviderInterface[] {
-		return this.getProviderByType(ProviderType.WEBHOOK);
+		return this.getProviderByType(AirhornProviderType.WEBHOOK);
 	}
 
 	public get mobilePush(): ProviderInterface[] {
-		return this.getProviderByType(ProviderType.MOBILE_PUSH);
+		return this.getProviderByType(AirhornProviderType.MOBILE_PUSH);
 	}
 
-	public getProviderByType(type: ProviderType): ProviderInterface[] {
+	public getProviderByType(type: AirhornProviderType): ProviderInterface[] {
 		let result: ProviderInterface[] = [];
 		const provider = this._providers.filter(provider => provider.type === type);
 

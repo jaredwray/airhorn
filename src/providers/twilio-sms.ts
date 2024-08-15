@@ -1,11 +1,11 @@
 
 import twilio from 'twilio';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class TwilioSMS implements ProviderInterface {
 	name = 'twilio-sms';
-	type = ProviderType.SMS;
+	type = AirhornProviderType.SMS;
 
 	accountSID = '';
 	authToken = '';

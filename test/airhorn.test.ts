@@ -4,7 +4,7 @@ import type * as admin from 'firebase-admin';
 // eslint-disable-next-line import/no-unassigned-import
 import 'dotenv/config';
 import {Options} from '../src/options.js';
-import {ProviderType} from '../src/provider-type.js';
+import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
@@ -61,7 +61,7 @@ test('Airhorn - Get Provider By Type', () => {
 	};
 	const airhorn = new Airhorn(options);
 
-	expect(airhorn.providers.getProviderByType(ProviderType.WEBHOOK).length).toEqual(1);
+	expect(airhorn.providers.getProviderByType(AirhornProviderType.WEBHOOK).length).toEqual(1);
 });
 
 test('Airhorn - Send Friendly WebHook', async () => {
@@ -94,14 +94,14 @@ test('Airhorn - Send SMTP', async () => {
 	const userData = new TestingData();
 
 	airhorn.providers.addProvider({
-		type: ProviderType.SMTP,
+		type: AirhornProviderType.SMTP,
 		name: 'smtp',
 		async send() {
 			return Promise.resolve(true);
 		},
 	});
 
-	expect(await airhorn.send('me@you.com', 'you@me.com', 'cool-multi-lingual', ProviderType.SMTP, userData.users[0])).toEqual(true);
+	expect(await airhorn.send('me@you.com', 'you@me.com', 'cool-multi-lingual', AirhornProviderType.SMTP, userData.users[0])).toEqual(true);
 });
 
 test('Airhorn - Send Friendly SMTP', async () => {
@@ -126,7 +126,7 @@ test('Airhorn - Send Friendly SMS', async () => {
 	const userData = new TestingData();
 
 	airhorn.providers.addProvider({
-		type: ProviderType.SMS,
+		type: AirhornProviderType.SMS,
 		name: 'sms',
 		async send() {
 			return Promise.resolve(true);
@@ -155,7 +155,7 @@ test('Airhorn - Send Mobile Push with Notification', async () => {
 	} as any;
 	airhorn.providers.addProvider(firebaseAdmin);
 
-	expect(await airhorn.send('deviceToken', '', 'generic-template-foo', ProviderType.MOBILE_PUSH, notification)).toEqual(true);
+	expect(await airhorn.send('deviceToken', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH, notification)).toEqual(true);
 });
 
 test('Airhorn - Send Friendly Mobile Push with Notification', async () => {
@@ -190,14 +190,14 @@ test('Airhorn - Send Mobile Push', async () => {
 	airhorn.providers.removeProvider('firebase-messaging');
 
 	airhorn.providers.addProvider({
-		type: ProviderType.MOBILE_PUSH,
+		type: AirhornProviderType.MOBILE_PUSH,
 		name: 'aws-sns',
 		async send() {
 			return Promise.resolve(true);
 		},
 	});
 
-	expect(await airhorn.send('topicArnFromSns', '', 'generic-template-foo', ProviderType.MOBILE_PUSH)).toEqual(true);
+	expect(await airhorn.send('topicArnFromSns', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH)).toEqual(true);
 });
 
 test('Airhorn - Send Friendly Mobile Push', async () => {
@@ -210,7 +210,7 @@ test('Airhorn - Send Friendly Mobile Push', async () => {
 	airhorn.providers.removeProvider('firebase-messaging');
 
 	airhorn.providers.addProvider({
-		type: ProviderType.MOBILE_PUSH,
+		type: AirhornProviderType.MOBILE_PUSH,
 		name: 'aws-sns',
 		async send() {
 			return Promise.resolve(true);
