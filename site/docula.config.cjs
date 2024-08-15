@@ -14,6 +14,6 @@ module.exports.onPrepare = async config => {
 	const readmeSitePath = path.join(config.sitePath, 'README.md');
 	const readme = await fs.promises.readFile(readmePath, 'utf8');
 	const updatedReadme = readme.replace('![Airhorn](site/logo.svg "Airhorn")\n\n---', '');
-	console.log('writing updated readme to', readmeSitePath);
+	console.log('Writing updated readme to', readmeSitePath);
 	await fs.promises.writeFile(readmeSitePath, updatedReadme);
 };
