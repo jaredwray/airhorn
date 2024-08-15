@@ -1,11 +1,11 @@
 import {SNS} from '@aws-sdk/client-sns';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class AWSSNS implements ProviderInterface {
 	client: SNS;
 	name = 'aws-sns';
-	type = ProviderType.MOBILE_PUSH;
+	type = AirhornProviderType.MOBILE_PUSH;
 	region?: string;
 
 	constructor(region?: string) {

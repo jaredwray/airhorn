@@ -1,6 +1,6 @@
 import {test, expect} from 'vitest';
 import {ProviderService} from '../src/provider-service.js';
-import {ProviderType} from '../src/provider-type.js';
+import {AirhornProviderType} from '../src/provider-type.js';
 import {WebHook} from '../src/providers/webhook.js';
 
 test('Provider Service Init', () => {
@@ -49,13 +49,13 @@ test('Provider Service - Get mobilePush Provider', () => {
 test('Provider Service - Get Provider By Type With No Result', () => {
 	const providerService = new ProviderService();
 
-	expect(providerService.getProviderByType(ProviderType.SMS).length).toEqual(0);
+	expect(providerService.getProviderByType(AirhornProviderType.SMS).length).toEqual(0);
 });
 
 test('Provider Service - Get Provider By Type', () => {
 	const providerService = new ProviderService();
 
-	expect(providerService.getProviderByType(ProviderType.WEBHOOK).length).toEqual(1);
+	expect(providerService.getProviderByType(AirhornProviderType.WEBHOOK).length).toEqual(1);
 });
 
 test('Provider Service - Add Provider', () => {

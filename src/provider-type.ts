@@ -1,4 +1,4 @@
-export enum ProviderType {
+export enum AirhornProviderType {
 	SMTP = 'SMTP',
 	SMS = 'SMS',
 	WEBHOOK = 'WEBHOOK',

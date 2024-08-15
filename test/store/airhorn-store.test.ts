@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-array-for-each */
 import {test, expect, describe} from 'vitest';
 import { ObjectId } from 'mongodb';
-import { AirhornStore, ProviderType, type AirhornContact } from '../../src/airhorn.js';
+import { AirhornStore, AirhornProviderType, type AirhornContact } from '../../src/airhorn.js';
 import { MongoStoreProvider } from '../../src/store/mongo-store-provider.js';
 
 const mongodbUri = 'mongodb://localhost:27017/airhorn';
@@ -66,7 +66,7 @@ describe('AirhornStore', async () => {
 
 		const notification = {
 			templateName: 'test',
-			providerType: ProviderType.SMTP,
+			providerType: AirhornProviderType.SMTP,
 			enabled: true,
 		};
 		result.notifications = [notification];
@@ -101,19 +101,19 @@ describe('AirhornStore', async () => {
 		const contactOne = { ...mockContact, firstName: 'foo'};
 		contactOne.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.SMTP, enabled: true, email: 'foo@foo.com',
+				templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, email: 'foo@foo.com',
 			},
 			{
-				templateName: 'test', providerType: ProviderType.SMTP, enabled: true, email: 'baz@baz.com',
+				templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, email: 'baz@baz.com',
 			},
 		];
 		const contactTwo = { ...mockContact, firstName: 'bar' };
 		contactTwo.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.SMTP, enabled: true, email: 'bar@bar.com',
+				templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, email: 'bar@bar.com',
 			},
 			{
-				templateName: 'test', providerType: ProviderType.SMTP, enabled: true, email: 'bar1@bar1.com',
+				templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, email: 'bar1@bar1.com',
 			},
 		];
 		await store.setContact(contactOne);
@@ -139,10 +139,10 @@ describe('AirhornStore', async () => {
 		const contactOne = { ...mockContact, firstName: 'foo'};
 		contactOne.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.SMS, enabled: true, phone: '1234567890',
+				templateName: 'test', providerType: AirhornProviderType.SMS, enabled: true, phone: '1234567890',
 			},
 			{
-				templateName: 'test', providerType: ProviderType.SMS, enabled: true, phone: '0987654321',
+				templateName: 'test', providerType: AirhornProviderType.SMS, enabled: true, phone: '0987654321',
 			},
 		];
 		const resulSettOne = await store.setContact(contactOne);
@@ -163,10 +163,10 @@ describe('AirhornStore', async () => {
 		const contactOne = { ...mockContact, firstName: 'foo'};
 		contactOne.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.WEBHOOK, enabled: true, url: 'http://foo.com',
+				templateName: 'test', providerType: AirhornProviderType.WEBHOOK, enabled: true, url: 'http://foo.com',
 			},
 			{
-				templateName: 'test', providerType: ProviderType.WEBHOOK, enabled: true, url: 'http://baz.com',
+				templateName: 'test', providerType: AirhornProviderType.WEBHOOK, enabled: true, url: 'http://baz.com',
 			},
 		];
 		const resulSettOne = await store.setContact(contactOne);
@@ -229,19 +229,19 @@ describe('AirhornStore', async () => {
 		const contactOne = { ...mockContact, firstName: 'foo'};
 		contactOne.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.SMS, enabled: true, phone: '1234567890',
+				templateName: 'test', providerType: AirhornProviderType.SMS, enabled: true, phone: '1234567890',
 			},
 			{
-				templateName: 'test', providerType: ProviderType.SMS, enabled: true, phone: '0987654321',
+				templateName: 'test', providerType: AirhornProviderType.SMS, enabled: true, phone: '0987654321',
 			},
 		];
 		const contactTwo = { ...mockContact, firstName: 'bar1' };
 		contactTwo.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.SMTP, enabled: true, phone: 'bar@bar.com',
+				templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, phone: 'bar@bar.com',
 			},
 			{
-				templateName: 'test', providerType: ProviderType.WEBHOOK, enabled: true, phone: 'https://baz.com',
+				templateName: 'test', providerType: AirhornProviderType.WEBHOOK, enabled: true, phone: 'https://baz.com',
 			},
 		];
 
@@ -272,7 +272,7 @@ describe('AirhornStore', async () => {
 		const contact = { ...mockContact };
 		contact.notifications = [
 			{
-				templateName: 'test', providerType: ProviderType.SMTP, enabled: true, email: 'foo@foo.com',
+				templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, email: 'foo@foo.com',
 			},
 		];
 		const resultSetContact = await store.setContact(contact);
@@ -343,7 +343,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(new MongoStoreProvider(mongodbUri));
 		const contact = { ...mockContact };
 		contact.notifications = [{
-			templateName: 'test', providerType: ProviderType.SMTP, enabled: true, email: 'foo@foo.com',
+			templateName: 'test', providerType: AirhornProviderType.SMTP, enabled: true, email: 'foo@foo.com',
 		}];
 		await store.setContact(contact);
 		const result = await store.deleteContactByEmail('foo@foo.com');
@@ -356,7 +356,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(new MongoStoreProvider(mongodbUri));
 		const contact = { ...mockContact };
 		contact.notifications = [{
-			templateName: 'test', providerType: ProviderType.SMS, enabled: true, phone: '1234567890',
+			templateName: 'test', providerType: AirhornProviderType.SMS, enabled: true, phone: '1234567890',
 		}];
 		await store.setContact(contact);
 		const result = await store.deleteContactByPhone('1234567890');

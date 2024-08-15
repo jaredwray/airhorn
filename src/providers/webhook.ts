@@ -1,10 +1,10 @@
 import axios from 'axios';
 import type {ProviderInterface} from '../provider-interface.js';
-import {ProviderType} from '../provider-type.js';
+import {AirhornProviderType} from '../provider-type.js';
 
 export class WebHook implements ProviderInterface {
 	name = 'webhook';
-	type = ProviderType.WEBHOOK;
+	type = AirhornProviderType.WEBHOOK;
 
 	public async send(to: string, from: string, message: string, subject?: string): Promise<boolean> {
 		const messageData = JSON.parse(message);

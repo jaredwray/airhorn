@@ -1,7 +1,7 @@
 import { Options } from './options.js';
 import { TemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
-import { ProviderType } from './provider-type.js';
+import { AirhornProviderType } from './provider-type.js';
 
 export class Airhorn {
 	options = new Options();
@@ -26,7 +26,7 @@ export class Airhorn {
 	}
 
 	/* eslint max-params: [2, 6] */
-	public async send(to: string, from: string, templateName: string, providerType: ProviderType, data?: any, languageCode?: string): Promise<boolean> {
+	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: any, languageCode?: string): Promise<boolean> {
 		let result = false;
 
 		const template = this._templateService.getTemplate(templateName);
@@ -40,7 +40,7 @@ export class Airhorn {
 					const random = Math.floor(Math.random() * providers.length);
 					const provider = providers[random];
 
-					if (providerType === ProviderType.SMTP) {
+					if (providerType === AirhornProviderType.SMTP) {
 						const subject = template.getProperty(providerType, 'subject');
 
 						result = await provider.send(to, from, message, subject);
@@ -55,23 +55,23 @@ export class Airhorn {
 	}
 
 	public async sendSMTP(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, ProviderType.SMTP, data, languageCode);
+		return this.send(to, from, templateName, AirhornProviderType.SMTP, data, languageCode);
 	}
 
 	public async sendSMS(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, ProviderType.SMS, data, languageCode);
+		return this.send(to, from, templateName, AirhornProviderType.SMS, data, languageCode);
 	}
 
 	public async sendWebhook(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, ProviderType.WEBHOOK, data, languageCode);
+		return this.send(to, from, templateName, AirhornProviderType.WEBHOOK, data, languageCode);
 	}
 
 	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, ProviderType.MOBILE_PUSH, data, languageCode);
+		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
 	}
 }
 
-export { ProviderType } from './provider-type.js';
+export { AirhornProviderType } from './provider-type.js';
 export {
 	AirhornStore, type AirhornContact, type AirhornStoreProvider, type AirhornNotification,
 } from './store/airhorn-store.js';
