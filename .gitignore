@@ -113,6 +113,6 @@ firebase-cert.json
 .DS_Store
 
 # site
-dist-site
+site/dist
 pnpm-lock.yaml
 site/README.md

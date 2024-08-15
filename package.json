@@ -14,11 +14,11 @@
   "private": false,
   "scripts": {
     "test": "xo --fix && vitest run --coverage",
-    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock ./pnpm-lock.yaml ./dist-site",
+    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock ./pnpm-lock.yaml ./site/dist",
     "prepare": "npm run build",
     "build": "tsc --project tsconfig.dist.json",
-    "website:build": "rimraf ./site/readme.md && npx -y docula build -s ./site -o ./dist-site",
-    "website:serve": "rimraf ./site/readme.md && npx -y docula serve -s ./site -o ./dist-site",
+    "website:build": "rimraf ./site/readme.md && npx -y docula build -s ./site -o ./site/dist",
+    "website:serve": "rimraf ./site/readme.md && npx -y docula serve -s ./site -o ./site/dist",
     "test:services:start": "docker compose -f docker-compose.yml up -d",
     "test:services:stop": "docker compose -f docker-compose.yml down"
   },
