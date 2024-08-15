@@ -16,11 +16,11 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # Test
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
 
@@ -43,5 +43,5 @@ jobs:
         accountId: b09b24c345713c704e71dea8bd81f713
         projectName: airhorn
         branch: main
-        directory: dist-site
+        directory: site/dist
         gitHubToken: ${{ secrets.GH_TOKEN }}

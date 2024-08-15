@@ -1,4 +1,4 @@
-name: tests
+name: code-coverage
 
 on:
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['20', '22']
+        node-version: ['20']
 
     steps:
     - uses: actions/checkout@v4
@@ -44,4 +44,11 @@ jobs:
       env:
         FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
       run: npm run test
+      
+    - name: Code Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_KEY }}
+        verbose: true
+        files: ./coverage/coverage-final.json
 

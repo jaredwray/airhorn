@@ -23,9 +23,9 @@ jobs:
         node-version: [20]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -42,13 +42,6 @@ jobs:
         env:
           FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
         run: npm run test
-        
-      - name: Code Coverage
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_KEY }}
-          verbose: true
-          files: ./coverage/coverage-final.json
 
       - name: Publish
         run: |
