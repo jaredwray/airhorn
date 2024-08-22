@@ -1,143 +1,207 @@
 import {
-	MongoClient, type Db, type Collection, ObjectId,
+	MongoClient, type Db, type Collection, ObjectId, type Document,
 } from 'mongodb';
-import { type AirhornContact, type AirhornStoreProvider } from './airhorn-store.js';
+import { type AirhornProviderType } from '../provider-type.js';
+import {
+	type AirhornSubscription, type AirhornNotification, type AirhornNotificationStatus, type CreateAirhornNotification,
+	type CreateAirhornSubscription,
+} from './airhorn-store.js';
 
-export class MongoStoreProvider implements AirhornStoreProvider {
-	public collectionName = 'contacts';
-	private readonly db: Db;
-	private readonly collection: Collection;
+export type MongoStoreProviderOptions = {
+	uri?: string;
+	subscriptionsCollectionName?: string;
+	notificationsCollectionName?: string;
+};
 
-	constructor(private readonly uri: string) {
+export class MongoStoreProvider {
+	public subscriptionsCollectionName = 'airhornSubscriptions';
+	public notificationsCollectionName = 'airhornNotifications';
+	public uri = 'mongodb://localhost:27017';
+	public readonly db: Db;
+	public readonly subscriptionsCollection: Collection;
+	public readonly notificationsCollection: Collection;
+
+	constructor(options?: MongoStoreProviderOptions) {
+		if (options) {
+			this.loadOptions(options);
+		}
+
 		const client = new MongoClient(this.uri);
 		this.db = client.db();
-		this.collection = this.db.collection(this.collectionName);
-	}
-
-	get id(): string {
-		return 'mongodb-provider';
+		this.subscriptionsCollection = this.db.collection(this.subscriptionsCollectionName);
+		this.notificationsCollection = this.db.collection(this.notificationsCollectionName);
 	}
 
 	get name(): string {
-		return 'MongoDB Provider';
+		return 'MongoStoreProvider';
 	}
 
-	async getContactByEmail(email: string): Promise<AirhornContact | undefined> {
-		const document = await this.collection.findOne({ 'notifications.email': email, isDeleted: false });
+	async createSubscription(createSubcription: CreateAirhornSubscription): Promise<AirhornSubscription> {
+		const subscription: Document = {
+			to: createSubcription.to,
+			templateName: createSubcription.templateName,
+			providerType: createSubcription.providerType,
+			externalId: createSubcription.externalId,
+			createdAt: new Date(),
+			modifiedAt: new Date(),
+			isDeleted: false,
+		};
+		const result = await this.subscriptionsCollection.insertOne(subscription);
+		const document = await this.subscriptionsCollection.findOne({_id: result.insertedId});
+		/* c8 ignore next 3 */
 		if (!document) {
-			return undefined; // Or `undefined`
+			throw new Error('Failed to create subscription');
 		}
 
-		const contact = this.mapDocumentToContact(document);
-
-		return contact;
+		return this.mapDocumentToSubscription(document);
 	}
 
-	async getContactByPhone(phone: string): Promise<AirhornContact | undefined> {
-		const document = await this.collection.findOne({ 'notifications.phone': phone, isDeleted: false });
-		if (!document) {
-			return undefined; // Or `undefined`
-		}
-
-		const contact = this.mapDocumentToContact(document);
-
-		return contact;
-	}
-
-	async getContactByUrl(url: string): Promise<AirhornContact | undefined> {
-		const document = await this.collection.findOne({ 'notifications.url': url, isDeleted: false });
-		if (!document) {
-			return undefined; // Or `undefined`
-		}
-
-		const contact = this.mapDocumentToContact(document);
-
-		return contact;
-	}
-
-	async getContactById(id: string): Promise<AirhornContact | undefined> {
-		const objectId = new ObjectId(id);
-		const document = await this.collection.findOne({ _id: objectId, isDeleted: false });
-		if (!document) {
-			return undefined; // Or `undefined`
-		}
-
-		const contact = this.mapDocumentToContact(document);
-
-		return contact;
-	}
-
-	async getContacts(): Promise<AirhornContact[]> {
-		const contacts = new Array<AirhornContact>();
-		const document = await this.collection.find({ isDeleted: false }).toArray();
-		for (const document_ of document) {
-			contacts.push(this.mapDocumentToContact(document_));
-		}
-
-		return contacts;
-	}
-
-	async setContact(contact: AirhornContact): Promise<AirhornContact> {
-		const now = new Date();
-		contact.modified = now;
-
-		if (contact.id) {
-			const objectId = new ObjectId(contact.id);
-			await this.collection.updateOne({ _id: objectId }, { $set: contact });
-			return { ...contact, id: objectId.toString() };
-		}
-
-		contact.created = now;
-		contact.isDeleted = false;
-		const result = await this.collection.insertOne(contact);
-		return { ...contact, id: result.insertedId.toString() };
-	}
-
-	async setContacts(contacts: AirhornContact[]): Promise<AirhornContact[]> {
-		const now = new Date();
-		const operations = contacts.map(contact => {
-			contact.modified = now;
-			if (contact.id) {
-				const objectId = new ObjectId(contact.id);
-				return {
-					updateOne: {
-						filter: { _id: objectId },
-						update: { $set: contact },
-					},
-				};
-			}
-
-			contact.created = now;
-			contact.isDeleted = false;
-			return { insertOne: { document: contact } };
+	async updateSubscription(subscription: AirhornSubscription): Promise<AirhornSubscription> {
+		const result = await this.subscriptionsCollection.updateOne({_id: new ObjectId(subscription.id)}, {
+			$set: {
+				to: subscription.to,
+				templateName: subscription.templateName,
+				providerType: subscription.providerType,
+				externalId: subscription.externalId,
+				modifiedAt: new Date(),
+				isDeleted: subscription.isDeleted,
+			},
 		});
-		await this.collection.bulkWrite(operations);
-		return this.getContacts(); // Returning all contacts after operations
+		const updatedSubscription = await this.subscriptionsCollection.findOne({_id: new ObjectId(subscription.id)});
+		/* c8 ignore next 3 */
+		if (!updatedSubscription) {
+			throw new Error('Failed to update subscription');
+		}
+
+		return this.mapDocumentToSubscription(updatedSubscription);
 	}
 
-	async deleteContact(id: string): Promise<boolean> {
-		const objectId = new ObjectId(id);
-		const result = await this.collection.updateOne({ _id: objectId }, { $set: { isDeleted: true, modified: new Date() } });
-		return result.modifiedCount === 1;
+	async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
+		subscription.isDeleted = true;
+		await this.updateSubscription(subscription);
 	}
 
-	async deleteContacts(ids: string[]): Promise<boolean[]> {
-		const objectIds = ids.map(id => new ObjectId(id));
-		const result = await this.collection.updateMany({ _id: { $in: objectIds } }, { $set: { isDeleted: true, modified: new Date() } });
-		return ids.map(id => result.modifiedCount > 0);
+	async getSubscriptions(): Promise<AirhornSubscription[]> {
+		const documents = await this.subscriptionsCollection.find({ isDeleted: false}).toArray();
+		return this.mapDocumentsToSubscriptions(documents);
 	}
 
-	private mapDocumentToContact(document: any): AirhornContact {
-		return {
-			id: document._id.toString(),
-			firstName: document.firstName,
-			lastName: document.lastName,
-			languageCode: document.languageCode,
-			notifications: document.notifications,
-			doNotContact: document.doNotContact,
-			created: document.created,
-			modified: document.modified,
+	async getSubscriptionById(id: string): Promise<AirhornSubscription> {
+		const document = await this.subscriptionsCollection.findOne({_id: new ObjectId(id), isDeleted: false});
+		if (!document) {
+			throw new Error(`Subscription with id ${id} not found`);
+		}
+
+		return this.mapDocumentToSubscription(document);
+	}
+
+	async getSubscriptionsByTo(to: string): Promise<AirhornSubscription[]> {
+		const documents = await this.subscriptionsCollection.find({to, isDeleted: false}).toArray();
+		return this.mapDocumentsToSubscriptions(documents);
+	}
+
+	async getSubscriptionsByExternalId(externalId: string): Promise<AirhornSubscription[]> {
+		const documents = await this.subscriptionsCollection.find({externalId, isDeleted: false}).toArray();
+		return this.mapDocumentsToSubscriptions(documents);
+	}
+
+	async getSubscriptionsByTemplateName(templateName: string): Promise<AirhornSubscription[]> {
+		const documents = await this.subscriptionsCollection.find({templateName, isDeleted: false}).toArray();
+		return this.mapDocumentsToSubscriptions(documents);
+	}
+
+	async getSubscriptionsByProviderType(providerType: AirhornProviderType): Promise<AirhornSubscription[]> {
+		const documents = await this.subscriptionsCollection.find({providerType, isDeleted: false}).toArray();
+		return this.mapDocumentsToSubscriptions(documents);
+	}
+
+	async createNotification(createNotification: CreateAirhornNotification): Promise<AirhornNotification> {
+		const notificationDocument: Document = {
+			to: createNotification.to,
+			subscriptionId: createNotification.subscriptionId,
+			externalId: createNotification.externalId,
+			providerType: createNotification.providerType,
+			status: createNotification.status,
+			templateName: createNotification.templateName,
+			providerName: createNotification.providerName,
+			providerResponse: new Array<string>(),
+			createdAt: new Date(),
+			modifiedAt: new Date(),
+		};
+
+		const result = await this.notificationsCollection.insertOne(notificationDocument);
+		const document = await this.notificationsCollection.findOne({_id: result.insertedId});
+		/* c8 ignore next 3 */
+		if (!document) {
+			throw new Error('Failed to create notification');
+		}
+
+		return this.mapDocumentToNotification(document);
+	}
+
+	loadOptions(options: MongoStoreProviderOptions) {
+		if (options.uri) {
+			this.uri = options.uri;
+		}
+
+		if (options.subscriptionsCollectionName) {
+			this.subscriptionsCollectionName = options.subscriptionsCollectionName;
+		}
+
+		if (options.notificationsCollectionName) {
+			this.notificationsCollectionName = options.notificationsCollectionName;
+		}
+	}
+
+	mapDocumentToSubscription(document: Document): AirhornSubscription {
+		const notification: AirhornSubscription = {
+			id: document._id,
+			to: document.to,
+			templateName: document.templateName,
+			providerType: document.providerType as AirhornProviderType,
+			externalId: document.externalId,
+			createdAt: document.createdAt,
+			modifiedAt: document.modifiedAt,
 			isDeleted: document.isDeleted,
 		};
+
+		return notification;
+	}
+
+	mapDocumentsToSubscriptions(documents: Document[]): AirhornSubscription[] {
+		const subscriptions = new Array<AirhornSubscription>();
+		for (const document of documents) {
+			subscriptions.push(this.mapDocumentToSubscription(document));
+		}
+
+		return subscriptions;
+	}
+
+	mapDocumentToNotification(document: Document): AirhornNotification {
+		const notification: AirhornNotification = {
+			id: document._id,
+			to: document.to,
+			subscriptionId: document.subscriptionId,
+			externalId: document.externalId,
+			providerType: document.providerType as AirhornProviderType,
+			status: document.status as AirhornNotificationStatus,
+			templateName: document.templateName,
+			templateData: document.templateData,
+			providerName: document.providerName,
+			providerResponse: document.providerResponse,
+			createdAt: document.createdAt,
+			modifiedAt: document.modifiedAt,
+		};
+
+		return notification;
+	}
+
+	mapDocumentsToNotifications(documents: Document[]): AirhornNotification[] {
+		const notifications = new Array<AirhornNotification>();
+		for (const document of documents) {
+			notifications.push(this.mapDocumentToNotification(document));
+		}
+
+		return notifications;
 	}
 }
