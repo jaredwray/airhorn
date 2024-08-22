@@ -25,10 +25,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install Dependencies  
-      run: npm install
-
-    - name: Test Services    
-      run: npm run test:services:start      
+      run: npm install   
 
     - name: Build Website
       run: npm run build

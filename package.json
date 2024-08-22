@@ -13,7 +13,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "test": "xo --fix && vitest run --coverage",
+    "test": "xo --fix && WEBHOOK_MOCK_URL=http://localhost:8081/post vitest run --coverage",
     "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock ./pnpm-lock.yaml ./site/dist",
     "prepare": "npm run build",
     "build": "tsc --project tsconfig.dist.json",

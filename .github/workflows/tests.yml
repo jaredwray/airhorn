@@ -7,18 +7,10 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  WEBHOOK_MOCK_URL: http://localhost:80/post
-
 jobs:
   setup-test:
 
     runs-on: ubuntu-latest
-    services:
-      httpbin:
-        image: kennethreitz/httpbin
-        ports:
-           - 80:80
 
     strategy:
       matrix:
