@@ -8,7 +8,6 @@ export type AirhornSubscription = {
 	externalId?: string;
 	createdAt: Date;
 	modifiedAt: Date;
-	isDeleted: boolean;
 };
 
 export type CreateAirhornSubscription = {

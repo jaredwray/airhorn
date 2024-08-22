@@ -43,7 +43,6 @@ describe('MongoStoreProvider Subscriptions', () => {
 		expect(subscription.templateName).toBe('foo.template');
 		expect(subscription.providerType).toBe(AirhornProviderType.SMTP);
 		expect(subscription.externalId).toBe('externalId');
-		expect(subscription.isDeleted).toBe(false);
 		await provider.deleteSubscription(subscription);
 	});
 
@@ -366,6 +365,64 @@ describe('MongoStoreProvider Notifications', () => {
 		const result = await provider.getNotificationByProviderType(providerType);
 		expect(result.length).toBe(2);
 		expect(result[0].providerType).toBe(providerType);
+		await provider.notificationsCollection.deleteMany({});
+	});
+
+	test('getNotificationByStatus', async () => {
+		const provider = mongoStoreProvider;
+		const status = AirhornNotificationStatus.QUEUED;
+		await provider.notificationsCollection.deleteMany({});
+		const createNotificationOne = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status,
+			templateName: 'foo.template',
+			providerName: 'foo.provider',
+		};
+		const createNotificationTwo = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status,
+			templateName: 'foo.template',
+			providerName: 'foo.provider',
+		};
+		await provider.createNotification(createNotificationOne);
+		await provider.createNotification(createNotificationTwo);
+
+		const result = await provider.getNotificationByStatus(status);
+		expect(result.length).toBe(2);
+		expect(result[0].status).toBe(status);
+		await provider.notificationsCollection.deleteMany({});
+	});
+
+	test('getNotificationByProviderName', async () => {
+		const provider = mongoStoreProvider;
+		const providerName = 'foo.provider';
+		await provider.notificationsCollection.deleteMany({});
+		const createNotificationOne = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'foo.template',
+			providerName,
+		};
+		const createNotificationTwo = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'foo.template',
+			providerName,
+		};
+		await provider.createNotification(createNotificationOne);
+		await provider.createNotification(createNotificationTwo);
+
+		const result = await provider.getNotificationByProviderName(providerName);
+		expect(result.length).toBe(2);
+		expect(result[0].providerName).toBe(providerName);
 		await provider.notificationsCollection.deleteMany({});
 	});
 });

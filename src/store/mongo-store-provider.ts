@@ -2,6 +2,7 @@ import {
 	MongoClient, type Db, type Collection, ObjectId, type Document,
 } from 'mongodb';
 import { type AirhornProviderType } from '../provider-type.js';
+import { type AirhornStoreProvider } from '../airhorn.js';
 import {
 	type AirhornSubscription, type AirhornNotification, type AirhornNotificationStatus, type CreateAirhornNotification,
 	type CreateAirhornSubscription,
@@ -13,7 +14,7 @@ export type MongoStoreProviderOptions = {
 	notificationsCollectionName?: string;
 };
 
-export class MongoStoreProvider {
+export class MongoStoreProvider implements AirhornStoreProvider {
 	public subscriptionsCollectionName = 'airhornSubscriptions';
 	public notificationsCollectionName = 'airhornNotifications';
 	public uri = 'mongodb://localhost:27017';
@@ -44,7 +45,6 @@ export class MongoStoreProvider {
 			externalId: createSubcription.externalId,
 			createdAt: new Date(),
 			modifiedAt: new Date(),
-			isDeleted: false,
 		};
 		const result = await this.subscriptionsCollection.insertOne(subscription);
 		const document = await this.subscriptionsCollection.findOne({_id: result.insertedId});
@@ -64,7 +64,6 @@ export class MongoStoreProvider {
 				providerType: subscription.providerType,
 				externalId: subscription.externalId,
 				modifiedAt: new Date(),
-				isDeleted: subscription.isDeleted,
 			},
 		});
 		const updatedSubscription = await this.subscriptionsCollection.findOne({_id: new ObjectId(subscription.id)});
@@ -77,17 +76,20 @@ export class MongoStoreProvider {
 	}
 
 	async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
-		subscription.isDeleted = true;
-		await this.updateSubscription(subscription);
+		await this.deleteSubscriptionById(subscription.id);
+	}
+
+	async deleteSubscriptionById(id: string): Promise<void> {
+		await this.subscriptionsCollection.deleteOne({_id: new ObjectId(id)});
 	}
 
 	async getSubscriptions(): Promise<AirhornSubscription[]> {
-		const documents = await this.subscriptionsCollection.find({ isDeleted: false}).toArray();
+		const documents = await this.subscriptionsCollection.find({}).toArray();
 		return this.mapDocumentsToSubscriptions(documents);
 	}
 
 	async getSubscriptionById(id: string): Promise<AirhornSubscription> {
-		const document = await this.subscriptionsCollection.findOne({_id: new ObjectId(id), isDeleted: false});
+		const document = await this.subscriptionsCollection.findOne({_id: new ObjectId(id)});
 		if (!document) {
 			throw new Error(`Subscription with id ${id} not found`);
 		}
@@ -96,22 +98,22 @@ export class MongoStoreProvider {
 	}
 
 	async getSubscriptionsByTo(to: string): Promise<AirhornSubscription[]> {
-		const documents = await this.subscriptionsCollection.find({to, isDeleted: false}).toArray();
+		const documents = await this.subscriptionsCollection.find({to}).toArray();
 		return this.mapDocumentsToSubscriptions(documents);
 	}
 
 	async getSubscriptionsByExternalId(externalId: string): Promise<AirhornSubscription[]> {
-		const documents = await this.subscriptionsCollection.find({externalId, isDeleted: false}).toArray();
+		const documents = await this.subscriptionsCollection.find({externalId}).toArray();
 		return this.mapDocumentsToSubscriptions(documents);
 	}
 
 	async getSubscriptionsByTemplateName(templateName: string): Promise<AirhornSubscription[]> {
-		const documents = await this.subscriptionsCollection.find({templateName, isDeleted: false}).toArray();
+		const documents = await this.subscriptionsCollection.find({templateName}).toArray();
 		return this.mapDocumentsToSubscriptions(documents);
 	}
 
 	async getSubscriptionsByProviderType(providerType: AirhornProviderType): Promise<AirhornSubscription[]> {
-		const documents = await this.subscriptionsCollection.find({providerType, isDeleted: false}).toArray();
+		const documents = await this.subscriptionsCollection.find({providerType}).toArray();
 		return this.mapDocumentsToSubscriptions(documents);
 	}
 
@@ -204,6 +206,16 @@ export class MongoStoreProvider {
 		return this.mapDocumentsToNotifications(documents);
 	}
 
+	async getNotificationByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({status}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
+	async getNotificationByProviderName(providerName: string): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({providerName}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
 	loadOptions(options: MongoStoreProviderOptions) {
 		if (options.uri) {
 			this.uri = options.uri;
@@ -227,7 +239,6 @@ export class MongoStoreProvider {
 			externalId: document.externalId,
 			createdAt: document.createdAt,
 			modifiedAt: document.modifiedAt,
-			isDeleted: document.isDeleted,
 		};
 
 		return notification;
