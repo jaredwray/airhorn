@@ -12,4 +12,14 @@ describe('AirhornStore', async () => {
 		expect(store.provider).toBeDefined();
 		expect(store.provider?.name).toBe('MongoStoreProvider');
 	});
+
+	test('Set Provider', async () => {
+		const provider = new MongoStoreProvider({uri: mongoUri});
+		const providerNew = new MongoStoreProvider({uri: mongoUri + 'new'});
+		const store = new AirhornStore(provider);
+		expect(store.provider).toBeDefined();
+		store.provider = providerNew;
+		expect(store.provider).toBeDefined();
+		expect(store.provider?.uri).toBe('mongodb://localhost:27017/airhornnew');
+	});
 });
