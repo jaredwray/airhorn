@@ -5,18 +5,10 @@ on:
   release:
     types: [released]
 
-env:
-  WEBHOOK_MOCK_URL: http://localhost:80/post
-
 jobs:
   setup-build-release:
 
     runs-on: ubuntu-latest
-    services:
-      httpbin:
-        image: kennethreitz/httpbin
-        ports:
-           - 80:80
 
     strategy:
       matrix:
