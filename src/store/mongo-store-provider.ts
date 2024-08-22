@@ -139,6 +139,56 @@ export class MongoStoreProvider {
 		return this.mapDocumentToNotification(document);
 	}
 
+	async updateNotification(notification: AirhornNotification): Promise<AirhornNotification> {
+		const result = await this.notificationsCollection.updateOne({_id: new ObjectId(notification.id)}, {
+			$set: {
+				to: notification.to,
+				subscriptionId: notification.subscriptionId,
+				externalId: notification.externalId,
+				providerType: notification.providerType,
+				status: notification.status,
+				templateName: notification.templateName,
+				providerName: notification.providerName,
+				providerResponse: notification.providerResponse,
+				modifiedAt: new Date(),
+			},
+		});
+		const updatedNotification = await this.notificationsCollection.findOne({_id: new ObjectId(notification.id)});
+		/* c8 ignore next 3 */
+		if (!updatedNotification) {
+			throw new Error('Failed to update notification');
+		}
+
+		return this.mapDocumentToNotification(updatedNotification);
+	}
+
+	async deleteNotification(notification: AirhornNotification): Promise<void> {
+		await this.deleteNotificationById(notification.id);
+	}
+
+	async deleteNotificationById(id: string): Promise<void> {
+		await this.notificationsCollection.deleteOne({_id: new ObjectId(id)});
+	}
+
+	async getNotifications(): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
+	async getNotificationById(id: string): Promise<AirhornNotification> {
+		const document = await this.notificationsCollection.findOne({_id: new ObjectId(id)});
+		if (!document) {
+			throw new Error(`Notification with id ${id} not found`);
+		}
+
+		return this.mapDocumentToNotification(document);
+	}
+
+	async getNotificationByTo(to: string): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({to}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
 	loadOptions(options: MongoStoreProviderOptions) {
 		if (options.uri) {
 			this.uri = options.uri;

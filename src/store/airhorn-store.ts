@@ -69,7 +69,7 @@ export type AirhornStoreProvider = {
 	updateNotification(status: AirhornNotification): Promise<AirhornNotification>;
 	deleteNotification(status: AirhornNotification): Promise<void>;
 	deleteNotificationById(id: string): Promise<void>;
-	getNotification(): Promise<AirhornNotification[]>;
+	getNotifications(): Promise<AirhornNotification[]>;
 	getNotificationById(id: string): Promise<AirhornNotification>;
 	getNotificationByTo(to: string): Promise<AirhornNotification[]>;
 	getNotificationByNotificationId(notificationId: string): Promise<AirhornNotification[]>;
