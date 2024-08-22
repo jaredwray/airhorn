@@ -189,6 +189,21 @@ export class MongoStoreProvider {
 		return this.mapDocumentsToNotifications(documents);
 	}
 
+	async getNotificationByExternalId(externalId: string): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({externalId}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
+	async getNotificationByTemplateName(templateName: string): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({templateName}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
+	async getNotificationByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
+		const documents = await this.notificationsCollection.find({providerType}).toArray();
+		return this.mapDocumentsToNotifications(documents);
+	}
+
 	loadOptions(options: MongoStoreProviderOptions) {
 		if (options.uri) {
 			this.uri = options.uri;

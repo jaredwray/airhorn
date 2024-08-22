@@ -279,4 +279,93 @@ describe('MongoStoreProvider Notifications', () => {
 		expect(result.length).toBe(2);
 		await provider.notificationsCollection.deleteMany({});
 	});
+
+	test('getNotificationByExternalId', async () => {
+		const provider = mongoStoreProvider;
+		const externalId = 'externalfoo';
+		await provider.notificationsCollection.deleteMany({});
+		const createNotificationOne = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			externalId,
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'foo.template',
+			providerName: 'foo.provider',
+		};
+		const createNotificationTwo = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			externalId,
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'foo.template',
+			providerName: 'foo.provider',
+		};
+		await provider.createNotification(createNotificationOne);
+		await provider.createNotification(createNotificationTwo);
+
+		const result = await provider.getNotificationByExternalId(externalId);
+		expect(result.length).toBe(2);
+		expect(result[0].externalId).toBe(externalId);
+		await provider.notificationsCollection.deleteMany({});
+	});
+
+	test('getNotificationByTemplateName', async () => {
+		const provider = mongoStoreProvider;
+		const templateName = 'template.foo';
+		await provider.notificationsCollection.deleteMany({});
+		const createNotificationOne = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName,
+			providerName: 'foo.provider',
+		};
+		const createNotificationTwo = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName,
+			providerName: 'foo.provider',
+		};
+		await provider.createNotification(createNotificationOne);
+		await provider.createNotification(createNotificationTwo);
+
+		const result = await provider.getNotificationByTemplateName(templateName);
+		expect(result.length).toBe(2);
+		expect(result[0].templateName).toBe(templateName);
+		await provider.notificationsCollection.deleteMany({});
+	});
+
+	test('getNotificationByProviderType', async () => {
+		const provider = mongoStoreProvider;
+		const providerType = AirhornProviderType.SMTP;
+		await provider.notificationsCollection.deleteMany({});
+		const createNotificationOne = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'foo.template',
+			providerName: 'foo.provider',
+		};
+		const createNotificationTwo = {
+			to: 'joe1@bar.com',
+			subscriptionId: new ObjectId().toHexString(),
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'foo.template',
+			providerName: 'foo.provider',
+		};
+		await provider.createNotification(createNotificationOne);
+		await provider.createNotification(createNotificationTwo);
+
+		const result = await provider.getNotificationByProviderType(providerType);
+		expect(result.length).toBe(2);
+		expect(result[0].providerType).toBe(providerType);
+		await provider.notificationsCollection.deleteMany({});
+	});
 });

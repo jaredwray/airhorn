@@ -72,7 +72,6 @@ export type AirhornStoreProvider = {
 	getNotifications(): Promise<AirhornNotification[]>;
 	getNotificationById(id: string): Promise<AirhornNotification>;
 	getNotificationByTo(to: string): Promise<AirhornNotification[]>;
-	getNotificationByNotificationId(notificationId: string): Promise<AirhornNotification[]>;
 	getNotificationByExternalId(externalId: string): Promise<AirhornNotification[]>;
 	getNotificationByTemplateName(templateName: string): Promise<AirhornNotification[]>;
 	getNotificationByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]>;
