@@ -75,10 +75,6 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		return this.mapDocumentToSubscription(updatedSubscription);
 	}
 
-	async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
-		await this.deleteSubscriptionById(subscription.id);
-	}
-
 	async deleteSubscriptionById(id: string): Promise<void> {
 		await this.subscriptionsCollection.deleteOne({_id: new ObjectId(id)});
 	}
@@ -162,10 +158,6 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		}
 
 		return this.mapDocumentToNotification(updatedNotification);
-	}
-
-	async deleteNotification(notification: AirhornNotification): Promise<void> {
-		await this.deleteNotificationById(notification.id);
 	}
 
 	async deleteNotificationById(id: string): Promise<void> {

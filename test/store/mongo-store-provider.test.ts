@@ -43,7 +43,7 @@ describe('MongoStoreProvider Subscriptions', () => {
 		expect(subscription.templateName).toBe('foo.template');
 		expect(subscription.providerType).toBe(AirhornProviderType.SMTP);
 		expect(subscription.externalId).toBe('externalId');
-		await provider.deleteSubscription(subscription);
+		await provider.deleteSubscriptionById(subscription.id);
 	});
 
 	test('updateSubscription', async () => {
@@ -53,7 +53,7 @@ describe('MongoStoreProvider Subscriptions', () => {
 		subscription = await provider.updateSubscription(subscription);
 		expect(subscription.to).toBe('meow@bar.com');
 		expect(subscription.modifiedAt.getTime()).toBeGreaterThan(subscription.createdAt.getTime());
-		await provider.deleteSubscription(subscription);
+		await provider.deleteSubscriptionById(subscription.id);
 	});
 
 	test('getSubscriptions', async () => {
@@ -190,7 +190,7 @@ describe('MongoStoreProvider Notifications', () => {
 			providerName: 'foo.provider',
 		};
 		const notification = await provider.createNotification(createNotification);
-		await provider.deleteNotification(notification);
+		await provider.deleteNotificationById(notification.id);
 		const result = await provider.notificationsCollection.findOne({_id: new ObjectId(notification.id)});
 		expect(result).toBeNull();
 	});

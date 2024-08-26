@@ -56,7 +56,6 @@ export type AirhornStoreProvider = {
 	uri: string;
 	createSubscription(subscription: CreateAirhornSubscription): Promise<AirhornSubscription>;
 	updateSubscription(notification: AirhornSubscription): Promise<AirhornSubscription>;
-	deleteSubscription(notification: AirhornSubscription): Promise<void>;
 	deleteSubscriptionById(id: string): Promise<void>;
 	getSubscriptions(): Promise<AirhornSubscription[]>;
 	getSubscriptionById(id: string): Promise<AirhornSubscription>;
@@ -66,7 +65,6 @@ export type AirhornStoreProvider = {
 	getSubscriptionsByProviderType(providerType: AirhornProviderType): Promise<AirhornSubscription[]>;
 	createNotification(notification: CreateAirhornNotification): Promise<AirhornNotification>;
 	updateNotification(status: AirhornNotification): Promise<AirhornNotification>;
-	deleteNotification(status: AirhornNotification): Promise<void>;
 	deleteNotificationById(id: string): Promise<void>;
 	getNotifications(): Promise<AirhornNotification[]>;
 	getNotificationById(id: string): Promise<AirhornNotification>;
@@ -101,7 +99,7 @@ export class AirhornStore {
 	}
 
 	public async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
-		return this._provider.deleteSubscription(subscription);
+		return this.deleteSubscriptionById(subscription.id);
 	}
 
 	public async deleteSubscriptionById(id: string): Promise<void> {
@@ -121,7 +119,7 @@ export class AirhornStore {
 	}
 
 	public async deleteNotification(notification: AirhornNotification): Promise<void> {
-		return this._provider.deleteNotification(notification);
+		return this.deleteNotificationById(notification.id);
 	}
 
 	public async deleteNotificationById(id: string): Promise<void> {
