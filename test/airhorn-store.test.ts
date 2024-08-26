@@ -1,7 +1,7 @@
 import {test, describe, expect} from 'vitest';
-import {type CreateAirhornNotification, AirhornStore, AirhornNotificationStatus} from '../../src/store/airhorn-store.js';
-import { MongoStoreProvider } from '../../src/store/mongo-store-provider.js';
-import { AirhornProviderType } from '../../src/provider-type.js';
+import {type CreateAirhornNotification, AirhornStore, AirhornNotificationStatus} from '../src/airhorn-store.js';
+import { MongoStoreProvider } from '../src/store-providers/mongo.js';
+import { AirhornProviderType } from '../src/provider-type.js';
 
 const mongoUri = 'mongodb://localhost:27017/airhorn';
 

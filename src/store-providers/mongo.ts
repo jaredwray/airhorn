@@ -6,7 +6,7 @@ import { type AirhornStoreProvider } from '../airhorn.js';
 import {
 	type AirhornSubscription, type AirhornNotification, type AirhornNotificationStatus, type CreateAirhornNotification,
 	type CreateAirhornSubscription,
-} from './airhorn-store.js';
+} from '../airhorn-store.js';
 
 export type MongoStoreProviderOptions = {
 	uri?: string;

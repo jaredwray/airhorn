@@ -1,4 +1,4 @@
-import { type AirhornProviderType } from '../provider-type.js';
+import { type AirhornProviderType } from './provider-type.js';
 
 export type AirhornSubscription = {
 	id: string;
