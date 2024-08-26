@@ -1,5 +1,5 @@
 import {test, describe, expect} from 'vitest';
-import {AirhornStore} from '../../src/store/airhorn-store.js';
+import {type CreateAirhornNotification, AirhornStore, AirhornNotificationStatus} from '../../src/store/airhorn-store.js';
 import { MongoStoreProvider } from '../../src/store/mongo-store-provider.js';
 import { AirhornProviderType } from '../../src/provider-type.js';
 
@@ -75,5 +75,63 @@ describe('AirhornStore', async () => {
 		expect(subscriptionById).toBeDefined();
 		expect(subscriptionById.id).toStrictEqual(subscription.id);
 		await store.deleteSubscriptionById(subscription.id);
+	});
+
+	test('Create Notification', async () => {
+		const provider = new MongoStoreProvider({uri: mongoUri});
+		const store = new AirhornStore(provider);
+		const createNotification: CreateAirhornNotification = {
+			to: 'foo@foo.com',
+			subscriptionId: '123',
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			providerName: 'smtp-provider',
+		};
+
+		const notification = await store.createNotification(createNotification);
+		expect(notification).toBeDefined();
+		expect(notification.id).toBeDefined();
+		expect(notification.to).toBe(createNotification.to);
+		await store.deleteNotification(notification);
+	});
+
+	test('Update Notification', async () => {
+		const provider = new MongoStoreProvider({uri: mongoUri});
+		const store = new AirhornStore(provider);
+		const createNotification: CreateAirhornNotification = {
+			to: 'foo@foo.com',
+			subscriptionId: '123',
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			providerName: 'smtp-provider',
+		};
+		const notification = await store.createNotification(createNotification);
+		notification.status = AirhornNotificationStatus.SENT;
+		const updatedNotification = await store.updateNotification(notification);
+		expect(updatedNotification).toBeDefined();
+		expect(updatedNotification.id).toStrictEqual(notification.id);
+		expect(updatedNotification.status).toBe(AirhornNotificationStatus.SENT);
+		await store.deleteNotificationById(updatedNotification.id);
+	});
+
+	test('Get Notification by Id', async () => {
+		const provider = new MongoStoreProvider({uri: mongoUri});
+		const store = new AirhornStore(provider);
+		const createNotification: CreateAirhornNotification = {
+			to: 'foo@foo.com',
+			subscriptionId: '123',
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			providerName: 'smtp-provider',
+		};
+		const notification = await store.createNotification(createNotification);
+		expect(notification).toBeDefined();
+		const notificationById = await store.getNotificationById(notification.id);
+		expect(notificationById).toBeDefined();
+		expect(notificationById.id).toStrictEqual(notification.id);
+		await store.deleteNotificationById(notification.id);
 	});
 });

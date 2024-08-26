@@ -111,5 +111,25 @@ export class AirhornStore {
 	public async getSubscriptionById(id: string): Promise<AirhornSubscription> {
 		return this._provider.getSubscriptionById(id);
 	}
+
+	public async createNotification(notification: CreateAirhornNotification): Promise<AirhornNotification> {
+		return this._provider.createNotification(notification);
+	}
+
+	public async updateNotification(notification: AirhornNotification): Promise<AirhornNotification> {
+		return this._provider.updateNotification(notification);
+	}
+
+	public async deleteNotification(notification: AirhornNotification): Promise<void> {
+		return this._provider.deleteNotification(notification);
+	}
+
+	public async deleteNotificationById(id: string): Promise<void> {
+		return this._provider.deleteNotificationById(id);
+	}
+
+	public async getNotificationById(id: string): Promise<AirhornNotification> {
+		return this._provider.getNotificationById(id);
+	}
 }
 
