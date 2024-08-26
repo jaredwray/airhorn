@@ -1,5 +1,6 @@
 import {test, describe, expect} from 'vitest';
-import {type CreateAirhornNotification, AirhornStore, AirhornNotificationStatus} from '../src/airhorn-store.js';
+import {type CreateAirhornNotification, AirhornStore} from '../src/store.js';
+import {AirhornNotificationStatus} from '../src/notification.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
 import { AirhornProviderType } from '../src/provider-type.js';
 
