@@ -1,43 +1,12 @@
 import { type AirhornProviderType } from './provider-type.js';
-
-export type AirhornSubscription = {
-	id: string;
-	to: string;
-	templateName: string;
-	providerType: AirhornProviderType;
-	externalId?: string;
-	createdAt: Date;
-	modifiedAt: Date;
-};
+import { type AirhornSubscription } from './subscription.js';
+import { type AirhornNotificationStatus, type AirhornNotification } from './notification.js';
 
 export type CreateAirhornSubscription = {
 	to: string;
 	templateName: string;
 	providerType: AirhornProviderType;
 	externalId?: string;
-};
-
-export enum AirhornNotificationStatus {
-	QUEUED = 'QUEUED',
-	SENT = 'SENT',
-	DELIVERED = 'DELIVERED',
-	FAILED = 'FAILED',
-	CANCELLED = 'CANCELLED',
-}
-
-export type AirhornNotification = {
-	id: string;
-	to: string;
-	subscriptionId: string;
-	externalId?: string;
-	providerType: AirhornProviderType;
-	status: AirhornNotificationStatus;
-	templateName: string;
-	templateData?: any;
-	providerName: string;
-	providerResponse: string[];
-	createdAt: Date;
-	modifiedAt: Date;
 };
 
 export type CreateAirhornNotification = {
