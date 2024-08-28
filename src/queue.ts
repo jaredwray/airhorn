@@ -1,25 +1,24 @@
-
-export enum AirhornQueueType {
-	DELIVER = 'DELIVER',
-	PUBLISH = 'PUBLISH',
-}
+import { type AirhornNotification } from './notification.js';
 
 export type AirhornQueueProvider = {
 	name: string;
 	uri: string;
+	createQueue(queueName: string): Promise<void>;
+	queueExists(queueName: string): Promise<boolean>;
+	deleteQueue(queueName: string): Promise<void>;
+	publishNotification(notification: AirhornNotification): Promise<void>;
+	acknowledgeNotification(notification: AirhornNotification): Promise<void>;
+	listenForNotifications(queueName: string, callback: (notification: AirhornNotification) => void): Promise<void>;
 };
 
 export type AirhornQueueOptions = {
 	provider: AirhornQueueProvider;
-	type: AirhornQueueType;
 };
 
 export class AirhornQueue {
 	public provider: AirhornQueueProvider;
-	public type: AirhornQueueType;
 
 	constructor(options: AirhornQueueOptions) {
 		this.provider = options.provider;
-		this.type = options.type;
 	}
 }
