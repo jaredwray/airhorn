@@ -20,3 +20,12 @@ services:
     ports:
       - "8081:80" # Maps port 8080 on your machine to port 80 in the container
     restart: always
+
+  pubsub-emulator:
+    image: gcr.io/google.com/cloudsdktool/cloud-sdk:emulators
+    command: gcloud beta emulators pubsub start --project=airhorn-project --host-port=0.0.0.0:8085
+    ports:
+      - "8085:8085"
+    environment:
+      - PUBSUB_PROJECT_ID=airhorn-project
+      - PUBSUB_EMULATOR_HOST=0.0.0.0:8085
