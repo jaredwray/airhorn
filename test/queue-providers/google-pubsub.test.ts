@@ -30,4 +30,10 @@ describe('GooglePubSubQueue', async () => {
 		expect(queue.topicCreated).toEqual(true);
 		await queue.createTopic();
 	});
+
+	test('ability to get the queue topic', async () => {
+		const queue = new GooglePubSubQueue();
+		const topic = await queue.getTopic();
+		expect(topic.name).toEqual('projects/airhorn-project/topics/airhorn-delivery-queue');
+	});
 });
