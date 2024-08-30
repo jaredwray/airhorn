@@ -22,6 +22,7 @@ describe('GooglePubSubQueue', async () => {
 		await queue.createTopic();
 		expect(queue.topicCreated).toEqual(true);
 	});
+
 	test('should handle the topic if it already exists', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.topicCreated).toEqual(false);

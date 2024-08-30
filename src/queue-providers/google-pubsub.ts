@@ -70,8 +70,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		if (topicExists) {
 			this._topicCreated = true;
 		} else {
-			const topic = this._pubsub.topic(this.topicName);
-			await topic.create();
+			await this._pubsub.createTopic(this._topicName);
 			this._topicCreated = true;
 		}
 	}
