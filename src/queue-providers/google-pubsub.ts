@@ -40,7 +40,9 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		try {
 			const topic = this._pubsub.topic(this.topicName);
 			const exists = await topic.exists();
-			result = exists[0];
+			if (exists.length > 0) {
+				result = exists[0];
+			}
 		} catch {
 			/* c8 ignore next 2 */
 			result = false;
