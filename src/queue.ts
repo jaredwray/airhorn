@@ -18,4 +18,16 @@ export class AirhornQueue {
 	constructor(options: AirhornQueueOptions) {
 		this.provider = options.provider;
 	}
+
+	public async publishNotification(notification: AirhornNotification) {
+		await this.provider.publishNotification(notification);
+	}
+
+	public async acknowledgeNotification(notification: AirhornNotification) {
+		await this.provider.acknowledgeNotification(notification);
+	}
+
+	public async listenForNotifications(queueName: string, callback: (notification: AirhornNotification) => void) {
+		await this.provider.listenForNotifications(queueName, callback);
+	}
 }
