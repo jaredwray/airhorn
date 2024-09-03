@@ -23,7 +23,7 @@
     "test:services:stop": "docker compose -f docker-compose.yml down"
   },
   "devDependencies": {
-    "@types/node": "^22.5.0",
+    "@types/node": "^22.5.2",
     "@vitest/coverage-v8": "^2.0.5",
     "docula": "^0.9.0",
     "dotenv": "^16.4.5",
@@ -44,7 +44,7 @@
     "firebase-admin": "^12.4.0",
     "gray-matter": "^4.0.3",
     "mongodb": "^6.8.0",
-    "twilio": "^5.2.2"
+    "twilio": "^5.2.3"
   },
   "files": [
     "dist"
