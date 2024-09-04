@@ -154,3 +154,11 @@ test('Template - Set/Get Text with Matter Subject Undefined', () => {
 
 	expect(template.getProperty('smtp', 'foo', 'es')).toEqual('');
 });
+
+test('Template - get/set defaultLanguageCode', () => {
+	const template = new Template();
+
+	template.defaultLanguageCode = 'es';
+
+	expect(template.defaultLanguageCode).toEqual('es');
+});

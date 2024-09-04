@@ -2,11 +2,12 @@
 import fs from 'node:fs';
 import { Ecto } from 'ecto';
 import matter from 'gray-matter';
-import { Options } from './options.js';
 import { TemplateText } from './template-text.js';
+import { AirhornOptions } from './airhorn.js';
 
 export class Template {
-	options = new Options();
+	_defaultLanguageCode = 'en';
+
 	filePath?: string;
 	private readonly text = new Map<string, TemplateText>();
 
@@ -18,9 +19,17 @@ export class Template {
 		return this.getFileName(this.filePath);
 	}
 
+	public get defaultLanguageCode(): string {
+		return this._defaultLanguageCode;
+	}
+
+	public set defaultLanguageCode(value: string) {
+		this._defaultLanguageCode = value;
+	}
+
 	public getText(serviceType: string, languageCode?: string): TemplateText {
 		if (languageCode === undefined) {
-			languageCode = this.options.DEFAULT_TEMPLATE_LANGUAGE;
+			languageCode = this._defaultLanguageCode;
 		}
 
 		let result = this.text.get(this.generateKey(languageCode, serviceType));
@@ -108,7 +117,7 @@ export class Template {
 
 	public loadTemplateFile(filePath: string, languageCode?: string) {
 		if (languageCode === undefined) {
-			languageCode = this.options.DEFAULT_TEMPLATE_LANGUAGE;
+			languageCode = this._defaultLanguageCode;
 		}
 
 		const fileText = fs.readFileSync(filePath).toString();
