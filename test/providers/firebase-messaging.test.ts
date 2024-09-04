@@ -1,7 +1,8 @@
 import { test, expect, vi } from 'vitest';
 import type * as admin from 'firebase-admin';
-// eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
+
+// eslint-disable-next-line n/prefer-global/process
+process.env.FIREBASE_CERT = './firebase-cert.json';
 
 vi.mock('firebase-admin', async () => {
 	const actual: typeof admin = await vi.importActual('firebase-admin'); // Import the actual module

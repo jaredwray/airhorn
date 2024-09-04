@@ -1,13 +1,14 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {test, expect, vi} from 'vitest';
 import type * as admin from 'firebase-admin';
-// eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
 import {Options} from '../src/options.js';
 import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
+
+// eslint-disable-next-line n/prefer-global/process
+process.env.FIREBASE_CERT = './firebase-cert.json';
 
 vi.mock('firebase-admin', async () => {
 	const actual: typeof admin = await vi.importActual('firebase-admin'); // Import the actual module
