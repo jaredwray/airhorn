@@ -10,7 +10,7 @@ You can contribute changes to this repo by opening a pull request:
 
 1) After forking this repository to your Git account, make the proposed changes on your forked branch.
 2) Run tests and linting locally.
-	- Make sure to have an `.env` file with `FIREBASE_CERT` and `SENDGRID_API_KEY` values plus the `firebase-cert.json` file and valid cert. 
+	- You need to have the firebase cert at `./firebase-cert.json`. You can get this from the Firebase console.
 	- Run `npm install`.
 	- Run `npm test`.
 3) Commit your changes and push them to your forked repository.
