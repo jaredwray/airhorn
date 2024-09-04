@@ -1,8 +1,6 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {test, expect, vi} from 'vitest';
 import type * as admin from 'firebase-admin';
-// eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
 import {Options} from '../src/options.js';
 import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
@@ -25,7 +23,7 @@ vi.mock('firebase-admin', async () => {
 });
 
 // eslint-disable-next-line n/prefer-global/process
-const FIREBASE_CERT = process.env.FIREBASE_CERT ?? '{}';
+const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
 // eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'http://localhost:8081/post';

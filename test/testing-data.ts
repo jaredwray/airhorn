@@ -1,8 +1,4 @@
 
-import dotenv from 'dotenv';
-
-dotenv.config();
-
 export class TestingData {
 	public users = new Array<TestingUser>();
 

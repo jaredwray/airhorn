@@ -1,7 +1,5 @@
 import { test, expect, vi } from 'vitest';
 import type * as admin from 'firebase-admin';
-// eslint-disable-next-line import/no-unassigned-import
-import 'dotenv/config';
 
 vi.mock('firebase-admin', async () => {
 	const actual: typeof admin = await vi.importActual('firebase-admin'); // Import the actual module
@@ -19,7 +17,7 @@ vi.mock('firebase-admin', async () => {
 });
 
 // eslint-disable-next-line n/prefer-global/process
-const FIREBASE_CERT = process.env.FIREBASE_CERT ?? '{}';
+const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
 const { FirebaseMessaging } = await import('../../src/providers/firebase-messaging.js');
 
