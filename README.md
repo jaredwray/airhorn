@@ -87,38 +87,33 @@ The `sendMobilePush()` function, located in `airhorn.ts`, is used to send `Mobil
 
 ### `options`
 
-The `Options` class, enables you to configure the settings of Airhorn. It accepts the following parameters:
+The `AirhornOptions` enables you to configure the settings of Airhorn. It accepts the following parameters:
 
 * `TEMPLATE_PATH` (string): The path where the notification system checks for templates. By default, this is set to './templates'
-* `DEFAULT_TEMPLATE_LANGUAGE` (string): The default language code the notification system uses for localization, if a language code is not provided. By default, this is set to 'en' for English localization.
-* `ENVIRONMENT` (string): The environment that the notification system uses to deploy messages. By default, this is set to 'development'
-* `TWILIO_SMS_ACCOUNT_SID` (string): The ID of your Twilio SMS account. By default, this value is a null string.
-* `TWILIO_SMS_AUTH_TOKEN` (string): The authentication token for your Twilio SMS account. By default, this value is a null string.
-* `TWILIO_SENDGRID_API_KEY` (string): The API key for your Twilio SendGrid account. By default, this value is a null string.
-* `AWS_SES_REGION` (string): For AWS, the endpoint region where an email is sent. By default, this value is a null string.
-* `AWS_SMS_REGION` (string): For AWS, The endpoint region where an SMS is sent. By default, this value is a null string.
-* `AWS_SNS_REGION` (string): For AWS, the endpoint region where a push notification is sent. By default, this value is a null string.
-* `FIREBASE_CERT` (string): The certificate for sending push notifications through Google Firebase. By default, this value is a null string.
+* `DEFAULT_TEMPLATE_LANGUAGE` (string): The default language code the notification system uses for localization, if a language code is not provided. By default, this is set to `en` for English localization.
+* `TWILIO_SMS_ACCOUNT_SID` (string): The ID of your Twilio SMS account. By default, this value is undefined.
+* `TWILIO_SMS_AUTH_TOKEN` (string): The authentication token for your Twilio SMS account. By default, this value is undefined.
+* `TWILIO_SENDGRID_API_KEY` (string): The API key for your Twilio SendGrid account. By default, this value is undefined.
+* `AWS_SES_REGION` (string): For AWS, the endpoint region where an email is sent. By default, this value is undefined.
+* `AWS_SMS_REGION` (string): For AWS, The endpoint region where an SMS is sent. By default, this value is undefined.
+* `AWS_SNS_REGION` (string): For AWS, the endpoint region where a push notification is sent. By default, this value is undefined.
+* `FIREBASE_CERT` (string): The certificate for sending push notifications through Google Firebase. By default, this value is undefined.
 
-These settings can be overridden by passing them in when you create a new instance of `Airnorn`:
+These settings can be overridden by passing them in when you create a new instance of `Airhorn`:
 
 ```javascript
 const airhorn = new Airhorn({
     TEMPLATE_PATH: './templates',
     DEFAULT_TEMPLATE_LANGUAGE: 'en',
-    ENVIRONMENT: 'development',
-    TWILIO_SMS_ACCOUNT_SID: '',
-    TWILIO_SMS_AUTH_TOKEN: '',
-    TWILIO_SENDGRID_API_KEY: '',
-    AWS_SES_REGION: '',
-    AWS_SMS_REGION: '',
-    AWS_SNS_REGION: '',
-    FIREBASE_CERT: ''
-    });
+    TWILIO_SMS_ACCOUNT_SID: 'YOUR TWILIO ACCOUNT SID',
+    TWILIO_SMS_AUTH_TOKEN: 'YOUR TWILIO AUTH TOKEN',
+    TWILIO_SENDGRID_API_KEY: 'YOUR SENDGRID API KEY',
+    AWS_SES_REGION: 'YOUR AWS SES REGION',
+    AWS_SMS_REGION: 'YOUR AWS SMS REGION',
+    AWS_SNS_REGION: 'YOUR AWS SNS REGION',
+    FIREBASE_CERT: 'YOUR FIREBASE CERTIFICATE'
 });
 ```
-
-You can also pass these settings via your `process.env` at the start of your application.
 
 ### Templates
 
@@ -213,7 +208,7 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 
 #### Twilio Sendgrid
 
-To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value in `options.ts`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
+To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value via `AirhornOptions`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
 
 ```javascript
 const airhorn = new Airhorn({
@@ -239,7 +234,7 @@ await airhorn.send('5555555555', '5552223333', 'Test message text', AirhornProvi
 
 ### Twilio SMS
 
-To send SMS notifications via Twilio SMS, first update the `TWILIO_SMS_ACCOUNT_SID` and the `TWILIO_SMS_AUTH_TOKEN` values via the `options` as shown below. Then, we can send an SMS notification using the same syntax as above:
+To send SMS notifications via Twilio SMS, first update the `TWILIO_SMS_ACCOUNT_SID` and the `TWILIO_SMS_AUTH_TOKEN` values via the `AirhornOptions` as shown below. Then, we can send an SMS notification using the same syntax as above:
 
 ```javascript
 const airhorn = new Airhorn({
