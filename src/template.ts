@@ -3,7 +3,6 @@ import fs from 'node:fs';
 import { Ecto } from 'ecto';
 import matter from 'gray-matter';
 import { TemplateText } from './template-text.js';
-import { AirhornOptions } from './airhorn.js';
 
 export class Template {
 	_defaultLanguageCode = 'en';
