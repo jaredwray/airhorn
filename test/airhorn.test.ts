@@ -7,9 +7,6 @@ import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {TestingData} from './testing-data.js';
 
-// eslint-disable-next-line n/prefer-global/process
-process.env.FIREBASE_CERT = './firebase-cert.json';
-
 vi.mock('firebase-admin', async () => {
 	const actual: typeof admin = await vi.importActual('firebase-admin'); // Import the actual module
 
@@ -26,7 +23,7 @@ vi.mock('firebase-admin', async () => {
 });
 
 // eslint-disable-next-line n/prefer-global/process
-const FIREBASE_CERT = process.env.FIREBASE_CERT ?? '{}';
+const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
 // eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'http://localhost:8081/post';
