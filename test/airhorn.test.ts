@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {test, expect, vi} from 'vitest';
 import type * as admin from 'firebase-admin';
-import {Options} from '../src/options.js';
 import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
@@ -35,13 +34,14 @@ test('Airhorn - Init', () => {
 test('Airhorn - Get Templates', () => {
 	const airhorn = new Airhorn();
 
-	expect(airhorn.templates.options).toEqual(new Options());
+	expect(airhorn.templates.options).toEqual({ TEMPLATE_PATH: './templates' });
 });
 
 test('Airhorn - Get Providers', () => {
-	const airhorn = new Airhorn();
+	const options = { TEMPLATE_PATH: './foo/templates' };
+	const airhorn = new Airhorn(options);
 
-	expect(airhorn.providers.options).toEqual(new Options());
+	expect(airhorn.providers.options.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
 });
 
 test('Airhorn - Options Validated in Config', () => {

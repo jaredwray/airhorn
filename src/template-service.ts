@@ -1,14 +1,16 @@
 import fs from 'node:fs';
-import {Options} from './options.js';
 import {Template} from './template.js';
 import {log} from './logger.js';
 
 export class TemplateService {
-	options = new Options();
+	options = {
+		TEMPLATE_PATH: './templates',
+	};
+
 	templates = new Array<Template>();
 
 	constructor(options?: any) {
-		this.options = new Options(options);
+		this.options = { ...this.options, ...options };
 		this.loadTemplates();
 	}
 

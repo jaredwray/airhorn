@@ -1,4 +1,3 @@
-import { Options } from './options.js';
 import type { ProviderInterface } from './provider-interface.js';
 import { AirhornProviderType } from './provider-type.js';
 import { WebHook } from './providers/webhook.js';
@@ -8,14 +7,15 @@ import { AWSSES } from './providers/aws-ses.js';
 import { AWSSMS } from './providers/aws-sms.js';
 import { FirebaseMessaging } from './providers/firebase-messaging.js';
 import { AWSSNS } from './providers/aws-sns.js';
+import { type AirhornOptions } from './airhorn.js';
 
 export class ProviderService {
-	options = new Options();
+	options: AirhornOptions = {};
 	private readonly _providers = new Array<ProviderInterface>();
 
 	constructor(options?: any) {
 		if (options) {
-			this.options = new Options(options);
+			this.options = { ...this.options, ...options };
 		}
 
 		this.loadProviders();
@@ -96,27 +96,27 @@ export class ProviderService {
 	public loadProviders() {
 		this._providers.push(new WebHook());
 
-		if (this.options.TWILIO_SMS_ACCOUNT_SID.length > 0 && this.options.TWILIO_SMS_AUTH_TOKEN.length > 0) {
+		if (this.options.TWILIO_SMS_ACCOUNT_SID !== undefined && this.options.TWILIO_SMS_AUTH_TOKEN !== undefined) {
 			this._providers.push(new TwilioSMS(this.options.TWILIO_SMS_ACCOUNT_SID, this.options.TWILIO_SMS_AUTH_TOKEN));
 		}
 
-		if (this.options.TWILIO_SENDGRID_API_KEY.length > 0) {
+		if (this.options.TWILIO_SENDGRID_API_KEY) {
 			this._providers.push(new TwilioSendgrid(this.options.TWILIO_SENDGRID_API_KEY));
 		}
 
-		if (this.options.AWS_SES_REGION.length > 0) {
+		if (this.options.AWS_SES_REGION) {
 			this._providers.push(new AWSSES(this.options.AWS_SES_REGION));
 		}
 
-		if (this.options.AWS_SMS_REGION.length > 0) {
+		if (this.options.AWS_SMS_REGION) {
 			this._providers.push(new AWSSMS(this.options.AWS_SMS_REGION));
 		}
 
-		if (this.options.AWS_SNS_REGION.length > 0) {
+		if (this.options.AWS_SNS_REGION) {
 			this._providers.push(new AWSSNS(this.options.AWS_SNS_REGION));
 		}
 
-		if (this.options.FIREBASE_CERT.length > 0) {
+		if (this.options.FIREBASE_CERT) {
 			this._providers.push(new FirebaseMessaging(this.options.FIREBASE_CERT));
 		}
 	}
