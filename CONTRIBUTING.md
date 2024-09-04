@@ -9,10 +9,7 @@ We release new versions of this project (maintenance/features) on a monthly cade
 You can contribute changes to this repo by opening a pull request:
 
 1) After forking this repository to your Git account, make the proposed changes on your forked branch.
-2) Run tests and linting locally.
-	- You need to have the firebase cert at `./firebase-cert.json`. You can get this from the Firebase console.
-	- Run `npm install`.
-	- Run `npm test`.
+2) Go to the README.md file as it has detailed instructions on how to run the project locally and how to test the integrations.
 3) Commit your changes and push them to your forked repository.
 4) Navigate to the main `Airhorn` repository and select the *Pull Requests* tab.
 5) Click the *New pull request* button, then select the option "Compare across forks"
@@ -22,17 +19,6 @@ You can contribute changes to this repo by opening a pull request:
 9) Once the pull request has been reviewed, those with write access to the branch will be able to merge your changes into the `Airhorn` repository.
 
 If you need more information on the steps to create a pull request, you can find a detailed walkthrough in the [Github documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)
-
-# Testing Integrations
-
-Do to some of the complexities of testing certain integrations and making sure they are valid we require that you provide a valid `FIREBASE_CERT` and `SENDGRID_API_KEY` environment variables to run the tests.
-
-These are only used for validation of auth and using the sandbox environment on Sendgrid. You can do this by providing an `.env` file in the root of the project with the following contents:
-
-```
-FIREBASE_CERT="YOUR_FIREBASE_CERT_AS_JSON_STRING"
-TWILIO_SENDGRID_API_KEY="YOUR_SENDGRID_API_KEY"
-```
 
 # Code of Conduct
 Please refer to our [Code of Conduct](https://github.com/jaredwray/airhorn/blob/main/CODE_OF_CONDUCT.md) readme for how to contribute to this open source project and work within the community. 
