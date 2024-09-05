@@ -1,6 +1,8 @@
 import { TemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
+import { type AirhornSubscription } from './subscription.js';
+import { AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription } from './store.js';
 
 export type AirhornOptions = {
 	TEMPLATE_PATH?: string;
@@ -12,6 +14,7 @@ export type AirhornOptions = {
 	AWS_SMS_REGION?: string;
 	AWS_SNS_REGION?: string;
 	FIREBASE_CERT?: string;
+	STORE_PROVIDER?: AirhornStoreProvider;
 };
 
 export class Airhorn {
@@ -22,12 +25,17 @@ export class Airhorn {
 
 	private readonly _templateService = new TemplateService();
 	private readonly _providerService = new ProviderService();
+	private readonly _store?: AirhornStore;
 
 	constructor(options?: AirhornOptions) {
 		if (options) {
 			this.options = { ...this.options, ...options };
 			this._templateService = new TemplateService(options);
 			this._providerService = new ProviderService(options);
+		}
+
+		if (this.options.STORE_PROVIDER) {
+			this._store = new AirhornStore(this.options.STORE_PROVIDER);
 		}
 	}
 
@@ -37,6 +45,10 @@ export class Airhorn {
 
 	public get providers(): ProviderService {
 		return this._providerService;
+	}
+
+	public get store(): AirhornStore | undefined {
+		return this._store;
 	}
 
 	/* eslint max-params: [2, 6] */
@@ -82,6 +94,46 @@ export class Airhorn {
 
 	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
+	}
+
+	public async createSubscription(subscription: CreateAirhornSubscription): Promise<AirhornSubscription> {
+		if (this._store) {
+			return this._store.createSubscription(subscription);
+		}
+
+		throw new Error('Airhorn store not available');
+	}
+
+	public async updateSubscription(subscription: AirhornSubscription): Promise<AirhornSubscription> {
+		if (this._store) {
+			return this._store.updateSubscription(subscription);
+		}
+
+		throw new Error('Airhorn store not available');
+	}
+
+	public async getSubscriptionById(id: string): Promise<AirhornSubscription> {
+		if (this._store) {
+			return this._store.getSubscriptionById(id);
+		}
+
+		throw new Error('Airhorn store not available');
+	}
+
+	public async getSubscriptionByExternalId(externalId: string): Promise<AirhornSubscription[]> {
+		if (this._store) {
+			return this._store.getSubscriptionsByExternalId(externalId);
+		}
+
+		throw new Error('Airhorn store not available');
+	}
+
+	public async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
+		if (this._store) {
+			return this._store.deleteSubscription(subscription);
+		}
+
+		throw new Error('Airhorn store not available');
 	}
 }
 

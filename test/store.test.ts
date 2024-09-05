@@ -1,5 +1,5 @@
 import {test, describe, expect} from 'vitest';
-import {type CreateAirhornNotification, AirhornStore} from '../src/store.js';
+import {type CreateAirhornNotification, AirhornStore, type CreateAirhornSubscription} from '../src/store.js';
 import {AirhornNotificationStatus} from '../src/notification.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
 import { AirhornProviderType } from '../src/provider-type.js';
@@ -134,5 +134,25 @@ describe('AirhornStore', async () => {
 		expect(notificationById).toBeDefined();
 		expect(notificationById.id).toStrictEqual(notification.id);
 		await store.deleteNotificationById(notification.id);
+	});
+
+	test('Get Subscription By External Id', async () => {
+		const provider = new MongoStoreProvider({uri: mongoUri});
+		const store = new AirhornStore(provider);
+		const externalId = '123';
+		const createSubscription: CreateAirhornSubscription = {
+			to: 'john@doe.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId,
+		};
+
+		const subscription = await store.createSubscription(createSubscription);
+		expect(subscription).toBeDefined();
+		const subscriptions = await store.getSubscriptionsByExternalId(externalId);
+		expect(subscriptions).toBeDefined();
+		expect(subscriptions.length).toBe(1);
+		expect(subscriptions[0].id).toStrictEqual(subscription.id);
+		await store.deleteSubscriptionById(subscription.id);
 	});
 });
