@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
+import { mock } from 'node:test';
 import {
 	describe, test, expect, vi,
 } from 'vitest';
@@ -268,9 +269,8 @@ describe('Airhorn Store and Subscription', async () => {
 		subscription.templateName = 'updated-template';
 		const updatedSubscription = await airhorn.updateSubscription(subscription);
 		expect(updatedSubscription).toBeDefined();
-		const updatedSubscriptions = await airhorn.getSubscriptionByExternalId('1234');
-		expect(updatedSubscriptions.length).toBe(1);
-		expect(updatedSubscriptions[0].templateName).toBe('updated-template');
+		const updatedSubscription2 = await airhorn.getSubscriptionById(updatedSubscription.id);
+		expect(updatedSubscription2.templateName).toBe('updated-template');
 		await airhorn.deleteSubscription(updatedSubscription);
 	});
 
@@ -286,5 +286,29 @@ describe('Airhorn Store and Subscription', async () => {
 			modifiedAt: new Date(),
 		};
 		await expect(airhorn.updateSubscription(mockSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Get Subscription by Id with no Store', async () => {
+		const airhorn = new Airhorn();
+		await expect(airhorn.getSubscriptionById('1234')).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Get Subscription by External Id with no Store', async () => {
+		const airhorn = new Airhorn();
+		await expect(airhorn.getSubscriptionByExternalId('1234')).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Delete Subscription with No Store', async () => {
+		const airhorn = new Airhorn();
+		const mockSubscription = {
+			id: '1234',
+			to: 'john@doe.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId: '1234',
+			createdAt: new Date(),
+			modifiedAt: new Date(),
+		};
+		await expect(airhorn.deleteSubscription(mockSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
 	});
 });
