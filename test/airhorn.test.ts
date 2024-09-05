@@ -1,9 +1,13 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
-import {test, expect, vi} from 'vitest';
+import { mock } from 'node:test';
+import {
+	describe, test, expect, vi,
+} from 'vitest';
 import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
+import { MongoStoreProvider } from '../src/store-providers/mongo.js';
 import {TestingData} from './testing-data.js';
 
 vi.mock('firebase-admin', async () => {
@@ -216,4 +220,95 @@ test('Airhorn - Send Friendly Mobile Push', async () => {
 	});
 
 	expect(await airhorn.sendMobilePush('topicArnFromSns', '', 'generic-template-foo')).toEqual(true);
+});
+
+describe('Airhorn Store and Subscription', async () => {
+	test('Airhorn Store Initialization', async () => {
+		const provider = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
+		const airhorn = new Airhorn({STORE_PROVIDER: provider});
+		expect(airhorn.store).toBeDefined();
+		expect(airhorn?.store?.provider?.name).toBe('MongoStoreProvider');
+	});
+
+	test('Create Subscription', async () => {
+		const provider = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
+		const airhorn = new Airhorn({STORE_PROVIDER: provider});
+		const createSubscription = {
+			to: 'john@doe.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId: '1234',
+		};
+		await airhorn.createSubscription(createSubscription);
+		const subscriptions = await airhorn.getSubscriptionByExternalId('1234');
+		expect(subscriptions.length).toBe(1);
+		await airhorn.deleteSubscription(subscriptions[0]);
+	});
+
+	test('Create Subscription with no Store', async () => {
+		const airhorn = new Airhorn();
+		const createSubscription = {
+			to: 'john@doe.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId: '1234',
+		};
+		await expect(airhorn.createSubscription(createSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Update Subscription', async () => {
+		const airhorn = new Airhorn({STORE_PROVIDER: new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'})});
+		const createSubscription = {
+			to: 'joe@mo.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId: '1234',
+		};
+		const subscription = await airhorn.createSubscription(createSubscription);
+		expect(subscription).toBeDefined();
+		subscription.templateName = 'updated-template';
+		const updatedSubscription = await airhorn.updateSubscription(subscription);
+		expect(updatedSubscription).toBeDefined();
+		const updatedSubscription2 = await airhorn.getSubscriptionById(updatedSubscription.id);
+		expect(updatedSubscription2.templateName).toBe('updated-template');
+		await airhorn.deleteSubscription(updatedSubscription);
+	});
+
+	test('Update Subscription with no Store', async () => {
+		const airhorn = new Airhorn();
+		const mockSubscription = {
+			id: '1234',
+			to: 'joe@mo.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId: '1234',
+			createdAt: new Date(),
+			modifiedAt: new Date(),
+		};
+		await expect(airhorn.updateSubscription(mockSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Get Subscription by Id with no Store', async () => {
+		const airhorn = new Airhorn();
+		await expect(airhorn.getSubscriptionById('1234')).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Get Subscription by External Id with no Store', async () => {
+		const airhorn = new Airhorn();
+		await expect(airhorn.getSubscriptionByExternalId('1234')).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+
+	test('Delete Subscription with No Store', async () => {
+		const airhorn = new Airhorn();
+		const mockSubscription = {
+			id: '1234',
+			to: 'john@doe.org',
+			templateName: 'test-template',
+			providerType: AirhornProviderType.SMTP,
+			externalId: '1234',
+			createdAt: new Date(),
+			modifiedAt: new Date(),
+		};
+		await expect(airhorn.deleteSubscription(mockSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
 });

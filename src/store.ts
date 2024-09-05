@@ -79,6 +79,10 @@ export class AirhornStore {
 		return this._provider.getSubscriptionById(id);
 	}
 
+	public async getSubscriptionsByExternalId(externalId: string): Promise<AirhornSubscription[]> {
+		return this._provider.getSubscriptionsByExternalId(externalId);
+	}
+
 	public async createNotification(notification: CreateAirhornNotification): Promise<AirhornNotification> {
 		return this._provider.createNotification(notification);
 	}
