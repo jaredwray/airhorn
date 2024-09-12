@@ -251,6 +251,7 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		const notification: AirhornNotification = {
 			id: document._id,
 			to: document.to,
+			from: document.from,
 			subscriptionId: document.subscriptionId,
 			externalId: document.externalId,
 			providerType: document.providerType as AirhornProviderType,

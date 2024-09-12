@@ -3,31 +3,22 @@ import { type AirhornNotification } from './notification.js';
 export type AirhornQueueProvider = {
 	name: string;
 	uri: string;
-	publishNotification(notification: AirhornNotification): Promise<void>;
-	acknowledgeNotification(notification: AirhornNotification): Promise<void>;
-	listenForNotifications(queueName: string, callback: (notification: AirhornNotification) => void): Promise<void>;
-};
-
-export type AirhornQueueOptions = {
-	provider: AirhornQueueProvider;
+	publish(notification: AirhornNotification): Promise<void>;
+	subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void>;
 };
 
 export class AirhornQueue {
 	public provider: AirhornQueueProvider;
 
-	constructor(options: AirhornQueueOptions) {
-		this.provider = options.provider;
+	constructor(provider: AirhornQueueProvider) {
+		this.provider = provider;
 	}
 
 	public async publishNotification(notification: AirhornNotification) {
-		await this.provider.publishNotification(notification);
+		await this.provider.publish(notification);
 	}
 
-	public async acknowledgeNotification(notification: AirhornNotification) {
-		await this.provider.acknowledgeNotification(notification);
-	}
-
-	public async listenForNotifications(queueName: string, callback: (notification: AirhornNotification) => void) {
-		await this.provider.listenForNotifications(queueName, callback);
+	public async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void) {
+		await this.provider.subscribe(callback);
 	}
 }

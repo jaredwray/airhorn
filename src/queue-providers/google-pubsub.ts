@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function,@typescript-eslint/class-literal-property-style  */
+/* eslint-disable @typescript-eslint/class-literal-property-style  */
 import { PubSub } from '@google-cloud/pubsub';
 import { type AirhornNotification } from '../notification.js';
 import { type AirhornQueueProvider } from '../queue.js';
@@ -55,11 +55,44 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		return this._pubsub.topic(this.topicName);
 	}
 
-	async publishNotification(notification: AirhornNotification): Promise<void> {}
+	async publish(notification: AirhornNotification): Promise<void> {
+		await this.createTopic();
+		const topic = await this.getTopic();
+		const data = JSON.stringify(notification);
+		await topic.publishMessage({ data });
+	}
 
-	async acknowledgeNotification(notification: AirhornNotification): Promise<void> {}
+	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
+		await this.createTopic();
+		const topic = await this.getTopic();
+		const subscriptionName = this._topicName + '-subscription';
+		const subscription = topic.subscription(subscriptionName);
 
-	async listenForNotifications(queueName: string, callback: (notification: AirhornNotification) => void): Promise<void> {}
+		const [exists] = await subscription.exists();
+		if (!exists) {
+			await topic.createSubscription(subscriptionName);
+		}
+
+		subscription.on('message', message => {
+			const notification = JSON.parse(message.data.toString());
+			const acknowledge = () => {
+				message.ack();
+			};
+
+			callback(notification as AirhornNotification, acknowledge);
+		});
+	}
+
+	async clearSubscription(): Promise<void> {
+		const topic = await this.getTopic();
+		const subscriptionName = this._topicName + '-subscription';
+		const subscription = topic.subscription(subscriptionName);
+
+		const [exists] = await subscription.exists();
+		if (exists) {
+			await subscription.delete();
+		}
+	}
 
 	async createTopic(): Promise<void> {
 		if (this._topicCreated) {

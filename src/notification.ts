@@ -11,6 +11,7 @@ export enum AirhornNotificationStatus {
 export type AirhornNotification = {
 	id: string;
 	to: string;
+	from: string;
 	subscriptionId: string;
 	externalId?: string;
 	providerType: AirhornProviderType;
