@@ -5,6 +5,7 @@ export type AirhornQueueProvider = {
 	uri: string;
 	publish(notification: AirhornNotification): Promise<void>;
 	subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void>;
+	clearSubscription(): Promise<void>;
 };
 
 export class AirhornQueue {
@@ -20,5 +21,9 @@ export class AirhornQueue {
 
 	public async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void) {
 		await this.provider.subscribe(callback);
+	}
+
+	public async clearSubscription() {
+		await this.provider.clearSubscription();
 	}
 }

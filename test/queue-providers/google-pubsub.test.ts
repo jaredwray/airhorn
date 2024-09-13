@@ -1,8 +1,28 @@
 import {describe, test, expect} from 'vitest';
 import {GooglePubSubQueue} from '../../src/queue-providers/google-pubsub.js';
+import { AirhornNotification, AirhornNotificationStatus } from '../../src/notification.js';
+import { AirhornProviderType } from '../../src/provider-type.js';
+import exp from 'constants';
+
 
 // eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const notificationMock: AirhornNotification = {
+	id: '1',
+	to: '1',
+	from: '1',
+	subscriptionId: '1',
+	templateName: '1',
+	providerName: '1',
+	providerResponse: [],
+	providerType: AirhornProviderType.SMTP,
+	status: AirhornNotificationStatus.QUEUED,
+	createdAt: new Date(),
+	modifiedAt: new Date(),
+};
 
 describe('GooglePubSubQueue', async () => {
 	test('should create a new instance of GooglePubSubQueue', async () => {
@@ -35,5 +55,23 @@ describe('GooglePubSubQueue', async () => {
 		const queue = new GooglePubSubQueue();
 		const topic = await queue.getTopic();
 		expect(topic.name).toEqual('projects/airhorn-project/topics/airhorn-delivery-queue');
+	});
+
+	test('publish and subscribe to a message', async () => {
+		const queue = new GooglePubSubQueue();
+		await queue.createTopic();
+		let itWorked = false;
+		const onMessage = (notification: AirhornNotification, acknowledge: () => void) => {
+			console.log('onMessage');
+			expect(notification).toEqual({message: 'Hello, Pub/Sub emulator!'});
+			acknowledge();
+			itWorked = true;
+		};
+		await queue.subscribe(onMessage);
+		await queue.publish(notificationMock);
+		await queue.publish(notificationMock);
+		await sleep(1000);
+		expect(itWorked).toEqual(true);
+		queue.clearSubscription();
 	});
 });

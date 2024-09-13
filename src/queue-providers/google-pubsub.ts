@@ -7,6 +7,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 	private readonly _name: string;
 	private readonly _uri: string;
 	private readonly _topicName: string;
+	private readonly _subscriptionName: string;
 	private readonly _pubsub: PubSub;
 	private _topicCreated = false;
 	private readonly _projectId = 'airhorn-project';
@@ -15,6 +16,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		this._name = 'google-pubsub';
 		this._uri = 'google-pubsub://localhost';
 		this._topicName = 'airhorn-delivery-queue';
+		this._subscriptionName = this._topicName + '-subscription';
 
 		this._pubsub = new PubSub({ projectId: this._projectId });
 	}
@@ -58,39 +60,53 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 	async publish(notification: AirhornNotification): Promise<void> {
 		await this.createTopic();
 		const topic = await this.getTopic();
-		const data = JSON.stringify(notification);
-		await topic.publishMessage({ data });
+		const data = Buffer.from(JSON.stringify({ message: 'Hello, Pub/Sub emulator!' }));
+		const publishId = await topic.publishMessage({ data });
+		console.log(`Message published with ID: ${publishId} to topic: ${topic.name}`);
 	}
 
 	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
 		await this.createTopic();
 		const topic = await this.getTopic();
-		const subscriptionName = this._topicName + '-subscription';
-		const subscription = topic.subscription(subscriptionName);
+		let subscription = topic.subscription(this._subscriptionName);
 
 		const [exists] = await subscription.exists();
 		if (!exists) {
-			await topic.createSubscription(subscriptionName);
+			await topic.createSubscription(this._subscriptionName, {
+				retryPolicy: {
+					minimumBackoff: {
+						seconds: 60,
+					},
+					maximumBackoff: {
+						seconds: 600,
+					}
+				}
+			});
+
+			subscription = topic.subscription(this._subscriptionName);
 		}
 
-		subscription.on('message', message => {
-			const notification = JSON.parse(message.data.toString());
-			const acknowledge = () => {
-				message.ack();
-			};
+		const listeners = subscription.listenerCount('message');
+		if(listeners === 0) {
+			subscription.on('message', (message) => {
+				const airhornNotification = JSON.parse(message.data.toString());
+				console.log('Received message:', message);
+				const acknowledge = () => {
+					message.ack();
+				}
 
-			callback(notification as AirhornNotification, acknowledge);
-		});
+				callback(airhornNotification, acknowledge);
+			});
+		}
 	}
 
 	async clearSubscription(): Promise<void> {
 		const topic = await this.getTopic();
-		const subscriptionName = this._topicName + '-subscription';
-		const subscription = topic.subscription(subscriptionName);
+		const subscription = topic.subscription(this._subscriptionName);
 
 		const [exists] = await subscription.exists();
 		if (exists) {
-			await subscription.delete();
+			await subscription.close();
 		}
 	}
 

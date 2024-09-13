@@ -10,6 +10,7 @@ const providerMock = {
 	uri: 'mock://localhost',
 	async publish(notification: AirhornNotification) {},
 	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void) {},
+	async clearSubscription() {},
 };
 
 const notificationMock: AirhornNotification = {
