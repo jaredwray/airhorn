@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-empty-function,@typescript-eslint/class-literal-property-style  */
+/* eslint-disable @typescript-eslint/class-literal-property-style  */
 import { PubSub } from '@google-cloud/pubsub';
 import { type AirhornNotification } from '../notification.js';
 import { type AirhornQueueProvider } from '../queue.js';
@@ -7,6 +7,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 	private readonly _name: string;
 	private readonly _uri: string;
 	private readonly _topicName: string;
+	private readonly _subscriptionName: string;
 	private readonly _pubsub: PubSub;
 	private _topicCreated = false;
 	private readonly _projectId = 'airhorn-project';
@@ -15,6 +16,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		this._name = 'google-pubsub';
 		this._uri = 'google-pubsub://localhost';
 		this._topicName = 'airhorn-delivery-queue';
+		this._subscriptionName = this._topicName + '-subscription';
 
 		this._pubsub = new PubSub({ projectId: this._projectId });
 	}
@@ -55,11 +57,56 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		return this._pubsub.topic(this.topicName);
 	}
 
-	async publishNotification(notification: AirhornNotification): Promise<void> {}
+	async publish(notification: AirhornNotification): Promise<void> {
+		await this.createTopic();
+		const topic = await this.getTopic();
+		const data = Buffer.from(JSON.stringify(notification));
+		await topic.publishMessage({ data });
+	}
 
-	async acknowledgeNotification(notification: AirhornNotification): Promise<void> {}
+	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
+		await this.createTopic();
+		const topic = await this.getTopic();
+		let subscription = topic.subscription(this._subscriptionName);
 
-	async listenForNotifications(queueName: string, callback: (notification: AirhornNotification) => void): Promise<void> {}
+		const [exists] = await subscription.exists();
+		if (!exists) {
+			await topic.createSubscription(this._subscriptionName, {
+				retryPolicy: {
+					minimumBackoff: {
+						seconds: 60,
+					},
+					maximumBackoff: {
+						seconds: 600,
+					},
+				},
+			});
+
+			subscription = topic.subscription(this._subscriptionName);
+		}
+
+		const listeners = subscription.listenerCount('message');
+		if (listeners === 0) {
+			subscription.on('message', message => {
+				const airhornNotification = JSON.parse(message.data.toString()) as AirhornNotification;
+				const acknowledge = () => {
+					message.ack();
+				};
+
+				callback(airhornNotification, acknowledge);
+			});
+		}
+	}
+
+	async clearSubscription(): Promise<void> {
+		const topic = await this.getTopic();
+		const subscription = topic.subscription(this._subscriptionName);
+
+		const [exists] = await subscription.exists();
+		if (exists) {
+			await subscription.close();
+		}
+	}
 
 	async createTopic(): Promise<void> {
 		if (this._topicCreated) {
