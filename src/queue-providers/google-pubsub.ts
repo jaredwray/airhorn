@@ -79,22 +79,23 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 					},
 					maximumBackoff: {
 						seconds: 600,
-					}
-				}
+					},
+				},
 			});
 
 			subscription = topic.subscription(this._subscriptionName);
 		}
 
 		const listeners = subscription.listenerCount('message');
-		if(listeners === 0) {
-			subscription.on('message', (message) => {
+		if (listeners === 0) {
+			subscription.on('message', message => {
 				const airhornNotification = JSON.parse(message.data.toString());
 				console.log('Received message:', message);
 				const acknowledge = () => {
 					message.ack();
-				}
+				};
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				callback(airhornNotification, acknowledge);
 			});
 		}

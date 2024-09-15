@@ -1,14 +1,13 @@
 import {describe, test, expect} from 'vitest';
 import {GooglePubSubQueue} from '../../src/queue-providers/google-pubsub.js';
-import { AirhornNotification, AirhornNotificationStatus } from '../../src/notification.js';
+import { type AirhornNotification, AirhornNotificationStatus } from '../../src/notification.js';
 import { AirhornProviderType } from '../../src/provider-type.js';
-import exp from 'constants';
-
 
 // eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// eslint-disable-next-line no-promise-executor-return
+const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const notificationMock: AirhornNotification = {
 	id: '1',
@@ -33,8 +32,10 @@ describe('GooglePubSubQueue', async () => {
 	});
 	test('should create the topic if it does not exist', async () => {
 		const queue = new GooglePubSubQueue();
-		if ((await queue.topicExists())) {
+		if (await queue.topicExists()) {
 			const topic = await queue.getTopic();
+			const [subscriptions] = await topic.getSubscriptions();
+			await Promise.all(subscriptions.map(async subscription => subscription.delete()));
 			await topic.delete();
 		}
 
@@ -67,11 +68,12 @@ describe('GooglePubSubQueue', async () => {
 			acknowledge();
 			itWorked = true;
 		};
+
 		await queue.subscribe(onMessage);
 		await queue.publish(notificationMock);
 		await queue.publish(notificationMock);
 		await sleep(1000);
 		expect(itWorked).toEqual(true);
-		queue.clearSubscription();
+		await queue.clearSubscription();
 	});
 });

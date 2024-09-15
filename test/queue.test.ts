@@ -43,4 +43,9 @@ describe('AirhornQueue', async () => {
 		const queue = new AirhornQueue(providerMock);
 		await queue.subscribe((notification, acknowledge) => {});
 	});
+
+	test('should clear the subscription', async () => {
+		const queue = new AirhornQueue(providerMock);
+		await queue.clearSubscription();
+	});
 });
