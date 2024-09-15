@@ -1,15 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ESNext",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', or 'ESNEXT'. */
-    "module": "NodeNext",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
-    "declaration": true,                   /* Generates corresponding '.d.ts' file. */
-    "declarationMap": true,                           /* Create sourcemaps for d.ts files. */
-    "sourceMap": true,                     /* Generates corresponding '.map' file. */
-    "outDir": "./dist",                        /* Redirect output structure to the directory. */
-    "skipLibCheck": true,                   /* Skip type checking of declaration files. */
-    "allowSyntheticDefaultImports": true,             /* Allow 'import x from y' when a module doesn't have a default export. */
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "strict": true,                            /* Enable all strict type-checking options. */
-    "moduleResolution": "NodeNext"            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "node",                       /* Specify how TypeScript looks up a file from a given module specifier. */
+      "baseUrl": "./src",                                  /* Specify the base directory to resolve non-relative module names. */
+
+      /* Emit */
+      "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
+      "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
+      "outDir": "./dist",                                   /* Specify an output folder for all emitted files. */
+
+      /* Interop Constraints */
+      "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
+      "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+
+      /* Type Checking */
+      "strict": true,                                      /* Enable all strict type-checking options. */
+
+      /* Completeness */
+      "skipLibCheck": true,                     /* Skip type checking all .d.ts files. */
+      "lib": [
+          "ESNext", "DOM"
+      ]
   }
 }
