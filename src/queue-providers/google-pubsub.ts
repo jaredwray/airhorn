@@ -60,9 +60,8 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 	async publish(notification: AirhornNotification): Promise<void> {
 		await this.createTopic();
 		const topic = await this.getTopic();
-		const data = Buffer.from(JSON.stringify({ message: 'Hello, Pub/Sub emulator!' }));
-		const publishId = await topic.publishMessage({ data });
-		console.log(`Message published with ID: ${publishId} to topic: ${topic.name}`);
+		const data = Buffer.from(JSON.stringify(notification));
+		await topic.publishMessage({ data });
 	}
 
 	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
@@ -89,13 +88,11 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		const listeners = subscription.listenerCount('message');
 		if (listeners === 0) {
 			subscription.on('message', message => {
-				const airhornNotification = JSON.parse(message.data.toString());
-				console.log('Received message:', message);
+				const airhornNotification = JSON.parse(message.data.toString()) as AirhornNotification;
 				const acknowledge = () => {
 					message.ack();
 				};
 
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				callback(airhornNotification, acknowledge);
 			});
 		}

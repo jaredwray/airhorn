@@ -63,8 +63,7 @@ describe('GooglePubSubQueue', async () => {
 		await queue.createTopic();
 		let itWorked = false;
 		const onMessage = (notification: AirhornNotification, acknowledge: () => void) => {
-			console.log('onMessage');
-			expect(notification).toEqual({message: 'Hello, Pub/Sub emulator!'});
+			expect(notification.id).toEqual('1');
 			acknowledge();
 			itWorked = true;
 		};
