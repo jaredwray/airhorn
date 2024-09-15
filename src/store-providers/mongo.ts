@@ -118,6 +118,7 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 	async createNotification(createNotification: CreateAirhornNotification): Promise<AirhornNotification> {
 		const notificationDocument: Document = {
 			to: createNotification.to,
+			from: createNotification.from,
 			subscriptionId: createNotification.subscriptionId,
 			externalId: createNotification.externalId,
 			providerType: createNotification.providerType,
@@ -143,6 +144,7 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		const result = await this.notificationsCollection.updateOne({_id: new ObjectId(notification.id)}, {
 			$set: {
 				to: notification.to,
+				from: notification.from,
 				subscriptionId: notification.subscriptionId,
 				externalId: notification.externalId,
 				providerType: notification.providerType,

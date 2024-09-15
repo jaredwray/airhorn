@@ -11,6 +11,7 @@ export type CreateAirhornSubscription = {
 
 export type CreateAirhornNotification = {
 	to: string;
+	from: string;
 	subscriptionId: string;
 	externalId?: string;
 	providerType: AirhornProviderType;

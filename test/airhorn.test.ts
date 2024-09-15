@@ -1,14 +1,18 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
-import { mock } from 'node:test';
 import {
 	describe, test, expect, vi,
 } from 'vitest';
 import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
-import {Airhorn} from '../src/airhorn.js';
+import {Airhorn, AirhornNotificationStatus} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
+import { GooglePubSubQueue } from '../src/queue-providers/google-pubsub.js';
+import { type CreateAirhornNotification } from '../src/store.js';
 import {TestingData} from './testing-data.js';
+
+// eslint-disable-next-line n/prefer-global/process
+process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
 
 vi.mock('firebase-admin', async () => {
 	const actual: typeof admin = await vi.importActual('firebase-admin'); // Import the actual module
@@ -310,5 +314,31 @@ describe('Airhorn Store and Subscription', async () => {
 			modifiedAt: new Date(),
 		};
 		await expect(airhorn.deleteSubscription(mockSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
+	});
+});
+
+describe('Airhorn - Notification / Queue', async () => {
+	test('Airhorn Queue Initialization', async () => {
+		const QUEUE_PROVIDER = new GooglePubSubQueue();
+		const airhorn = new Airhorn({QUEUE_PROVIDER});
+		expect(airhorn.queue?.provider).toBeDefined();
+	});
+	test('Airhorn Queue Publish Notification', async () => {
+		const QUEUE_PROVIDER = new GooglePubSubQueue();
+		const STORE_PROVIDER = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
+		const createNotification: CreateAirhornNotification = {
+			to: 'john@doe.org',
+			from: 'me@you.com',
+			subscriptionId: '1234',
+			externalId: '1234',
+			providerType: AirhornProviderType.SMTP,
+			status: AirhornNotificationStatus.QUEUED,
+			templateName: 'test-template',
+			templateData: {},
+			providerName: 'smtp',
+		};
+
+		const airhorn = new Airhorn({QUEUE_PROVIDER, STORE_PROVIDER});
+		await airhorn.publishNotification(createNotification);
 	});
 });

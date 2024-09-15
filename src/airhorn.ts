@@ -2,7 +2,7 @@ import { TemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
 import { type AirhornSubscription } from './subscription.js';
-import { type AirhornNotification } from './notification.js';
+import { AirhornNotificationStatus, type AirhornNotification } from './notification.js';
 import { AirhornQueue, type AirhornQueueProvider } from './queue.js';
 import {
 	AirhornStore, type CreateAirhornNotification, type AirhornStoreProvider, type CreateAirhornSubscription,
@@ -59,6 +59,10 @@ export class Airhorn {
 
 	public get store(): AirhornStore | undefined {
 		return this._store;
+	}
+
+	public get queue(): AirhornQueue | undefined {
+		return this._queue;
 	}
 
 	/* eslint max-params: [2, 6] */
@@ -151,6 +155,12 @@ export class Airhorn {
 			const updatedNotification = await this._store.createNotification(notification);
 
 			await this._queue.publishNotification(updatedNotification);
+
+			updatedNotification.status = AirhornNotificationStatus.QUEUED;
+
+			await this._store.updateNotification(updatedNotification);
+
+			return;
 		}
 
 		throw new Error('Airhorn queue and store needed for notifications');

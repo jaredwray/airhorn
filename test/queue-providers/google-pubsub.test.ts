@@ -11,7 +11,7 @@ const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, m
 
 const notificationMock: AirhornNotification = {
 	id: '1',
-	to: '1',
+	to: 'john@doe.org',
 	from: '1',
 	subscriptionId: '1',
 	templateName: '1',
@@ -63,7 +63,7 @@ describe('GooglePubSubQueue', async () => {
 		await queue.createTopic();
 		let itWorked = false;
 		const onMessage = (notification: AirhornNotification, acknowledge: () => void) => {
-			expect(notification.id).toEqual('1');
+			expect(notification.to).toEqual('john@doe.org');
 			acknowledge();
 			itWorked = true;
 		};
