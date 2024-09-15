@@ -58,14 +58,14 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 	}
 
 	async publish(notification: AirhornNotification): Promise<void> {
-		await this.createTopic();
+		await this.setTopic();
 		const topic = await this.getTopic();
 		const data = Buffer.from(JSON.stringify(notification));
 		await topic.publishMessage({ data });
 	}
 
 	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
-		await this.createTopic();
+		await this.setTopic();
 		const topic = await this.getTopic();
 		let subscription = topic.subscription(this._subscriptionName);
 
@@ -105,10 +105,11 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		const [exists] = await subscription.exists();
 		if (exists) {
 			await subscription.close();
+			await subscription.delete();
 		}
 	}
 
-	async createTopic(): Promise<void> {
+	async setTopic(): Promise<void> {
 		if (this._topicCreated) {
 			return;
 		}

@@ -32,7 +32,7 @@ describe('GooglePubSubQueue', async () => {
 	});
 	test('should create the topic if it does not exist', async () => {
 		const queue = new GooglePubSubQueue();
-		if (await queue.topicExists()) {
+		if (!(await queue.topicExists())) {
 			const topic = await queue.getTopic();
 			const [subscriptions] = await topic.getSubscriptions();
 			await Promise.all(subscriptions.map(async subscription => subscription.delete()));
@@ -40,16 +40,16 @@ describe('GooglePubSubQueue', async () => {
 		}
 
 		expect(queue.topicCreated).toEqual(false);
-		await queue.createTopic();
+		await queue.setTopic();
 		expect(queue.topicCreated).toEqual(true);
 	});
 
 	test('should handle the topic if it already exists', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.topicCreated).toEqual(false);
-		await queue.createTopic();
+		await queue.setTopic();
 		expect(queue.topicCreated).toEqual(true);
-		await queue.createTopic();
+		await queue.setTopic();
 	});
 
 	test('ability to get the queue topic', async () => {
@@ -60,7 +60,8 @@ describe('GooglePubSubQueue', async () => {
 
 	test('publish and subscribe to a message', async () => {
 		const queue = new GooglePubSubQueue();
-		await queue.createTopic();
+		// Clear the subscription
+		await queue.clearSubscription();
 		let itWorked = false;
 		const onMessage = (notification: AirhornNotification, acknowledge: () => void) => {
 			expect(notification.to).toEqual('john@doe.org');
@@ -74,5 +75,18 @@ describe('GooglePubSubQueue', async () => {
 		await sleep(1000);
 		expect(itWorked).toEqual(true);
 		await queue.clearSubscription();
+	});
+
+	test('set topic when it does not exists', async () => {
+		const queue = new GooglePubSubQueue();
+		if (await queue.topicExists()) {
+			const topic = await queue.getTopic();
+			const [subscriptions] = await topic.getSubscriptions();
+			await Promise.all(subscriptions.map(async subscription => subscription.delete()));
+			await topic.delete();
+		}
+
+		await queue.setTopic();
+		expect(queue.topicCreated).toEqual(true);
 	});
 });
