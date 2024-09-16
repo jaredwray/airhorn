@@ -109,8 +109,8 @@ describe('GooglePubSubQueue', async () => {
 			};
 
 			await pubsub.subscribe(onMessage);
-            await sleep(1000);
-            await pubsub.unsubscribe();
+			await sleep(1000);
+			await pubsub.unsubscribe();
 		} finally {
 			await pubsub.deleteQueue();
 		}

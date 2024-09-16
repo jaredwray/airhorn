@@ -108,11 +108,13 @@ export class GooglePubSubQueue {
 			if (!queueExists) {
 				await this.setQueue();
 			}
+
 			const subscriptionExists = await this.subscriptionExists();
 			if (!subscriptionExists) {
 				const topic = await this.getQueue();
 				await topic.createSubscription(this._subscriptionName);
 			}
+
 			const topic = await this.getQueue();
 			const subscription = topic.subscription(this._subscriptionName);
 			subscription.on('message', async message => {
@@ -120,6 +122,8 @@ export class GooglePubSubQueue {
 				const acknowledge = () => {
 					message.ack();
 				};
+
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 				callback(notification, acknowledge);
 			});
 		} catch (error) {
