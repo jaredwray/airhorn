@@ -3,21 +3,21 @@ import { PubSub } from '@google-cloud/pubsub';
 import { type AirhornNotification } from '../notification.js';
 import { type AirhornQueueProvider } from '../queue.js';
 
-export class GooglePubSubQueueOptions {
+export type GooglePubSubQueueOptions = {
 	projectId?: string;
 	uri?: string;
 	queueName?: string;
 	subscriptionName?: string;
-}
+};
 
 export class GooglePubSubQueue {
 	private readonly _name: string = 'google-pubsub';
-	private readonly _uri = 'google-pubsub://localhost';
-	private readonly _queueName = 'airhorn-queue';
-	private readonly _subscriptionName = 'airhorn-subscription';
+	private _uri = 'google-pubsub://localhost';
+	private _queueName = 'airhorn-queue';
+	private _subscriptionName = 'airhorn-subscription';
 	private readonly _pubsub: PubSub;
 
-	private readonly _projectId = 'airhorn-project';
+	private _projectId = 'airhorn-project';
 
 	constructor(options?: GooglePubSubQueueOptions) {
 		if (options?.projectId) {
@@ -47,16 +47,32 @@ export class GooglePubSubQueue {
 		return this._uri;
 	}
 
+	set uri(value: string) {
+		this._uri = value;
+	}
+
 	get queueName(): string {
 		return this._queueName;
+	}
+
+	set queueName(value: string) {
+		this._queueName = value;
 	}
 
 	get subscriptionName(): string {
 		return this._subscriptionName;
 	}
 
+	set subscriptionName(value: string) {
+		this._subscriptionName = value;
+	}
+
 	get projectId(): string {
 		return this._projectId;
+	}
+
+	set projectId(value: string) {
+		this._projectId = value;
 	}
 
 	async queueExists(): Promise<boolean> {
@@ -118,6 +134,23 @@ export class GooglePubSubQueue {
 				callback(airhornNotification, acknowledge);
 			});
 		}
+	}
+
+	async subscriptionExists(): Promise<boolean> {
+		let result = false;
+		try {
+			const topic = await this.getQueue();
+			const subscription = topic.subscription(this._subscriptionName);
+			const exists = await subscription.exists();
+			if (exists.length > 0) {
+				result = exists[0];
+			}
+		} catch {
+			/* c8 ignore next 2 */
+			result = false;
+		}
+
+		return result;
 	}
 
 	async clearSubscription(): Promise<void> {

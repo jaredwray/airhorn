@@ -44,6 +44,27 @@ describe('GooglePubSubQueue', async () => {
 		expect(queue.subscriptionName).toEqual('test');
 		expect(queue.projectId).toEqual('test');
 	});
+	test('should be able to get/set properties', async () => {
+		const options = {
+			projectId: 'test',
+			uri: 'test',
+			queueName: 'test',
+			subscriptionName: 'test',
+		};
+		const pubsub = new GooglePubSubQueue(options);
+		expect(pubsub.uri).toEqual('test');
+		expect(pubsub.queueName).toEqual('test');
+		expect(pubsub.subscriptionName).toEqual('test');
+		expect(pubsub.projectId).toEqual('test');
+		pubsub.uri = 'test2';
+		pubsub.queueName = 'test2';
+		pubsub.subscriptionName = 'test2';
+		pubsub.projectId = 'test2';
+		expect(pubsub.uri).toEqual('test2');
+		expect(pubsub.queueName).toEqual('test2');
+		expect(pubsub.subscriptionName).toEqual('test2');
+		expect(pubsub.projectId).toEqual('test2');
+	});
 	test('should create a queue if it does not exist', async () => {
 		const options = {
 			queueName: 'queue-test-1',
@@ -69,6 +90,25 @@ describe('GooglePubSubQueue', async () => {
 		queueExists = await pubsub.queueExists();
 		expect(queueExists).toEqual(true);
 		await pubsub.setQueue();
+		await pubsub.deleteQueue();
+	});
+	test('should be able to clear a subscription', async () => {
+		const options = {
+			queueName: 'queue-test-3',
+			subscriptionName: 'subscription-test-3',
+		};
+
+		const pubsub = new GooglePubSubQueue(options);
+		const queueExists = await pubsub.queueExists();
+		expect(queueExists).toEqual(false);
+		await pubsub.setQueue();
+		const onMessage = async (notification: AirhornNotification, acknowledge: () => void) => {
+			acknowledge();
+		};
+
+		await pubsub.subscribe(onMessage);
+		const subscriptionExists = await pubsub.subscriptionExists();
+		expect(subscriptionExists).toEqual(true);
 		await pubsub.deleteQueue();
 	});
 });
