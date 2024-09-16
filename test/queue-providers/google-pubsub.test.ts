@@ -6,6 +6,9 @@ import { AirhornProviderType } from '../../src/provider-type.js';
 // eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
 
+// eslint-disable-next-line n/prefer-global/process
+process.env.VITEST_MAX_THREADS = '1';
+
 // eslint-disable-next-line no-promise-executor-return
 const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -24,6 +27,7 @@ const notificationMock: AirhornNotification = {
 };
 
 describe('GooglePubSubQueue', async () => {
+
 	test('should create a new instance of GooglePubSubQueue', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.name).toEqual('google-pubsub');
@@ -32,7 +36,8 @@ describe('GooglePubSubQueue', async () => {
 	});
 	test('should create the topic if it does not exist', async () => {
 		const queue = new GooglePubSubQueue();
-		if (!(await queue.topicExists())) {
+		const topicExists = await queue.topicExists();
+		if (topicExists) {
 			const topic = await queue.getTopic();
 			const [subscriptions] = await topic.getSubscriptions();
 			await Promise.all(subscriptions.map(async subscription => subscription.delete()));
@@ -43,7 +48,7 @@ describe('GooglePubSubQueue', async () => {
 		await queue.setTopic();
 		expect(queue.topicCreated).toEqual(true);
 	});
-
+	
 	test('should handle the topic if it already exists', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.topicCreated).toEqual(false);
@@ -74,19 +79,29 @@ describe('GooglePubSubQueue', async () => {
 		await queue.publish(notificationMock);
 		await sleep(1000);
 		expect(itWorked).toEqual(true);
-		await queue.clearSubscription();
+		//await queue.clearSubscription();
 	});
 
 	test('set topic when it does not exists', async () => {
 		const queue = new GooglePubSubQueue();
-		if (await queue.topicExists()) {
-			const topic = await queue.getTopic();
-			const [subscriptions] = await topic.getSubscriptions();
-			await Promise.all(subscriptions.map(async subscription => subscription.delete()));
-			await topic.delete();
+		const topicExists = await queue.topicExists();
+		console.log('topicExists', topicExists);
+		if (topicExists) {
+			try {
+				const topic = await queue.getTopic();
+				const [subscriptions] = await topic.getSubscriptions();
+				await Promise.all(subscriptions.map(async subscription => subscription.delete()));
+				await topic.delete();
+			} catch (error) {
+				console.log('error', error);
+			}
 		}
-
-		await queue.setTopic();
+		try {
+			await queue.setTopic();
+		} catch (error) {
+			console.log('error', error);
+		}
 		expect(queue.topicCreated).toEqual(true);
 	});
+	
 });

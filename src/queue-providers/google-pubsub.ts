@@ -16,7 +16,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		this._name = 'google-pubsub';
 		this._uri = 'google-pubsub://localhost';
 		this._topicName = 'airhorn-delivery-queue';
-		this._subscriptionName = this._topicName + '-subscription';
+		this._subscriptionName = 'airhorn-subscription';
 
 		this._pubsub = new PubSub({ projectId: this._projectId });
 	}
