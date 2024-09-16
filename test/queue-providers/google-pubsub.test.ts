@@ -27,7 +27,6 @@ const notificationMock: AirhornNotification = {
 };
 
 describe('GooglePubSubQueue', async () => {
-
 	test('should create a new instance of GooglePubSubQueue', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.name).toEqual('google-pubsub');
@@ -48,7 +47,7 @@ describe('GooglePubSubQueue', async () => {
 		await queue.setTopic();
 		expect(queue.topicCreated).toEqual(true);
 	});
-	
+
 	test('should handle the topic if it already exists', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.topicCreated).toEqual(false);
@@ -79,7 +78,7 @@ describe('GooglePubSubQueue', async () => {
 		await queue.publish(notificationMock);
 		await sleep(1000);
 		expect(itWorked).toEqual(true);
-		//await queue.clearSubscription();
+		// Await queue.clearSubscription();
 	});
 
 	test('set topic when it does not exists', async () => {
@@ -96,12 +95,13 @@ describe('GooglePubSubQueue', async () => {
 				console.log('error', error);
 			}
 		}
+
 		try {
 			await queue.setTopic();
 		} catch (error) {
 			console.log('error', error);
 		}
+
 		expect(queue.topicCreated).toEqual(true);
 	});
-	
 });
