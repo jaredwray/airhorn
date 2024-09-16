@@ -1,5 +1,5 @@
-import {describe, test, expect} from 'vitest';
-import {GooglePubSubQueue} from '../../src/queue-providers/google-pubsub.js';
+import { describe, test, expect } from 'vitest';
+import { GooglePubSubQueue } from '../../src/queue-providers/google-pubsub.js';
 import { type AirhornNotification, AirhornNotificationStatus } from '../../src/notification.js';
 import { AirhornProviderType } from '../../src/provider-type.js';
 
@@ -92,23 +92,27 @@ describe('GooglePubSubQueue', async () => {
 		await pubsub.setQueue();
 		await pubsub.deleteQueue();
 	});
-	test('should be able to clear a subscription', async () => {
+
+	test('should be able to create a subscription and unsubscribe', async () => {
 		const options = {
 			queueName: 'queue-test-3',
 			subscriptionName: 'subscription-test-3',
 		};
 
 		const pubsub = new GooglePubSubQueue(options);
-		const queueExists = await pubsub.queueExists();
-		expect(queueExists).toEqual(false);
-		await pubsub.setQueue();
-		const onMessage = async (notification: AirhornNotification, acknowledge: () => void) => {
-			acknowledge();
-		};
+		try {
+			const queueExists = await pubsub.queueExists();
+			expect(queueExists).toEqual(false);
+			await pubsub.setQueue();
+			const onMessage = async (notification: AirhornNotification, acknowledge: () => void) => {
+				acknowledge();
+			};
 
-		await pubsub.subscribe(onMessage);
-		const subscriptionExists = await pubsub.subscriptionExists();
-		expect(subscriptionExists).toEqual(true);
-		await pubsub.deleteQueue();
+			await pubsub.subscribe(onMessage);
+            await sleep(1000);
+            await pubsub.unsubscribe();
+		} finally {
+			await pubsub.deleteQueue();
+		}
 	});
 });

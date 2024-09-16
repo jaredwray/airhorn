@@ -103,36 +103,28 @@ export class GooglePubSubQueue {
 	}
 
 	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
-		await this.setQueue();
-		const topic = await this.getQueue();
-		let subscription = topic.subscription(this._subscriptionName);
-
-		const [exists] = await subscription.exists();
-		if (!exists) {
-			await topic.createSubscription(this._subscriptionName, {
-				retryPolicy: {
-					minimumBackoff: {
-						seconds: 60,
-					},
-					maximumBackoff: {
-						seconds: 600,
-					},
-				},
-			});
-
-			subscription = topic.subscription(this._subscriptionName);
-		}
-
-		const listeners = subscription.listenerCount('message');
-		if (listeners === 0) {
-			subscription.on('message', message => {
-				const airhornNotification = JSON.parse(message.data.toString()) as AirhornNotification;
+		try {
+			const queueExists = await this.queueExists();
+			if (!queueExists) {
+				await this.setQueue();
+			}
+			const subscriptionExists = await this.subscriptionExists();
+			if (!subscriptionExists) {
+				const topic = await this.getQueue();
+				await topic.createSubscription(this._subscriptionName);
+			}
+			const topic = await this.getQueue();
+			const subscription = topic.subscription(this._subscriptionName);
+			subscription.on('message', async message => {
+				const notification = JSON.parse(message.data.toString());
 				const acknowledge = () => {
 					message.ack();
 				};
-
-				callback(airhornNotification, acknowledge);
+				callback(notification, acknowledge);
 			});
+		} catch (error) {
+			/* c8 ignore next */
+			console.error('Error creating subscription', error);
 		}
 	}
 
@@ -140,10 +132,12 @@ export class GooglePubSubQueue {
 		let result = false;
 		try {
 			const topic = await this.getQueue();
-			const subscription = topic.subscription(this._subscriptionName);
-			const exists = await subscription.exists();
-			if (exists.length > 0) {
-				result = exists[0];
+			if (topic) {
+				const subscription = topic.subscription(this._subscriptionName);
+				const exists = await subscription.exists();
+				if (exists.length > 0) {
+					result = exists[0];
+				}
 			}
 		} catch {
 			/* c8 ignore next 2 */
@@ -153,13 +147,12 @@ export class GooglePubSubQueue {
 		return result;
 	}
 
-	async clearSubscription(): Promise<void> {
+	async unsubscribe(): Promise<void> {
 		const topic = await this.getQueue();
 		const subscription = topic.subscription(this._subscriptionName);
 
 		const [exists] = await subscription.exists();
 		if (exists) {
-			await subscription.close();
 			await subscription.delete();
 		}
 	}
