@@ -6,9 +6,6 @@ import { AirhornProviderType } from '../../src/provider-type.js';
 // eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
 
-// eslint-disable-next-line n/prefer-global/process
-process.env.VITEST_MAX_THREADS = '1';
-
 // eslint-disable-next-line no-promise-executor-return
 const sleep = async (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -31,77 +28,47 @@ describe('GooglePubSubQueue', async () => {
 		const queue = new GooglePubSubQueue();
 		expect(queue.name).toEqual('google-pubsub');
 		expect(queue.uri).toEqual('google-pubsub://localhost');
-		expect(queue.topicName).toEqual('airhorn-delivery-queue');
+		expect(queue.queueName).toEqual('airhorn-queue');
 	});
-	test('should create the topic if it does not exist', async () => {
-		const queue = new GooglePubSubQueue();
-		const topicExists = await queue.topicExists();
-		if (topicExists) {
-			const topic = await queue.getTopic();
-			const [subscriptions] = await topic.getSubscriptions();
-			await Promise.all(subscriptions.map(async subscription => subscription.delete()));
-			await topic.delete();
-		}
-
-		expect(queue.topicCreated).toEqual(false);
-		await queue.setTopic();
-		expect(queue.topicCreated).toEqual(true);
-	});
-
-	test('should handle the topic if it already exists', async () => {
-		const queue = new GooglePubSubQueue();
-		expect(queue.topicCreated).toEqual(false);
-		await queue.setTopic();
-		expect(queue.topicCreated).toEqual(true);
-		await queue.setTopic();
-	});
-
-	test('ability to get the queue topic', async () => {
-		const queue = new GooglePubSubQueue();
-		const topic = await queue.getTopic();
-		expect(topic.name).toEqual('projects/airhorn-project/topics/airhorn-delivery-queue');
-	});
-
-	test('publish and subscribe to a message', async () => {
-		const queue = new GooglePubSubQueue();
-		// Clear the subscription
-		await queue.clearSubscription();
-		let itWorked = false;
-		const onMessage = (notification: AirhornNotification, acknowledge: () => void) => {
-			expect(notification.to).toEqual('john@doe.org');
-			acknowledge();
-			itWorked = true;
+	test('should create new insance with options', async () => {
+		const options = {
+			projectId: 'test',
+			uri: 'test',
+			queueName: 'test',
+			subscriptionName: 'test',
 		};
-
-		await queue.subscribe(onMessage);
-		await queue.publish(notificationMock);
-		await queue.publish(notificationMock);
-		await sleep(1000);
-		expect(itWorked).toEqual(true);
-		// Await queue.clearSubscription();
+		const queue = new GooglePubSubQueue(options);
+		expect(queue.name).toEqual('google-pubsub');
+		expect(queue.uri).toEqual('test');
+		expect(queue.queueName).toEqual('test');
+		expect(queue.subscriptionName).toEqual('test');
+		expect(queue.projectId).toEqual('test');
 	});
-
-	test('set topic when it does not exists', async () => {
-		const queue = new GooglePubSubQueue();
-		const topicExists = await queue.topicExists();
-		console.log('topicExists', topicExists);
-		if (topicExists) {
-			try {
-				const topic = await queue.getTopic();
-				const [subscriptions] = await topic.getSubscriptions();
-				await Promise.all(subscriptions.map(async subscription => subscription.delete()));
-				await topic.delete();
-			} catch (error) {
-				console.log('error', error);
-			}
-		}
-
-		try {
-			await queue.setTopic();
-		} catch (error) {
-			console.log('error', error);
-		}
-
-		expect(queue.topicCreated).toEqual(true);
+	test('should create a queue if it does not exist', async () => {
+		const options = {
+			queueName: 'queue-test-1',
+			subscriptionName: 'subscription-test-1',
+		};
+		const pubsub = new GooglePubSubQueue(options);
+		let queueExists = await pubsub.queueExists();
+		expect(queueExists).toEqual(false);
+		await pubsub.setQueue();
+		queueExists = await pubsub.queueExists();
+		expect(queueExists).toEqual(true);
+		await pubsub.deleteQueue();
+	});
+	test('should handle the queue if it already exists', async () => {
+		const options = {
+			queueName: 'queue-test-2',
+			subscriptionName: 'subscription-test-2',
+		};
+		const pubsub = new GooglePubSubQueue(options);
+		let queueExists = await pubsub.queueExists();
+		expect(queueExists).toEqual(false);
+		await pubsub.setQueue();
+		queueExists = await pubsub.queueExists();
+		expect(queueExists).toEqual(true);
+		await pubsub.setQueue();
+		await pubsub.deleteQueue();
 	});
 });

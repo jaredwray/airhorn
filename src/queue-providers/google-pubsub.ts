@@ -3,20 +3,38 @@ import { PubSub } from '@google-cloud/pubsub';
 import { type AirhornNotification } from '../notification.js';
 import { type AirhornQueueProvider } from '../queue.js';
 
-export class GooglePubSubQueue implements AirhornQueueProvider {
-	private readonly _name: string;
-	private readonly _uri: string;
-	private readonly _topicName: string;
-	private readonly _subscriptionName: string;
+export class GooglePubSubQueueOptions {
+	projectId?: string;
+	uri?: string;
+	queueName?: string;
+	subscriptionName?: string;
+}
+
+export class GooglePubSubQueue {
+	private readonly _name: string = 'google-pubsub';
+	private readonly _uri = 'google-pubsub://localhost';
+	private readonly _queueName = 'airhorn-queue';
+	private readonly _subscriptionName = 'airhorn-subscription';
 	private readonly _pubsub: PubSub;
-	private _topicCreated = false;
+
 	private readonly _projectId = 'airhorn-project';
 
-	constructor() {
-		this._name = 'google-pubsub';
-		this._uri = 'google-pubsub://localhost';
-		this._topicName = 'airhorn-delivery-queue';
-		this._subscriptionName = 'airhorn-subscription';
+	constructor(options?: GooglePubSubQueueOptions) {
+		if (options?.projectId) {
+			this._projectId = options.projectId;
+		}
+
+		if (options?.uri) {
+			this._uri = options.uri;
+		}
+
+		if (options?.queueName) {
+			this._queueName = options.queueName;
+		}
+
+		if (options?.subscriptionName) {
+			this._subscriptionName = options.subscriptionName;
+		}
 
 		this._pubsub = new PubSub({ projectId: this._projectId });
 	}
@@ -29,18 +47,22 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		return this._uri;
 	}
 
-	get topicName(): string {
-		return this._topicName;
+	get queueName(): string {
+		return this._queueName;
 	}
 
-	get topicCreated(): boolean {
-		return this._topicCreated;
+	get subscriptionName(): string {
+		return this._subscriptionName;
 	}
 
-	async topicExists(): Promise<boolean> {
+	get projectId(): string {
+		return this._projectId;
+	}
+
+	async queueExists(): Promise<boolean> {
 		let result = false;
 		try {
-			const topic = this._pubsub.topic(this.topicName);
+			const topic = this._pubsub.topic(this._queueName);
 			const exists = await topic.exists();
 			if (exists.length > 0) {
 				result = exists[0];
@@ -53,20 +75,20 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		return result;
 	}
 
-	async getTopic() {
-		return this._pubsub.topic(this.topicName);
+	async getQueue() {
+		return this._pubsub.topic(this._queueName);
 	}
 
 	async publish(notification: AirhornNotification): Promise<void> {
-		await this.setTopic();
-		const topic = await this.getTopic();
+		await this.setQueue();
+		const topic = await this.getQueue();
 		const data = Buffer.from(JSON.stringify(notification));
 		await topic.publishMessage({ data });
 	}
 
 	async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void): Promise<void> {
-		await this.setTopic();
-		const topic = await this.getTopic();
+		await this.setQueue();
+		const topic = await this.getQueue();
 		let subscription = topic.subscription(this._subscriptionName);
 
 		const [exists] = await subscription.exists();
@@ -99,7 +121,7 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 	}
 
 	async clearSubscription(): Promise<void> {
-		const topic = await this.getTopic();
+		const topic = await this.getQueue();
 		const subscription = topic.subscription(this._subscriptionName);
 
 		const [exists] = await subscription.exists();
@@ -109,17 +131,19 @@ export class GooglePubSubQueue implements AirhornQueueProvider {
 		}
 	}
 
-	async setTopic(): Promise<void> {
-		if (this._topicCreated) {
-			return;
-		}
+	async deleteQueue(): Promise<void> {
+		const topic = await this.getQueue();
+		const [subscriptions] = await topic.getSubscriptions();
+		await Promise.all(subscriptions.map(async subscription => {
+			await subscription.delete();
+		}));
+		await topic.delete();
+	}
 
-		const topicExists = await this.topicExists();
-		if (topicExists) {
-			this._topicCreated = true;
-		} else {
-			await this._pubsub.createTopic(this._topicName);
-			this._topicCreated = true;
+	async setQueue(): Promise<void> {
+		const topicExists = await this.queueExists();
+		if (!topicExists) {
+			await this._pubsub.createTopic(this._queueName);
 		}
 	}
 }
