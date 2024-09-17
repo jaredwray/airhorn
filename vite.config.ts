@@ -5,11 +5,11 @@ export default defineConfig({
 		coverage: {
 			exclude: [
 				'src/provider-interface.ts',
-				'site/dist/**',
+				'src/subscription.ts',
 				'dist/**',
 				'site/**',
 				'test/**',
-				'vite.config.mjs',
+				'vite.config.ts',
 			],
 		},
 	},
