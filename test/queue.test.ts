@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { subscribe } from 'node:diagnostics_channel';
 import {describe, test, expect} from 'vitest';
 import {AirhornQueue} from '../src/queue.js';
 import { AirhornNotificationStatus, type AirhornNotification } from '../src/notification.js';

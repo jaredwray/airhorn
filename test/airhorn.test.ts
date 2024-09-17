@@ -4,10 +4,9 @@ import {
 } from 'vitest';
 import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
-import {Airhorn, AirhornNotificationStatus} from '../src/airhorn.js';
+import {Airhorn, type AirhornNotification, AirhornNotificationStatus} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
-import { GooglePubSubQueue } from '../src/queue-providers/google-pubsub.js';
 import { type CreateAirhornNotification } from '../src/store.js';
 import {TestingData} from './testing-data.js';
 
@@ -318,13 +317,24 @@ describe('Airhorn Store and Subscription', async () => {
 });
 
 describe('Airhorn - Notification / Queue', async () => {
+	const providerMock = {
+		name: 'mock',
+		uri: 'mock://localhost',
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		async publish(notification: AirhornNotification) {},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void) {},
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
+		async clearSubscription() {},
+	};
+
 	test('Airhorn Queue Initialization', async () => {
-		const QUEUE_PROVIDER = new GooglePubSubQueue();
+		const QUEUE_PROVIDER = providerMock;
 		const airhorn = new Airhorn({QUEUE_PROVIDER});
 		expect(airhorn.queue?.provider).toBeDefined();
 	});
 	test('Airhorn Queue Publish Notification', async () => {
-		const QUEUE_PROVIDER = new GooglePubSubQueue();
+		const QUEUE_PROVIDER = providerMock;
 		const STORE_PROVIDER = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
 		const createNotification: CreateAirhornNotification = {
 			to: 'john@doe.org',
@@ -342,7 +352,7 @@ describe('Airhorn - Notification / Queue', async () => {
 		await airhorn.publishNotification(createNotification);
 	});
 	test('Airhorn Queue Publish Notification with no Store', async () => {
-		const QUEUE_PROVIDER = new GooglePubSubQueue();
+		const QUEUE_PROVIDER = providerMock;
 		const airhorn = new Airhorn({QUEUE_PROVIDER});
 		const createNotification: CreateAirhornNotification = {
 			to: 'john@doe.org',
