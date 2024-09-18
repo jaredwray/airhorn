@@ -30,14 +30,14 @@
     "test:services:stop": "docker compose -f docker-compose.yml down"
   },
   "devDependencies": {
-    "@types/node": "^22.5.2",
-    "@vitest/coverage-v8": "^2.0.5",
+    "@types/node": "^22.5.5",
+    "@vitest/coverage-v8": "^2.1.1",
     "docula": "^0.9.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "tsup": "^8.2.4",
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1",
     "webpack": "^5.94.0",
     "xo": "^0.59.3"
   },
