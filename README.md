@@ -33,14 +33,14 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 * Built using [writr](https://github.org/jaredwray/writr) markdown based content.
 * Subscriptions - You can now specify a subscription for a profile and track it. Data is stored in MongoDB and Posgres will be supported soon.
 
-## ESM and Node Version Support
+# ESM and Node Version Support
 
 This package is ESM only and tested on the current lts version and its previous. Please don't open issues for questions regarding CommonJS / ESM or previous Nodejs versions. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 
 
 # Library API
 
-### `send()`
+## `send()`
 
 The `send()` function, located in `airhorn.ts`, is used to send notifications. It accepts the following parameters:
 
@@ -51,7 +51,7 @@ The `send()` function, located in `airhorn.ts`, is used to send notifications. I
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
-### `sendSMTP()`
+## `sendSMTP()`
 
 The `sendSMTP()` function, located in `airhorn.ts`, is used to send `SMTP` notifications. It accepts the following parameters:
 
@@ -61,7 +61,7 @@ The `sendSMTP()` function, located in `airhorn.ts`, is used to send `SMTP` notif
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
-### `sendSMS()`
+## `sendSMS()`
 
 The `sendSMS()` function, located in `airhorn.ts`, is used to send `SMS` notifications. It accepts the following parameters:
 
@@ -71,7 +71,7 @@ The `sendSMS()` function, located in `airhorn.ts`, is used to send `SMS` notific
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
-### `sendWebhook()`
+## `sendWebhook()`
 
 The `sendWebhook()` function, located in `airhorn.ts`, is used to send `Webhook` notifications. It accepts the following parameters:
 
@@ -81,7 +81,7 @@ The `sendWebhook()` function, located in `airhorn.ts`, is used to send `Webhook`
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
-### `sendMobilePush()`
+## `sendMobilePush()`
 
 The `sendMobilePush()` function, located in `airhorn.ts`, is used to send `Mobile Push` notifications. It accepts the following parameters:
 
@@ -91,7 +91,7 @@ The `sendMobilePush()` function, located in `airhorn.ts`, is used to send `Mobil
 * `data` (any): The information to pass to the message. This parameter is typically a data object or a string. The data can include the raw message to be sent, or it can be used to populate a message template.
 * `languageCode` (string): The language code of the message template to be sent.
 
-### `options`
+## `options`
 
 The `AirhornOptions` enables you to configure the settings of Airhorn. It accepts the following parameters:
 
@@ -121,17 +121,17 @@ const airhorn = new Airhorn({
 });
 ```
 
-### Templates
+# Templates
 
 This library supports the use of templates to easily send formatted messages to different providers. Sample templates can be found in `test/templates` within the subdirectories `cool-multi-lingual`, `generic-template-foo`, and `multiple-types-bar`.
 
 By default, `Config` will look for templates at `./templates`. However, this path can be manually adjusted if needed. 
 
-#### Language Localization
+# Language Localization
 
 With templates, users can easily send messages in different languages. A sample architecture for language localized templates can be found in the `cool-multi-lingual` directory within `test/templates`. This directory contains folders for English and Spanish language codes, 'en' and 'es' respectively. Each of these directories contains SMS, SMTP, and Webhook templates in the appropriate language. To send notifications in a specific language, users can simply provide the appropriate `languageCode` parameter to the `send()` function.
 
-#### Template Overrides
+# Template Overrides
 
 When looking at the sample templates, we can see that some of them support word substitution. For example, the generic SMTP template looks like this:
 
@@ -145,11 +145,11 @@ subject: Generic Hello
 
 To substitute the appropriate text for `firstName`, `lastName`, and `email`, users can provide the appropriate data to the `send()` function. This data is then passed to the template and rendered automatically.
 
-### Examples for using this library
+# Examples for using this library
 
 This library can be used to easily send a variety of notifications. In this section, we'll cover how to implement some simple use cases.
 
-#### Sending a simple email
+## Sending a simple email
 
 Using the send function, we can email 'john@doe.org' from 'hello@testing.com' using the generic template 'generic-template-foo'. We'll also use the provider type `AirhornProviderType.SMTP` to indicate that we're sending an email:
 
@@ -159,7 +159,7 @@ const airhorn = new Airhorn();
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
-#### Sending a simple webhook
+## Sending a simple webhook
 
 Here, we'll send a simple webhook to the URL 'https://httpbin.org/post':
 
@@ -168,7 +168,7 @@ const airhorn = new Airhorn();
 airhorn.send('https://httpbin.org/post', 'foo', 'bar', AirhornProviderType.WEBHOOK);
 ```
 
-#### Using multiple providers
+## Using multiple providers
 
 In this example, we'll send a message using multiple email providers:
 
@@ -197,11 +197,11 @@ This library supports sending notifications via email, SMS, and Mobile Push for 
 
 In this section, we'll describe how to use each of these notification services.
 
-### Email providers
+## Email providers
 
 This library supports sending emails via AWS SES and Twilio Sendgrid.
 
-#### AWS SES
+## AWS SES
 
 After configuring your system to use AWS SES, you can easily use `airhorn` to send emails. In this example, we'll email 'john@doe.org' from 'hello@testing.com' using the email template 'generic-template-foo'. We'll list the provider type as `AirhornProviderType.SMTP` to indicate that we're sending an email:
 
@@ -212,7 +212,7 @@ const airhorn = new Airhorn({
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
-#### Twilio Sendgrid
+## Twilio Sendgrid
 
 To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value via `AirhornOptions`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
 
@@ -223,7 +223,7 @@ const airhorn = new Airhorn({
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
-### SMS providers
+## SMS providers
 
 This library supports sending SMS using AWS SMS and Twilio.
 
@@ -250,7 +250,7 @@ const airhorn = new Airhorn({
 await airhorn.send('5555555555', '5552223333', 'Test message text', AirhornProviderType.SMS);
 ```
 
-### Mobile push providers
+## Mobile push providers
 
 This library supports sending Mobile Push notifications using AWS SNS and Google Firebase.
 
@@ -287,11 +287,11 @@ const airhorn = new Airhorn({
 await airhorn.send('endpointArn', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH);
 ```
 
-## How to Contribute 
+# How to Contribute 
 
 Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository you can refer to the [CONTRIBUTING](CONTRIBUTING.md) guide. If you have any questions please feel free to ask by creating an issue and label it `question`.
 
-## Setting up your Development Environment
+# Setting up your Development Environment
 
 To set up your development environment, you'll need the following dependencies:
 * Node.js (latest)
@@ -318,6 +318,6 @@ If you are using `nvm` you can run the following:
 nvm use && npm i && npm run test:services:start && npm test
 ```
 
-## Licensing
+# Licensing
 
 This project is licensed under [MIT](LICENSE) and copyright by Jared Wray 2021-future. 
