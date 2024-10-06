@@ -30,7 +30,12 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 * Webhook Notifications - Built right into the system as a native feature.
 * 100% Code Coverage / Tested with Integration Tests
 * Built using [ecto](https://github.org/jaredwray/ecto) for handling multiple templates such as EJS, Handlebars, and more.
-* This package is native ESM and no longer provides a CommonJS export. If your project uses CommonJS, you'll have to convert to ESM or use the dynamic import() function. Please don't open issues for questions regarding CommonJS / ESM. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99
+* Built using [writr](https://github.org/jaredwray/writr) markdown based content.
+
+## ESM and Node Version Support
+
+This package is ESM only and tested on the current lts version and its previous. Please don't open issues for questions regarding CommonJS / ESM or previous Nodejs versions. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
+
 
 # Library API
 
