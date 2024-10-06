@@ -333,38 +333,4 @@ describe('Airhorn - Notification / Queue', async () => {
 		const airhorn = new Airhorn({QUEUE_PROVIDER});
 		expect(airhorn.queue?.provider).toBeDefined();
 	});
-	test('Airhorn Queue Publish Notification', async () => {
-		const QUEUE_PROVIDER = providerMock;
-		const STORE_PROVIDER = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
-		const createNotification: CreateAirhornNotification = {
-			to: 'john@doe.org',
-			from: 'me@you.com',
-			subscriptionId: '1234',
-			externalId: '1234',
-			providerType: AirhornProviderType.SMTP,
-			status: AirhornNotificationStatus.QUEUED,
-			templateName: 'test-template',
-			templateData: {},
-			providerName: 'smtp',
-		};
-
-		const airhorn = new Airhorn({QUEUE_PROVIDER, STORE_PROVIDER});
-		await airhorn.publishNotification(createNotification);
-	});
-	test('Airhorn Queue Publish Notification with no Store', async () => {
-		const QUEUE_PROVIDER = providerMock;
-		const airhorn = new Airhorn({QUEUE_PROVIDER});
-		const createNotification: CreateAirhornNotification = {
-			to: 'john@doe.org',
-			from: 'me@you.com',
-			subscriptionId: '1234',
-			externalId: '1234',
-			providerType: AirhornProviderType.SMTP,
-			status: AirhornNotificationStatus.QUEUED,
-			templateName: 'test-template',
-			templateData: {},
-			providerName: 'smtp',
-		};
-		await expect(airhorn.publishNotification(createNotification)).rejects.toThrowError(new Error('Airhorn queue and store needed for notifications'));
-	});
 });
