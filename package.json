@@ -1,6 +1,6 @@
 {
   "name": "airhorn",
-  "version": "4.0.0",
+  "version": "3.1.0",
   "description": "Cloud Notification Library",
   "type": "module",
   "main": "./dist/airhorn.js",
@@ -48,7 +48,7 @@
     "firebase-admin": "^12.4.0",
     "gray-matter": "^4.0.3",
     "mongodb": "^6.9.0",
-    "twilio": "^5.3.1"
+    "twilio": "^5.3.3"
   },
   "files": [
     "dist",

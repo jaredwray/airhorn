@@ -2,10 +2,9 @@ import { TemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
 import { type AirhornSubscription } from './subscription.js';
-import { AirhornNotificationStatus, type AirhornNotification } from './notification.js';
 import { AirhornQueue, type AirhornQueueProvider } from './queue.js';
 import {
-	AirhornStore, type CreateAirhornNotification, type AirhornStoreProvider, type CreateAirhornSubscription,
+	AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription,
 } from './store.js';
 
 export type AirhornOptions = {
@@ -148,22 +147,6 @@ export class Airhorn {
 		}
 
 		throw new Error('Airhorn store not available');
-	}
-
-	public async publishNotification(notification: CreateAirhornNotification): Promise<void> {
-		if (this._queue && this._store) {
-			const updatedNotification = await this._store.createNotification(notification);
-
-			await this._queue.publishNotification(updatedNotification);
-
-			updatedNotification.status = AirhornNotificationStatus.QUEUED;
-
-			await this._store.updateNotification(updatedNotification);
-
-			return;
-		}
-
-		throw new Error('Airhorn queue and store needed for notifications');
 	}
 }
 
