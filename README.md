@@ -31,6 +31,7 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 * 100% Code Coverage / Tested with Integration Tests
 * Built using [ecto](https://github.org/jaredwray/ecto) for handling multiple templates such as EJS, Handlebars, and more.
 * Built using [writr](https://github.org/jaredwray/writr) markdown based content.
+* Subscriptions - You can now specify a subscription for a profile and track it. Data is stored in MongoDB and Posgres will be supported soon.
 
 ## ESM and Node Version Support
 
