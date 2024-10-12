@@ -8,7 +8,6 @@
 [![npm](https://img.shields.io/npm/dm/airhorn)](https://npmjs.com/package/airhorn)
 [![npm](https://img.shields.io/npm/v/airhorn)](https://npmjs.com/package/airhorn)
 
-
 # Cloud Native Notifications Library
 
 Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications easily using templates through your standard cloud providers. We focused on making it cloud native by default (using cloud services).
@@ -136,9 +135,6 @@ With templates, users can easily send messages in different languages. A sample 
 When looking at the sample templates, we can see that some of them support word substitution. For example, the generic SMTP template looks like this:
 
 ``` hbs
----
-subject: Generic Hello
----
 <p>Hello {{ firstName }} {{ lastName }}</p>
 <p>Your email is {{ email }} and this is a generic template</p>
 ```
