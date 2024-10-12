@@ -8,12 +8,11 @@
 [![npm](https://img.shields.io/npm/dm/airhorn)](https://npmjs.com/package/airhorn)
 [![npm](https://img.shields.io/npm/v/airhorn)](https://npmjs.com/package/airhorn)
 
-
-## Cloud Native Notifications Library
+# Cloud Native Notifications Library
 
 Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications easily using templates through your standard cloud providers. We focused on making it cloud native by default (using cloud services).
 
-## Table of Contents
+# Table of Contents
 * [Features](#features)
 * [Library API and Examples](#library-api)
 * [Supported Cloud Service Providers](#supported-cloud-service-providers)
@@ -127,18 +126,15 @@ This library supports the use of templates to easily send formatted messages to 
 
 By default, `Config` will look for templates at `./templates`. However, this path can be manually adjusted if needed. 
 
-# Language Localization
+## Language Localization
 
 With templates, users can easily send messages in different languages. A sample architecture for language localized templates can be found in the `cool-multi-lingual` directory within `test/templates`. This directory contains folders for English and Spanish language codes, 'en' and 'es' respectively. Each of these directories contains SMS, SMTP, and Webhook templates in the appropriate language. To send notifications in a specific language, users can simply provide the appropriate `languageCode` parameter to the `send()` function.
 
-# Template Overrides
+## Template Overrides
 
 When looking at the sample templates, we can see that some of them support word substitution. For example, the generic SMTP template looks like this:
 
 ``` hbs
----
-subject: Generic Hello
----
 <p>Hello {{ firstName }} {{ lastName }}</p>
 <p>Your email is {{ email }} and this is a generic template</p>
 ```
@@ -318,6 +314,7 @@ If you are using `nvm` you can run the following:
 nvm use && npm i && npm run test:services:start && npm test
 ```
 
-# Licensing
+# Licensing and Copyright
 
-This project is licensed under [MIT](LICENSE) and copyright by Jared Wray 2021-future. 
+This project is [MIT License © Jared Wray](LICENSE)
+
