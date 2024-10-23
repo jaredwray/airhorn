@@ -13,6 +13,14 @@ services:
     ports:
       - "26257:26257"
       - "8080:8080"
+  
+  valkey:
+    image: valkey/valkey:latest
+    container_name: valkey
+    environment:
+      REDIS_HOST: redis
+    ports:
+      - 6379:6379
 
   httpbin:
     image: kennethreitz/httpbin
