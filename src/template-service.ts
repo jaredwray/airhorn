@@ -24,8 +24,6 @@ export class TemplateService {
 
 				this.templates.push(template);
 			}
-		} else {
-			throw new Error(`The template path does not exist: ${String(this.options.TEMPLATE_PATH)}`);
 		}
 	}
 
