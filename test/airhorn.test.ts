@@ -38,12 +38,6 @@ test('Airhorn - Init', () => {
 	expect(new Airhorn()).toEqual(new Airhorn());
 });
 
-test('Airhorn - Get Templates', () => {
-	const airhorn = new Airhorn();
-
-	expect(airhorn.templates.options).toEqual({ TEMPLATE_PATH: './templates' });
-});
-
 test('Airhorn - Get Providers', () => {
 	const options = { TEMPLATE_PATH: './foo/templates' };
 	const airhorn = new Airhorn(options);

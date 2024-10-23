@@ -1,39 +1,10 @@
-import fs from 'node:fs';
-import {Template} from './template.js';
+import { CacheableMemory } from 'cacheable';
+import { type AirhornTemplate } from './template.js';
 
-export class TemplateService {
-	options = {
-		TEMPLATE_PATH: './templates',
-	};
+export class AirhornTemplateService {
+	private readonly _cache = new CacheableMemory();
 
-	templates = new Array<Template>();
-
-	constructor(options?: any) {
-		this.options = { ...this.options, ...options };
-		this.loadTemplates();
-	}
-
-	public loadTemplates() {
-		this.templates = new Array<Template>();
-		if (fs.existsSync(this.options.TEMPLATE_PATH)) {
-			const templateDirectories = fs.readdirSync(this.options.TEMPLATE_PATH);
-
-			for (const templateDirectoryPath of templateDirectories) {
-				const templatePath = `${String(this.options.TEMPLATE_PATH)}/${String(templateDirectoryPath)}`;
-				const template = new Template(templatePath);
-
-				this.templates.push(template);
-			}
-		}
-	}
-
-	public getTemplate(templateName: string): Template | undefined {
-		for (const template of this.templates) {
-			if (template.name === templateName) {
-				return template;
-			}
-		}
-
-		return undefined;
+	public get(templateName: string): AirhornTemplate | undefined {
+		return this._cache.get<AirhornTemplate>(templateName);
 	}
 }

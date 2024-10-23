@@ -1,4 +1,4 @@
-import { TemplateService } from './template-service.js';
+import { AirhornTemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
 import { type AirhornSubscription } from './subscription.js';
@@ -25,14 +25,14 @@ export class Airhorn {
 		DEFAULT_TEMPLATE_LANGUAGE: 'en',
 	};
 
-	private readonly _templateService = new TemplateService();
+	private readonly _templates = new AirhornTemplateService();
 	private readonly _providerService = new ProviderService();
 	private readonly _store?: AirhornStore;
 
 	constructor(options?: AirhornOptions) {
 		if (options) {
 			this.options = { ...this.options, ...options };
-			this._templateService = new TemplateService(options);
+			this._templates = new AirhornTemplateService();
 			this._providerService = new ProviderService(options);
 		}
 
@@ -41,8 +41,8 @@ export class Airhorn {
 		}
 	}
 
-	public get templates(): TemplateService {
-		return this._templateService;
+	public get templates(): AirhornTemplateService {
+		return this._templates;
 	}
 
 	public get providers(): ProviderService {
@@ -54,15 +54,15 @@ export class Airhorn {
 	}
 
 	/* eslint max-params: [2, 6] */
-	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: any, languageCode?: string): Promise<boolean> {
+	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
 		let result = false;
 
-		const template = this._templateService.getTemplate(templateName);
+		const template = this._templates.get(templateName);
 		if (template) {
 			const providers = this._providerService.getProviderByType(providerType);
 
 			if (providers.length > 0) {
-				const message = await template.render(providerType, data, languageCode);
+				const message = template.render(providerType, data, languageCode);
 
 				if (message) {
 					const random = Math.floor(Math.random() * providers.length);
@@ -82,19 +82,19 @@ export class Airhorn {
 		return result;
 	}
 
-	public async sendSMTP(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+	public async sendSMTP(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.SMTP, data, languageCode);
 	}
 
-	public async sendSMS(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+	public async sendSMS(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.SMS, data, languageCode);
 	}
 
-	public async sendWebhook(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+	public async sendWebhook(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.WEBHOOK, data, languageCode);
 	}
 
-	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
+	public async sendMobilePush(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
 	}
 

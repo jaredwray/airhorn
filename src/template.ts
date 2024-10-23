@@ -1,132 +1,121 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-import fs from 'node:fs';
-import { Ecto } from 'ecto';
-import matter from 'gray-matter';
-import { TemplateText } from './template-text.js';
+import {Ecto} from 'ecto';
+import { AirhornProviderType } from './provider-type.js';
 
-export class Template {
-	_defaultLanguageCode = 'en';
+export type AirhornTemplateTextOptions = {
+	langCode?: string;
+	text?: string;
+	providerType?: AirhornProviderType;
+	properties?: Map<string, string>;
+};
 
-	filePath?: string;
-	private readonly text = new Map<string, TemplateText>();
+export class AirhornTemplateText {
+	private _langCode = '';
+	private _text = '';
+	private _providerType: AirhornProviderType = AirhornProviderType.SMTP;
+	private _properties: Map<string, string> = new Map<string, string>();
 
-	constructor(filePath?: string) {
-		this.loadTemplate(filePath);
-	}
-
-	public get name(): string {
-		return this.getFileName(this.filePath);
-	}
-
-	public get defaultLanguageCode(): string {
-		return this._defaultLanguageCode;
-	}
-
-	public set defaultLanguageCode(value: string) {
-		this._defaultLanguageCode = value;
-	}
-
-	public getText(serviceType: string, languageCode?: string): TemplateText {
-		if (languageCode === undefined) {
-			languageCode = this._defaultLanguageCode;
+	constructor(options?: AirhornTemplateTextOptions) {
+		if (options?.langCode) {
+			this._langCode = options.langCode;
 		}
 
-		let result = this.text.get(this.generateKey(languageCode, serviceType));
-
-		if (result === undefined) {
-			result = new TemplateText();
+		if (options?.text) {
+			this._text = options.text;
 		}
 
-		return result;
-	}
-
-	public getProperty(serviceType: string, propertyName: string, languageCode?: string): string {
-		const text = this.getText(serviceType, languageCode);
-		const result = text.properties.get(propertyName);
-		if (result) {
-			return result.toString();
+		if (options?.providerType) {
+			this._providerType = options.providerType;
 		}
 
-		return '';
-	}
-
-	/* eslint max-params: [2, 5] */
-	public setText(serviceType: string, languageCode: string, text: string, format: string, properties?: any) {
-		this.text.set(this.generateKey(languageCode, serviceType), new TemplateText(text, format, languageCode, properties));
-	}
-
-	public loadTemplate(filePath?: string) {
-		if (filePath !== undefined) {
-			this.filePath = filePath;
-
-			if (fs.existsSync(this.filePath)) {
-				const directories = fs.readdirSync(this.filePath);
-
-				for (const d of directories) {
-					const dFilePath = `${this.filePath}/${d}`;
-					if (fs.statSync(dFilePath).isDirectory()) {
-						const directoryLangCode = this.getFileName(dFilePath);
-						this.loadTemplateDirectory(dFilePath, directoryLangCode);
-					} else {
-						this.loadTemplateFile(dFilePath);
-					}
-				}
-			}
+		if (options?.properties) {
+			this._properties = options.properties;
 		}
 	}
 
-	public async render(serviceType: string, data?: any, languageCode?: string): Promise<string> {
-		let result = '';
-		const ecto = new Ecto();
-
-		if (this.filePath !== undefined) {
-			const templateText = this.getText(serviceType, languageCode);
-
-			result = await ecto.render(templateText.text, data, templateText.format);
-		}
-
-		return result;
+	public get langCode(): string {
+		return this._langCode;
 	}
 
-	public getFileName(filePath?: string): string {
-		let result = '';
-
-		if (filePath !== undefined) {
-			const name = filePath.split('/').pop();
-			if (name !== undefined) {
-				result = name.toLowerCase().trim();
-			}
-		}
-
-		return result;
+	public set langCode(value: string) {
+		this._langCode = value;
 	}
 
-	public generateKey(languageCode: string, serviceType: string): string {
-		languageCode = languageCode.toLowerCase().trim();
-		serviceType = serviceType.toLowerCase().trim();
-		return `${languageCode}-${serviceType}`;
+	public get text(): string {
+		return this._text;
 	}
 
-	public loadTemplateDirectory(filePath: string, languageCode: string) {
-		const files = fs.readdirSync(filePath);
-		for (const fp of files) {
-			this.loadTemplateFile(filePath + '/' + fp, languageCode);
-		}
+	public set text(value: string) {
+		this._text = value;
 	}
 
-	public loadTemplateFile(filePath: string, languageCode?: string) {
-		if (languageCode === undefined) {
-			languageCode = this._defaultLanguageCode;
-		}
+	public get providerType(): AirhornProviderType {
+		return this._providerType;
+	}
 
-		const fileText = fs.readFileSync(filePath).toString();
-		const fileData = matter(fileText);
-		const fileServiceType = this.getFileName(filePath).split('.')[0];
+	public set providerType(value: AirhornProviderType) {
+		this._providerType = value;
+	}
 
-		const ecto = new Ecto();
-		const format = ecto.getEngineByFilePath(filePath);
+	public get properties(): Map<string, string> {
+		return this._properties;
+	}
 
-		this.setText(fileServiceType, languageCode, fileData.content, format, fileData.data);
+	public set properties(value: Map<string, string>) {
+		this._properties = value;
 	}
 }
 
+export class AirhornTemplate {
+	private _name: string;
+	private readonly _text = new Array<AirhornTemplateText>();
+	private readonly _ecto = new Ecto();
+
+	constructor(name: string) {
+		this._name = name;
+	}
+
+	public get name(): string {
+		return this._name;
+	}
+
+	public set name(value: string) {
+		this._name = value;
+	}
+
+	public get text(): AirhornTemplateText[] {
+		return this._text;
+	}
+
+	public getProperty(providerType: AirhornProviderType, propertyName: string): string {
+		let result = '';
+		const text = this._text.find(text => text.providerType === providerType);
+
+		if (text) {
+			result = text.properties.get(propertyName) ?? '';
+		}
+
+		return result;
+	}
+
+	public getText(providerType: AirhornProviderType, languageCode?: string): string {
+		let result = '';
+		const text = this._text.find(text => text.providerType === providerType && text.langCode === languageCode);
+
+		if (text) {
+			result = text.text;
+		}
+
+		return result;
+	}
+
+	public render(providerType: AirhornProviderType, data?: Record<string, unknown>, languageCode?: string): string {
+		let result = '';
+		const text = this.getText(providerType, languageCode);
+
+		if (text) {
+			result = this._ecto.renderSync(text, data);
+		}
+
+		return result;
+	}
+}
