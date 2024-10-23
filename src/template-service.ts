@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import {Template} from './template.js';
-import {log} from './logger.js';
 
 export class TemplateService {
 	options = {
@@ -26,7 +25,7 @@ export class TemplateService {
 				this.templates.push(template);
 			}
 		} else {
-			log.error(`The template path does not exist: ${String(this.options.TEMPLATE_PATH)}`);
+			throw new Error(`The template path does not exist: ${String(this.options.TEMPLATE_PATH)}`);
 		}
 	}
 

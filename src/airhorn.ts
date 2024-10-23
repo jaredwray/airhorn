@@ -2,7 +2,6 @@ import { TemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
 import { type AirhornSubscription } from './subscription.js';
-import { AirhornQueue, type AirhornQueueProvider } from './queue.js';
 import {
 	AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription,
 } from './store.js';
@@ -18,7 +17,6 @@ export type AirhornOptions = {
 	AWS_SNS_REGION?: string;
 	FIREBASE_CERT?: string;
 	STORE_PROVIDER?: AirhornStoreProvider;
-	QUEUE_PROVIDER?: AirhornQueueProvider;
 };
 
 export class Airhorn {
@@ -30,7 +28,6 @@ export class Airhorn {
 	private readonly _templateService = new TemplateService();
 	private readonly _providerService = new ProviderService();
 	private readonly _store?: AirhornStore;
-	private readonly _queue?: AirhornQueue;
 
 	constructor(options?: AirhornOptions) {
 		if (options) {
@@ -41,10 +38,6 @@ export class Airhorn {
 
 		if (this.options.STORE_PROVIDER) {
 			this._store = new AirhornStore(this.options.STORE_PROVIDER);
-		}
-
-		if (this.options.QUEUE_PROVIDER) {
-			this._queue = new AirhornQueue(this.options.QUEUE_PROVIDER);
 		}
 	}
 
@@ -58,10 +51,6 @@ export class Airhorn {
 
 	public get store(): AirhornStore | undefined {
 		return this._store;
-	}
-
-	public get queue(): AirhornQueue | undefined {
-		return this._queue;
 	}
 
 	/* eslint max-params: [2, 6] */

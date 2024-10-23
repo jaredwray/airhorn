@@ -315,22 +315,3 @@ describe('Airhorn Store and Subscription', async () => {
 		await expect(airhorn.deleteSubscription(mockSubscription)).rejects.toThrowError(new Error('Airhorn store not available'));
 	});
 });
-
-describe('Airhorn - Notification / Queue', async () => {
-	const providerMock = {
-		name: 'mock',
-		uri: 'mock://localhost',
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		async publish(notification: AirhornNotification) {},
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		async subscribe(callback: (notification: AirhornNotification, acknowledge: () => void) => void) {},
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		async clearSubscription() {},
-	};
-
-	test('Airhorn Queue Initialization', async () => {
-		const QUEUE_PROVIDER = providerMock;
-		const airhorn = new Airhorn({QUEUE_PROVIDER});
-		expect(airhorn.queue?.provider).toBeDefined();
-	});
-});
