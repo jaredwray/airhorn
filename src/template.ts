@@ -67,7 +67,7 @@ export class AirhornTemplateText {
 
 export class AirhornTemplate {
 	private _name: string;
-	private readonly _text = new Array<AirhornTemplateText>();
+	private _text = new Array<AirhornTemplateText>();
 	private readonly _ecto = new Ecto();
 
 	constructor(name: string) {
@@ -84,6 +84,10 @@ export class AirhornTemplate {
 
 	public get text(): AirhornTemplateText[] {
 		return this._text;
+	}
+
+	public set text(value: AirhornTemplateText[]) {
+		this._text = value;
 	}
 
 	public getProperty(providerType: AirhornProviderType, propertyName: string): string {
