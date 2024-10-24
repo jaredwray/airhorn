@@ -112,11 +112,12 @@ export class AirhornTemplate {
 		return result;
 	}
 
-	public render(providerType: AirhornProviderType, data?: Record<string, unknown>, languageCode?: string): string {
+	public render(providerType: AirhornProviderType, data?: any, languageCode?: string): string {
 		let result = '';
 		const text = this.getText(providerType, languageCode);
 
 		if (text) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 			result = this._ecto.renderSync(text, data);
 		}
 

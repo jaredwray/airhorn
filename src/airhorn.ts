@@ -54,7 +54,7 @@ export class Airhorn {
 	}
 
 	/* eslint max-params: [2, 6] */
-	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
+	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: any, languageCode?: string): Promise<boolean> {
 		let result = false;
 
 		const template = this._templates.get(templateName);
@@ -82,19 +82,19 @@ export class Airhorn {
 		return result;
 	}
 
-	public async sendSMTP(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
+	public async sendSMTP(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.SMTP, data, languageCode);
 	}
 
-	public async sendSMS(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
+	public async sendSMS(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.SMS, data, languageCode);
 	}
 
-	public async sendWebhook(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
+	public async sendWebhook(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.WEBHOOK, data, languageCode);
 	}
 
-	public async sendMobilePush(to: string, from: string, templateName: string, data?: Record<string, unknown>, languageCode?: string): Promise<boolean> {
+	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
 	}
 

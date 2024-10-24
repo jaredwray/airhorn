@@ -13,6 +13,12 @@ export class TestingData {
 	}
 }
 
+export class TestingDataTwo {
+	public userOne = new TestingUser('John', 'Doe', 'john@gmail.com', ['https://download1.com', 'https://download2.com']);
+	public userTwo = new TestingUser('Mary', 'Anne', 'mary@gmail.com', ['https://download1ma.com', 'https://download2ma.com']);
+	public userThree = new TestingUser('Steve', 'Smith', 'steve@gmail.com', ['https://download1ss.com', 'https://download2ss.com', 'https://download3ss.com']);
+}
+
 export class TestingUser {
 	firstName: string;
 	lastName: string;

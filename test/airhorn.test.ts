@@ -8,7 +8,7 @@ import {Airhorn, type AirhornNotification, AirhornNotificationStatus} from '../s
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
 import { type CreateAirhornNotification } from '../src/store.js';
-import {TestingData} from './testing-data.js';
+import {TestingData, TestingDataTwo} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
@@ -68,9 +68,9 @@ test('Airhorn - Send Friendly WebHook', async () => {
 		TEMPLATE_PATH: './test/templates',
 	};
 	const airhorn = new Airhorn(options);
-	const userData = new TestingData();
+	const userData = new TestingDataTwo();
 
-	expect(await airhorn.sendWebhook(WEBHOOK_MOCK_URL, '', 'cool-multi-lingual', userData.users[0])).toEqual(true);
+	expect(await airhorn.sendWebhook(WEBHOOK_MOCK_URL, '', 'cool-multi-lingual', userData.userOne)).toEqual(true);
 }, 40_000);
 
 test('Airhorn - Get Loaded Providers', () => {
@@ -132,7 +132,7 @@ test('Airhorn - Send Friendly SMS', async () => {
 		},
 	});
 
-	expect(await airhorn.sendSMS('5555555555', '5552223333', 'cool-multi-lingual', userData.users[0])).toEqual(true);
+	expect(await airhorn.sendSMS('5555555555', '5552223333', 'cool-multi-lingual', userData.users[2])).toEqual(true);
 });
 
 test('Airhorn - Send Mobile Push with Notification', async () => {
@@ -267,7 +267,7 @@ describe('Airhorn Store and Subscription', async () => {
 		const updatedSubscription = await airhorn.updateSubscription(subscription);
 		expect(updatedSubscription).toBeDefined();
 		const updatedSubscription2 = await airhorn.getSubscriptionById(updatedSubscription.id);
-		expect(updatedSubscription2.templateName).toBe('updated-template');
+		expect(updatedSubscription2?.templateName).toBe('updated-template');
 		await airhorn.deleteSubscription(updatedSubscription);
 	});
 
