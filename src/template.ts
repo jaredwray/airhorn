@@ -4,6 +4,7 @@ import { AirhornProviderType } from './provider-type.js';
 export type AirhornTemplateTextOptions = {
 	langCode?: string;
 	text?: string;
+	textFormat?: string;
 	providerType?: AirhornProviderType;
 	properties?: Map<string, string>;
 };

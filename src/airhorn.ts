@@ -5,6 +5,7 @@ import { type AirhornSubscription } from './subscription.js';
 import {
 	AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription,
 } from './store.js';
+import { MemoryStoreProvider } from 'store-providers/memory.js';
 
 export type AirhornOptions = {
 	TEMPLATE_PATH?: string;
@@ -25,20 +26,22 @@ export class Airhorn {
 		DEFAULT_TEMPLATE_LANGUAGE: 'en',
 	};
 
-	private readonly _templates = new AirhornTemplateService();
+	private readonly _templates: AirhornTemplateService;
 	private readonly _providerService = new ProviderService();
-	private readonly _store?: AirhornStore;
+	private readonly _store = new AirhornStore(new MemoryStoreProvider());
 
 	constructor(options?: AirhornOptions) {
 		if (options) {
 			this.options = { ...this.options, ...options };
-			this._templates = new AirhornTemplateService();
+
+			if (this.options.STORE_PROVIDER) {
+				this._store = new AirhornStore(this.options.STORE_PROVIDER);
+			}
+
 			this._providerService = new ProviderService(options);
 		}
 
-		if (this.options.STORE_PROVIDER) {
-			this._store = new AirhornStore(this.options.STORE_PROVIDER);
-		}
+		this._templates = new AirhornTemplateService(this._store);
 	}
 
 	public get templates(): AirhornTemplateService {
@@ -57,7 +60,7 @@ export class Airhorn {
 	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: any, languageCode?: string): Promise<boolean> {
 		let result = false;
 
-		const template = this._templates.get(templateName);
+		const template = await this._templates.get(templateName);
 		if (template) {
 			const providers = this._providerService.getProviderByType(providerType);
 
