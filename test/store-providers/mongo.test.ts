@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import {MongoStoreProvider} from '../../src/store-providers/mongo.js';
 import { AirhornNotificationStatus } from '../../src/notification.js';
 import { AirhornProviderType } from '../../src/provider-type.js';
+import { createNotificationOneTestData, createNotificationTwoTestData } from '../testing-data.js';
 
 const uri = 'mongodb://localhost:27017';
 const mongoStoreProvider = new MongoStoreProvider({uri});
@@ -144,6 +145,7 @@ describe('MongoStoreProvider Notifications', () => {
 		const provider = mongoStoreProvider;
 		const createNotification = {
 			to: 'joe@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -164,6 +166,7 @@ describe('MongoStoreProvider Notifications', () => {
 		const provider = mongoStoreProvider;
 		const createNotification = {
 			to: 'joe@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -182,6 +185,7 @@ describe('MongoStoreProvider Notifications', () => {
 		const provider = mongoStoreProvider;
 		const createNotification = {
 			to: 'joe@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -200,6 +204,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.notificationsCollection.deleteMany({});
 		const createNotificationOne = {
 			to: 'one@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -209,6 +214,7 @@ describe('MongoStoreProvider Notifications', () => {
 		};
 		const createNotificationTwo = {
 			to: 'two@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -227,6 +233,7 @@ describe('MongoStoreProvider Notifications', () => {
 		const provider = mongoStoreProvider;
 		const createNotification = {
 			to: 'joe@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -255,6 +262,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.notificationsCollection.deleteMany({});
 		const createNotificationOne = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -264,6 +272,7 @@ describe('MongoStoreProvider Notifications', () => {
 		};
 		const createNotificationTwo = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId: 'externalId',
 			providerType: AirhornProviderType.SMTP,
@@ -285,6 +294,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.notificationsCollection.deleteMany({});
 		const createNotificationOne = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId,
 			providerType: AirhornProviderType.SMTP,
@@ -294,6 +304,7 @@ describe('MongoStoreProvider Notifications', () => {
 		};
 		const createNotificationTwo = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			externalId,
 			providerType: AirhornProviderType.SMTP,
@@ -316,6 +327,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.notificationsCollection.deleteMany({});
 		const createNotificationOne = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			providerType: AirhornProviderType.SMTP,
 			status: AirhornNotificationStatus.QUEUED,
@@ -324,6 +336,7 @@ describe('MongoStoreProvider Notifications', () => {
 		};
 		const createNotificationTwo = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			providerType: AirhornProviderType.SMTP,
 			status: AirhornNotificationStatus.QUEUED,
@@ -345,6 +358,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.notificationsCollection.deleteMany({});
 		const createNotificationOne = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			providerType: AirhornProviderType.SMTP,
 			status: AirhornNotificationStatus.QUEUED,
@@ -353,6 +367,7 @@ describe('MongoStoreProvider Notifications', () => {
 		};
 		const createNotificationTwo = {
 			to: 'joe1@bar.com',
+			from: '',
 			subscriptionId: new ObjectId().toHexString(),
 			providerType: AirhornProviderType.SMTP,
 			status: AirhornNotificationStatus.QUEUED,
@@ -372,22 +387,17 @@ describe('MongoStoreProvider Notifications', () => {
 		const provider = mongoStoreProvider;
 		const status = AirhornNotificationStatus.QUEUED;
 		await provider.notificationsCollection.deleteMany({});
+
 		const createNotificationOne = {
-			to: 'joe1@bar.com',
+			...createNotificationOneTestData,
 			subscriptionId: new ObjectId().toHexString(),
-			providerType: AirhornProviderType.SMTP,
-			status,
-			templateName: 'foo.template',
-			providerName: 'foo.provider',
 		};
+
 		const createNotificationTwo = {
-			to: 'joe1@bar.com',
+			...createNotificationTwoTestData,
 			subscriptionId: new ObjectId().toHexString(),
-			providerType: AirhornProviderType.SMTP,
-			status,
-			templateName: 'foo.template',
-			providerName: 'foo.provider',
 		};
+
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
@@ -402,19 +412,13 @@ describe('MongoStoreProvider Notifications', () => {
 		const providerName = 'foo.provider';
 		await provider.notificationsCollection.deleteMany({});
 		const createNotificationOne = {
-			to: 'joe1@bar.com',
+			...createNotificationOneTestData,
 			subscriptionId: new ObjectId().toHexString(),
-			providerType: AirhornProviderType.SMTP,
-			status: AirhornNotificationStatus.QUEUED,
-			templateName: 'foo.template',
 			providerName,
 		};
 		const createNotificationTwo = {
-			to: 'joe1@bar.com',
+			...createNotificationTwoTestData,
 			subscriptionId: new ObjectId().toHexString(),
-			providerType: AirhornProviderType.SMTP,
-			status: AirhornNotificationStatus.QUEUED,
-			templateName: 'foo.template',
 			providerName,
 		};
 		await provider.createNotification(createNotificationOne);

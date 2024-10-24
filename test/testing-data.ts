@@ -1,3 +1,5 @@
+import { AirhornProviderType } from '../src/provider-type.js';
+import { AirhornNotificationStatus } from '../src/notification.js';
 
 export class TestingData {
 	public users = new Array<TestingUser>();
@@ -23,3 +25,22 @@ export class TestingUser {
 		this.downloads = downloads;
 	}
 }
+
+export const createNotificationOneTestData = {
+	to: 'joe1@bar.com',
+	from: '',
+	subscriptionId: '123',
+	providerType: AirhornProviderType.SMTP,
+	status: AirhornNotificationStatus.SENT,
+	templateName: 'foo.template',
+	providerName: 'foo.provider',
+};
+export const createNotificationTwoTestData = {
+	to: 'joe1@bar.com',
+	from: '',
+	subscriptionId: '123',
+	providerType: AirhornProviderType.SMTP,
+	status: AirhornNotificationStatus.SENT,
+	templateName: 'foo.template',
+	providerName: 'foo.provider',
+};

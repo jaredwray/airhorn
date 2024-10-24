@@ -34,7 +34,7 @@ export type AirhornStoreProvider = {
 	getSubscriptionsByExternalId(externalId: string): Promise<AirhornSubscription[]>;
 	getSubscriptionsByTemplateName(templateName: string): Promise<AirhornSubscription[]>;
 	getSubscriptionsByProviderType(providerType: AirhornProviderType): Promise<AirhornSubscription[]>;
-	
+
 	createNotification(notification: CreateAirhornNotification): Promise<AirhornNotification>;
 	updateNotification(notification: AirhornNotification): Promise<AirhornNotification>;
 	deleteNotificationById(id: string): Promise<void>;
@@ -127,6 +127,5 @@ export class AirhornStore {
 	public async deleteTemplateById(name: string): Promise<void> {
 		return this.deleteTemplateById(name);
 	}
-
 }
 

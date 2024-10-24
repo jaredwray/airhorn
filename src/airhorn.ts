@@ -114,7 +114,7 @@ export class Airhorn {
 		throw new Error('Airhorn store not available');
 	}
 
-	public async getSubscriptionById(id: string): Promise<AirhornSubscription> {
+	public async getSubscriptionById(id: string): Promise<AirhornSubscription | undefined> {
 		if (this._store) {
 			return this._store.getSubscriptionById(id);
 		}
