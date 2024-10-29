@@ -1,6 +1,6 @@
 import { Cacheable } from 'cacheable';
 import { type AirhornTemplate } from './template.js';
-import { AirhornStore } from './store.js';
+import { type AirhornStore } from './store.js';
 
 export class AirhornTemplateService {
 	private readonly _cache = new Cacheable();
@@ -11,14 +11,14 @@ export class AirhornTemplateService {
 	}
 
 	public async get(templateName: string): Promise<AirhornTemplate | undefined> {
-		if(await this._cache.has(templateName)) {
+		if (await this._cache.has(templateName)) {
 			return this._cache.get(templateName);
 		}
 
 		const template = await this._store.provider?.getTemplateById(templateName);
 
-		if(template) {
-			this._cache.set(templateName, template);
+		if (template) {
+			await this._cache.set(templateName, template);
 		}
 
 		return template;

@@ -1,3 +1,4 @@
+import { MemoryStoreProvider } from './store-providers/memory.js';
 import { AirhornTemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
@@ -5,7 +6,6 @@ import { type AirhornSubscription } from './subscription.js';
 import {
 	AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription,
 } from './store.js';
-import { MemoryStoreProvider } from 'store-providers/memory.js';
 
 export type AirhornOptions = {
 	TEMPLATE_PATH?: string;
