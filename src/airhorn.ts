@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { MemoryStoreProvider } from './store-providers/memory.js';
 import { AirhornTemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
@@ -6,6 +7,7 @@ import { type AirhornSubscription } from './subscription.js';
 import {
 	AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription,
 } from './store.js';
+import { AirhornTemplateSync } from './template-sync.js';
 
 export type AirhornOptions = {
 	TEMPLATE_PATH?: string;
@@ -52,7 +54,7 @@ export class Airhorn {
 		return this._providerService;
 	}
 
-	public get store(): AirhornStore | undefined {
+	public get store(): AirhornStore {
 		return this._store;
 	}
 
@@ -66,6 +68,7 @@ export class Airhorn {
 
 			if (providers.length > 0) {
 				const message = template.render(providerType, data, languageCode);
+				console.log('message', message);
 
 				if (message) {
 					const random = Math.floor(Math.random() * providers.length);

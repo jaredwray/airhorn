@@ -56,18 +56,19 @@ export class AirhornTemplateSync {
 		const subDirectories = await this.getDirectories(directoryPath);
 
 		// Loop through the sub directories as it is language specific
-		console.log(subDirectories);
 		if (subDirectories.length > 0) {
 			for (const subDirectory of subDirectories) {
 				const langCode = subDirectory.split('/').pop() ?? '';
+				// eslint-disable-next-line no-await-in-loop
 				const subFiles = await fs.readdir(subDirectory);
-				for(const file of subFiles) {
+				for (const file of subFiles) {
 					const filePath = `${subDirectory}/${file}`;
 					// eslint-disable-next-line no-await-in-loop
 					const templateText = await this.createTemplateText(filePath, langCode);
 					template.text.push(templateText);
 				}
 			}
+
 			return template;
 		}
 
@@ -86,6 +87,7 @@ export class AirhornTemplateSync {
 		const templateText = new AirhornTemplateText();
 		templateText.langCode = languageCode ?? this._defaultLanguage;
 		const source = await fs.readFile(filePath, 'utf8');
+
 		let typeName = filePath.split('/').pop() ?? '';
 		typeName = typeName.split('.').shift() ?? '';
 
@@ -109,7 +111,7 @@ export class AirhornTemplateSync {
 		templateText.text = ecto.removeFrontMatter(source);
 
 		const frontMatter = ecto.getFrontMatter(source);
-		for( const [key, value] of Object.entries(frontMatter)) {
+		for (const [key, value] of Object.entries(frontMatter)) {
 			templateText.properties.set(key, value as string);
 		}
 

@@ -15,7 +15,7 @@ export class AirhornTemplateService {
 			return this._cache.get(templateName);
 		}
 
-		const template = await this._store.provider?.getTemplateById(templateName);
+		const template = await this._store.getTemplateById(templateName);
 
 		if (template) {
 			await this._cache.set(templateName, template);

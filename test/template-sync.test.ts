@@ -115,6 +115,10 @@ describe('create template text', async () => {
 });
 
 describe('create template', async () => {
+	test('should error if bad directory', async () => {
+		const airhornTemplateSync = new AirhornTemplateSync(AirhornTemplatePaths.GENERIC, defaultStore);
+		await expect(airhornTemplateSync.createTemplate('')).rejects.toThrow();
+	});
 	test('should create a template with default language', async () => {
 		const airhornTemplateSync = new AirhornTemplateSync(AirhornTemplatePaths.GENERIC, defaultStore);
 		const filePath = path.resolve(process.cwd(), AirhornTemplatePaths.GENERIC);
@@ -128,5 +132,29 @@ describe('create template', async () => {
 		const template = await airhornTemplateSync.createTemplate(filePath);
 		expect(template).toBeDefined();
 		expect(template.text).toHaveLength(6);
+	});
+});
+
+describe('template sync', async () => {
+	test('should sync template to a store', async () => {
+		const memoryStore = new AirhornStore(new MemoryStoreProvider());
+		const templatePath = path.resolve(process.cwd(), AirhornTemplatePaths.DEFAULT);
+		const airhornTemplateSync = new AirhornTemplateSync(templatePath, memoryStore);
+		await airhornTemplateSync.sync();
+		const templates = await memoryStore.getTemplates();
+		expect(templates).toHaveLength(3);
+		expect(templates[0].name).toBe('cool-multi-lingual');
+		expect(templates[0].text).toHaveLength(6);
+		expect(templates[1].name).toBe('generic-template-foo');
+		expect(templates[1].text).toHaveLength(2);
+		expect(templates[2].name).toBe('multiple-types-bar');
+		expect(templates[2].text).toHaveLength(3);
+	});
+
+	test('should error if source is bad', async () => {
+		const memoryStore = new AirhornStore(new MemoryStoreProvider());
+		const templatePath = path.resolve(process.cwd(), AirhornTemplatePaths.DEFAULT);
+		const airhornTemplateSync = new AirhornTemplateSync('', memoryStore);
+		await expect(airhornTemplateSync.sync()).rejects.toThrow();
 	});
 });

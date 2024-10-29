@@ -124,6 +124,10 @@ export class AirhornStore {
 		return this._provider.getTemplates();
 	}
 
+	public async getTemplateById(name: string): Promise<AirhornTemplate | undefined> {
+		return this._provider.getTemplateById(name);
+	}
+
 	public async deleteTemplateById(name: string): Promise<void> {
 		return this.deleteTemplateById(name);
 	}
