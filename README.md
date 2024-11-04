@@ -14,6 +14,7 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 
 # Table of Contents
 * [Features](#features)
+* [Getting Started](#gettign-started)
 * [Library API and Examples](#library-api)
 * [Supported Cloud Service Providers](#supported-cloud-service-providers)
 * [How to Contribute](#how-to-contribute)
@@ -29,13 +30,25 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 * Webhook Notifications - Built right into the system as a native feature.
 * 100% Code Coverage / Tested with Integration Tests
 * Built using [ecto](https://github.org/jaredwray/ecto) for handling multiple templates such as EJS, Handlebars, and more.
-* Built using [writr](https://github.org/jaredwray/writr) markdown based content.
 * Subscriptions - You can now specify a subscription for a profile and track it. Data is stored in MongoDB and Posgres will be supported soon.
 
 # ESM and Node Version Support
 
 This package is ESM only and tested on the current lts version and its previous. Please don't open issues for questions regarding CommonJS / ESM or previous Nodejs versions. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 
+# Gettign Started
+
+Airhorn allows you to use templates from the file system and sync them to the store that is provided. The in-memory store is great for just having templates that you load and then doing the `.send` functions. If you are planning to do `Notifications` or `Subscriptions` you should use the `Mongo` or `Postgres` provider for persistance. Here is an example of sending with the standard in-memory store. 
+
+```js
+const airhorn = new Airhorn();
+await airhorn.syncTemplates('./templates'); // this will load your templates into memory
+const data = {
+    // your data to render the template goes here
+}
+
+airhorn.send('me@you.com', 'no-contact@company.com', 'template-name', AirhornProviderType.SMTP, data, 'en');
+```
 
 # Library API
 
