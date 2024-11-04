@@ -129,7 +129,7 @@ export class AirhornStore {
 	}
 
 	public async deleteTemplateById(name: string): Promise<void> {
-		return this.deleteTemplateById(name);
+		return this._provider.deleteTemplateById(name);
 	}
 }
 
