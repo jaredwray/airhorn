@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/no-negated-condition */
 import firebase, { type ServiceAccount} from 'firebase-admin';
-import type {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-service.js';
 import {AirhornProviderType} from '../provider-type.js';
 
 export class FirebaseMessaging implements ProviderInterface {
