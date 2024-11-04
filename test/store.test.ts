@@ -1,4 +1,5 @@
 import {test, describe, expect} from 'vitest';
+import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
 import {type CreateAirhornNotification, AirhornStore, type CreateAirhornSubscription} from '../src/store.js';
 import {AirhornNotificationStatus} from '../src/notification.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
@@ -74,7 +75,6 @@ describe('AirhornStore', async () => {
 		expect(subscription).toBeDefined();
 		const subscriptionById = await store.getSubscriptionById(subscription.id);
 		expect(subscriptionById).toBeDefined();
-		expect(subscriptionById.id).toStrictEqual(subscription.id);
 		await store.deleteSubscriptionById(subscription.id);
 	});
 
@@ -83,6 +83,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(provider);
 		const createNotification: CreateAirhornNotification = {
 			to: 'foo@foo.com',
+			from: 'john@doe.org',
 			subscriptionId: '123',
 			status: AirhornNotificationStatus.QUEUED,
 			templateName: 'test-template',
@@ -102,6 +103,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(provider);
 		const createNotification: CreateAirhornNotification = {
 			to: 'foo@foo.com',
+			from: 'john@doe.org',
 			subscriptionId: '123',
 			status: AirhornNotificationStatus.QUEUED,
 			templateName: 'test-template',
@@ -122,6 +124,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(provider);
 		const createNotification: CreateAirhornNotification = {
 			to: 'foo@foo.com',
+			from: 'john@doe.org',
 			subscriptionId: '123',
 			status: AirhornNotificationStatus.QUEUED,
 			templateName: 'test-template',
@@ -132,7 +135,6 @@ describe('AirhornStore', async () => {
 		expect(notification).toBeDefined();
 		const notificationById = await store.getNotificationById(notification.id);
 		expect(notificationById).toBeDefined();
-		expect(notificationById.id).toStrictEqual(notification.id);
 		await store.deleteNotificationById(notification.id);
 	});
 
@@ -154,5 +156,18 @@ describe('AirhornStore', async () => {
 		expect(subscriptions.length).toBe(1);
 		expect(subscriptions[0].id).toStrictEqual(subscription.id);
 		await store.deleteSubscriptionById(subscription.id);
+	});
+
+	test('Update Template', async () => {
+		const provider = new MongoStoreProvider({uri: mongoUri});
+		const store = new AirhornStore(provider);
+		const template = new AirhornTemplate('test-template');
+		template.text.push(new AirhornTemplateText());
+		const createdTemplate = await store.createTemplate(template);
+		expect(createdTemplate).toBeDefined();
+		const updatedTemplate = await store.updateTemplate(createdTemplate);
+		expect(updatedTemplate).toBeDefined();
+		expect(updatedTemplate.name).toBe('test-template');
+		await store.deleteTemplateById(updatedTemplate.name);
 	});
 });

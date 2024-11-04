@@ -1,6 +1,6 @@
 
 import twilio from 'twilio';
-import type {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-service.js';
 import {AirhornProviderType} from '../provider-type.js';
 
 export class TwilioSMS implements ProviderInterface {

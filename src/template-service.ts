@@ -1,39 +1,20 @@
-import fs from 'node:fs';
-import {Template} from './template.js';
+import { type AirhornTemplate } from './template.js';
+import { type AirhornStore } from './store.js';
 
-export class TemplateService {
-	options = {
-		TEMPLATE_PATH: './templates',
-	};
+export class AirhornTemplateService {
+	private readonly _store: AirhornStore;
 
-	templates = new Array<Template>();
-
-	constructor(options?: any) {
-		this.options = { ...this.options, ...options };
-		this.loadTemplates();
+	constructor(store: AirhornStore) {
+		this._store = store;
 	}
 
-	public loadTemplates() {
-		this.templates = new Array<Template>();
-		if (fs.existsSync(this.options.TEMPLATE_PATH)) {
-			const templateDirectories = fs.readdirSync(this.options.TEMPLATE_PATH);
-
-			for (const templateDirectoryPath of templateDirectories) {
-				const templatePath = `${String(this.options.TEMPLATE_PATH)}/${String(templateDirectoryPath)}`;
-				const template = new Template(templatePath);
-
-				this.templates.push(template);
-			}
-		}
+	public get store(): AirhornStore {
+		return this._store;
 	}
 
-	public getTemplate(templateName: string): Template | undefined {
-		for (const template of this.templates) {
-			if (template.name === templateName) {
-				return template;
-			}
-		}
+	public async get(templateName: string): Promise<AirhornTemplate | undefined> {
+		const template = await this._store.getTemplateById(templateName);
 
-		return undefined;
+		return template;
 	}
 }

@@ -1,4 +1,3 @@
-import type { ProviderInterface } from './provider-interface.js';
 import { AirhornProviderType } from './provider-type.js';
 import { WebHook } from './providers/webhook.js';
 import { TwilioSMS } from './providers/twilio-sms.js';
@@ -8,6 +7,12 @@ import { AWSSMS } from './providers/aws-sms.js';
 import { FirebaseMessaging } from './providers/firebase-messaging.js';
 import { AWSSNS } from './providers/aws-sns.js';
 import { type AirhornOptions } from './airhorn.js';
+
+export type ProviderInterface = {
+	name: string;
+	type: AirhornProviderType;
+	send(to: string, from: string, message: string, subject?: string): Promise<boolean>;
+};
 
 export class ProviderService {
 	options: AirhornOptions = {};

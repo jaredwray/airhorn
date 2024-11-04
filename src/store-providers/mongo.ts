@@ -1,6 +1,7 @@
 import {
 	MongoClient, type Db, type Collection, ObjectId, type Document,
 } from 'mongodb';
+import { AirhornTemplate } from '../template.js';
 import { type AirhornProviderType } from '../provider-type.js';
 import { type AirhornStoreProvider } from '../airhorn.js';
 import {
@@ -14,15 +15,18 @@ export type MongoStoreProviderOptions = {
 	uri?: string;
 	subscriptionsCollectionName?: string;
 	notificationsCollectionName?: string;
+	templatesCollectionName?: string;
 };
 
 export class MongoStoreProvider implements AirhornStoreProvider {
 	public subscriptionsCollectionName = 'airhornSubscriptions';
 	public notificationsCollectionName = 'airhornNotifications';
+	public templatesCollectionName = 'airhornTemplates';
 	public uri = 'mongodb://localhost:27017';
 	public readonly db: Db;
 	public readonly subscriptionsCollection: Collection;
 	public readonly notificationsCollection: Collection;
+	public readonly templatesCollection: Collection;
 
 	constructor(options?: MongoStoreProviderOptions) {
 		if (options) {
@@ -33,10 +37,64 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		this.db = client.db();
 		this.subscriptionsCollection = this.db.collection(this.subscriptionsCollectionName);
 		this.notificationsCollection = this.db.collection(this.notificationsCollectionName);
+		this.templatesCollection = this.db.collection(this.templatesCollectionName);
 	}
 
 	get name(): string {
 		return 'MongoStoreProvider';
+	}
+
+	async createTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
+		const templateDocument: Document = {
+			name: template.name,
+			text: template.text,
+			createdAt: new Date(),
+			modifiedAt: new Date(),
+		};
+
+		const result = await this.templatesCollection.insertOne(templateDocument);
+		const document = await this.templatesCollection.findOne({_id: result.insertedId});
+		/* c8 ignore next 3 */
+		if (!document) {
+			throw new Error('Failed to create template');
+		}
+
+		return this.mapDocumentToTemplate(document);
+	}
+
+	async updateTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
+		const result = await this.templatesCollection.updateOne({name: template.name}, {
+			$set: {
+				name: template.name,
+				text: template.text,
+				modifiedAt: new Date(),
+			},
+		});
+		const updatedTemplate = await this.templatesCollection.findOne({name: template.name});
+		/* c8 ignore next 3 */
+		if (!updatedTemplate) {
+			throw new Error('Failed to update template');
+		}
+
+		return this.mapDocumentToTemplate(updatedTemplate);
+	}
+
+	async deleteTemplateById(name: string): Promise<void> {
+		await this.templatesCollection.deleteOne({name});
+	}
+
+	async getTemplates(): Promise<AirhornTemplate[]> {
+		const documents = await this.templatesCollection.find({}).toArray();
+		return this.mapDocumentsToTemplates(documents);
+	}
+
+	async getTemplateById(name: string): Promise<AirhornTemplate | undefined> {
+		const document = await this.templatesCollection.findOne({name});
+		if (!document) {
+			return undefined;
+		}
+
+		return this.mapDocumentToTemplate(document);
 	}
 
 	async createSubscription(createSubcription: CreateAirhornSubscription): Promise<AirhornSubscription> {
@@ -182,32 +240,32 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		return this.mapDocumentToNotification(document);
 	}
 
-	async getNotificationByTo(to: string): Promise<AirhornNotification[]> {
+	async getNotificationsByTo(to: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({to}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByExternalId(externalId: string): Promise<AirhornNotification[]> {
+	async getNotificationsByExternalId(externalId: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({externalId}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByTemplateName(templateName: string): Promise<AirhornNotification[]> {
+	async getNotificationsByTemplateName(templateName: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({templateName}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
+	async getNotificationsByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({providerType}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
+	async getNotificationsByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({status}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByProviderName(providerName: string): Promise<AirhornNotification[]> {
+	async getNotificationsByProviderName(providerName: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({providerName}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
@@ -276,5 +334,21 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		}
 
 		return notifications;
+	}
+
+	mapDocumentToTemplate(document: Document): AirhornTemplate {
+		const template = new AirhornTemplate(document.name as string);
+		template.text = document.text;
+
+		return template;
+	}
+
+	mapDocumentsToTemplates(documents: Document[]): AirhornTemplate[] {
+		const templates = new Array<AirhornTemplate>();
+		for (const document of documents) {
+			templates.push(this.mapDocumentToTemplate(document));
+		}
+
+		return templates;
 	}
 }

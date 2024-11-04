@@ -2,5 +2,9 @@
 	"firstName": "{{ firstName }}",
 	"lastName": "{{ lastName }}", 
 	"email": "{{ email }}",
-	"dowloads": [{{#each downloads}}"{{ download }}",{{#if @last}} "{{ download }}"{{/if}}{{/each}}]
+	"dowloads": [
+	{{#each downloads}}
+		"{{this}}"{{#unless @last}},{{/unless}}
+	{{/each}}
+	]
 }

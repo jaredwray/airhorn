@@ -1,5 +1,5 @@
 import {SNS} from '@aws-sdk/client-sns';
-import type {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-service.js';
 import {AirhornProviderType} from '../provider-type.js';
 
 export class AWSSNS implements ProviderInterface {
