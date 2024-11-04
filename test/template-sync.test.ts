@@ -157,4 +157,12 @@ describe('template sync', async () => {
 		const airhornTemplateSync = new AirhornTemplateSync('', memoryStore);
 		await expect(airhornTemplateSync.sync()).rejects.toThrow();
 	});
+
+	test('template sync when store already exists. No duplicates', async () => {
+		const memoryStore = new AirhornStore(new MemoryStoreProvider());
+		const templatePath = path.resolve(process.cwd(), AirhornTemplatePaths.DEFAULT);
+		const airhornTemplateSync = new AirhornTemplateSync(templatePath, memoryStore);
+		await airhornTemplateSync.sync();
+		await airhornTemplateSync.sync();
+	});
 });
