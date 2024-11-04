@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/no-useless-promise-resolve-reject */
+
 import path from 'node:path';
 import {
 	describe, test, expect, vi,
