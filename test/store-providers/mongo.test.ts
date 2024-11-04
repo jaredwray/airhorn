@@ -1,10 +1,9 @@
-import { stat } from 'node:fs';
 import {test, describe, expect} from 'vitest';
 import { ObjectId } from 'mongodb';
 import {MongoStoreProvider} from '../../src/store-providers/mongo.js';
 import { AirhornNotificationStatus } from '../../src/notification.js';
 import { AirhornProviderType } from '../../src/provider-type.js';
-import { createNotificationOneTestData, createNotificationTwoTestData } from '../testing-data.js';
+import { createNotificationOneTestData, createNotificationTwoTestData, airhornTestTemplate } from '../testing-data.js';
 
 const uri = 'mongodb://localhost:27017';
 const mongoStoreProvider = new MongoStoreProvider({uri});
@@ -431,5 +430,40 @@ describe('MongoStoreProvider Notifications', () => {
 		expect(result.length).toBe(2);
 		expect(result[0].providerName).toBe(providerName);
 		await provider.notificationsCollection.deleteMany({});
+	});
+});
+
+describe('MongoStoreProvider Templates', () => {
+	test('createTemplate', async () => {
+		const provider = mongoStoreProvider;
+		const template = await provider.createTemplate(airhornTestTemplate);
+		expect(template.name).toBe('airhorn-test-template');
+		await provider.templatesCollection.deleteMany({});
+	});
+
+	test('get templates', async () => {
+		const provider = mongoStoreProvider;
+		await provider.templatesCollection.deleteMany({});
+		const templateOne = await provider.createTemplate(airhornTestTemplate);
+		const templateTwo = await provider.createTemplate(airhornTestTemplate);
+		const templates = await provider.getTemplates();
+		expect(templates.length).toBe(2);
+		expect(templates[0].name).toBe(templateOne.name);
+		await provider.templatesCollection.deleteMany({});
+	});
+
+	test('get template by name', async () => {
+		const provider = mongoStoreProvider;
+		await provider.templatesCollection.deleteMany({});
+		const template = await provider.createTemplate(airhornTestTemplate);
+		const result = await provider.getTemplateById(template.name);
+		expect(result?.name).toBe(template.name);
+		await provider.templatesCollection.deleteMany({});
+	});
+
+	test('get umndefined template by name', async () => {
+		const provider = mongoStoreProvider;
+		const result = await provider.getTemplateById('undefined-template');
+		expect(result).toBeUndefined();
 	});
 });

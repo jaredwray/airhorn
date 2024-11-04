@@ -1,5 +1,6 @@
 import { AirhornProviderType } from '../src/provider-type.js';
 import { AirhornNotificationStatus } from '../src/notification.js';
+import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
 
 export class TestingData {
 	public users = new Array<TestingUser>();
@@ -50,3 +51,12 @@ export const createNotificationTwoTestData = {
 	templateName: 'foo.template',
 	providerName: 'foo.provider',
 };
+
+export const airhornTestTemplateText = new AirhornTemplateText();
+airhornTestTemplateText.langCode = 'en';
+airhornTestTemplateText.properties.set('subject', 'Test Subject');
+airhornTestTemplateText.templateFormat = 'handlebars';
+airhornTestTemplateText.text = 'Test Text';
+
+export const airhornTestTemplate = new AirhornTemplate('airhorn-test-template');
+airhornTestTemplate.text.push(airhornTestTemplateText);
