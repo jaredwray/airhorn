@@ -1,6 +1,5 @@
 import {describe, test, expect} from 'vitest';
 import { AirhornStore } from '../src/store.js';
-import { Airhorn } from '../src/airhorn.js';
 import {AirhornTemplateService} from '../src/template-service.js';
 import { MemoryStoreProvider } from '../src/store-providers/memory.js';
 
