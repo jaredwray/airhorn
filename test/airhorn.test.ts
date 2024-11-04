@@ -1,16 +1,12 @@
 /* eslint-disable unicorn/no-useless-promise-resolve-reject */
-import path from 'node:path';
 import {
 	describe, test, expect, vi,
 } from 'vitest';
 import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
-import {Airhorn, type AirhornNotification, AirhornNotificationStatus} from '../src/airhorn.js';
+import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
-import { MemoryStoreProvider } from '../src/store-providers/memory.js';
-import { AirhornStore } from '../src/store.js';
-import { AirhornTemplateSync } from '../src/template-sync.js';
 import {TestingData, TestingDataTwo} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
@@ -72,9 +68,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 		};
 		const airhorn = new Airhorn(options);
-
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
+		await airhorn.syncTemplates();
 
 		const userData = new TestingDataTwo();
 
@@ -86,9 +80,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 		};
 		const airhorn = new Airhorn(options);
-
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
+		await airhorn.syncTemplates();
 
 		const userData = new TestingDataTwo();
 
@@ -112,9 +104,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 		};
 		const airhorn = new Airhorn(options);
-
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
+		await airhorn.syncTemplates();
 
 		const userData = new TestingData();
 
@@ -136,9 +126,7 @@ describe('Airhorn', async () => {
 		};
 
 		const airhorn = new Airhorn(options);
-
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
+		await airhorn.syncTemplates();
 
 		airhorn.send = vi.fn().mockReturnValue(true) as any;
 		const userData = new TestingData();
@@ -151,6 +139,8 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 		};
 		const airhorn = new Airhorn(options);
+		await airhorn.syncTemplates();
+
 		const userData = new TestingData();
 
 		airhorn.providers.addProvider({
@@ -161,9 +151,6 @@ describe('Airhorn', async () => {
 			},
 		});
 
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
-
 		expect(await airhorn.sendSMS('5555555555', '5552223333', 'cool-multi-lingual', userData.users[2])).toEqual(true);
 	});
 
@@ -173,6 +160,7 @@ describe('Airhorn', async () => {
 			FIREBASE_CERT,
 		};
 		const airhorn = new Airhorn(options);
+		await airhorn.syncTemplates();
 
 		const notification = {
 			title: 'Airhorn',
@@ -186,9 +174,6 @@ describe('Airhorn', async () => {
 		} as any;
 		airhorn.providers.addProvider(firebaseAdmin);
 
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
-
 		expect(await airhorn.send('deviceToken', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH, notification)).toEqual(true);
 	});
 
@@ -198,6 +183,7 @@ describe('Airhorn', async () => {
 			FIREBASE_CERT,
 		};
 		const airhorn = new Airhorn(options);
+		await airhorn.syncTemplates();
 
 		const notification = {
 			title: 'Airhorn',
@@ -211,9 +197,6 @@ describe('Airhorn', async () => {
 		} as any;
 		airhorn.providers.addProvider(firebaseAdmin);
 
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
-
 		expect(await airhorn.sendMobilePush('deviceToken', '', 'generic-template-foo', notification)).toEqual(true);
 	});
 
@@ -223,8 +206,7 @@ describe('Airhorn', async () => {
 		};
 
 		const airhorn = new Airhorn(options);
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
+		await airhorn.syncTemplates();
 
 		airhorn.providers.removeProvider('firebase-messaging');
 
@@ -245,9 +227,7 @@ describe('Airhorn', async () => {
 		};
 
 		const airhorn = new Airhorn(options);
-
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
-		await airhornTemplateSync.sync();
+		await airhorn.syncTemplates();
 
 		airhorn.providers.removeProvider('firebase-messaging');
 

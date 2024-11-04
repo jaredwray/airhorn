@@ -39,7 +39,15 @@ export class AirhornTemplateSync {
 			// eslint-disable-next-line no-await-in-loop
 			const template = await this.createTemplate(directory);
 			// eslint-disable-next-line no-await-in-loop
-			await this._destination.createTemplate(template);
+			const templateExists = await this._destination.getTemplateById(template.name);
+			// eslint-disable-next-line unicorn/prefer-ternary
+			if (templateExists) {
+				// eslint-disable-next-line no-await-in-loop
+				await this._destination.updateTemplate(template);
+			} else {
+				// eslint-disable-next-line no-await-in-loop
+				await this._destination.createTemplate(template);
+			}
 		}
 	}
 

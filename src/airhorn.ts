@@ -142,6 +142,16 @@ export class Airhorn {
 
 		throw new Error('Airhorn store not available');
 	}
+
+	public async syncTemplates(templatesPath?: string): Promise<void> {
+		const fullTemplatesPath = templatesPath ?? this.options.TEMPLATE_PATH;
+		if (!fullTemplatesPath) {
+			throw new Error('Invalid template path');
+		}
+
+		const templateSync = new AirhornTemplateSync(fullTemplatesPath, this._store, this.options.DEFAULT_TEMPLATE_LANGUAGE);
+		await templateSync.sync();
+	}
 }
 
 export { AirhornProviderType } from './provider-type.js';
