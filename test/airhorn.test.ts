@@ -79,7 +79,21 @@ describe('Airhorn', async () => {
 		const userData = new TestingDataTwo();
 
 		expect(await airhorn.sendWebhook(WEBHOOK_MOCK_URL, '', 'cool-multi-lingual', userData.userOne)).toEqual(true);
-	}, 40_000);
+	});
+
+	test('Airhorn - Send Friendly WebHook in Spanish', async () => {
+		const options = {
+			TEMPLATE_PATH: './test/templates',
+		};
+		const airhorn = new Airhorn(options);
+
+		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
+		await airhornTemplateSync.sync();
+
+		const userData = new TestingDataTwo();
+
+		expect(await airhorn.sendWebhook(WEBHOOK_MOCK_URL, '', 'cool-multi-lingual', userData.userOne, 'es')).toEqual(true);
+	});
 
 	test('Airhorn - Get Loaded Providers', () => {
 		const airhorn = new Airhorn({

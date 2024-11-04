@@ -83,6 +83,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(provider);
 		const createNotification: CreateAirhornNotification = {
 			to: 'foo@foo.com',
+			from: 'john@doe.org',
 			subscriptionId: '123',
 			status: AirhornNotificationStatus.QUEUED,
 			templateName: 'test-template',
@@ -102,6 +103,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(provider);
 		const createNotification: CreateAirhornNotification = {
 			to: 'foo@foo.com',
+			from: 'john@doe.org',
 			subscriptionId: '123',
 			status: AirhornNotificationStatus.QUEUED,
 			templateName: 'test-template',
@@ -122,6 +124,7 @@ describe('AirhornStore', async () => {
 		const store = new AirhornStore(provider);
 		const createNotification: CreateAirhornNotification = {
 			to: 'foo@foo.com',
+			from: 'john@doe.org',
 			subscriptionId: '123',
 			status: AirhornNotificationStatus.QUEUED,
 			templateName: 'test-template',

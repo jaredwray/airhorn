@@ -1,3 +1,4 @@
+import { stat } from 'node:fs';
 import {test, describe, expect} from 'vitest';
 import { ObjectId } from 'mongodb';
 import {MongoStoreProvider} from '../../src/store-providers/mongo.js';
@@ -391,11 +392,13 @@ describe('MongoStoreProvider Notifications', () => {
 		const createNotificationOne = {
 			...createNotificationOneTestData,
 			subscriptionId: new ObjectId().toHexString(),
+			status,
 		};
 
 		const createNotificationTwo = {
 			...createNotificationTwoTestData,
 			subscriptionId: new ObjectId().toHexString(),
+			status,
 		};
 
 		await provider.createNotification(createNotificationOne);

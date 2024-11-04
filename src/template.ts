@@ -10,8 +10,9 @@ export type AirhornTemplateTextOptions = {
 };
 
 export class AirhornTemplateText {
-	private _langCode = '';
+	private _langCode = 'en';
 	private _text = '';
+	private _templateFormat = 'ejs'; // Default to ejs
 	private _providerType: AirhornProviderType = AirhornProviderType.SMTP;
 	private _properties: Map<string, string> = new Map<string, string>();
 
@@ -31,6 +32,14 @@ export class AirhornTemplateText {
 		if (options?.properties) {
 			this._properties = options.properties;
 		}
+	}
+
+	public get templateFormat(): string {
+		return this._templateFormat;
+	}
+
+	public set templateFormat(value: string) {
+		this._templateFormat = value;
 	}
 
 	public get langCode(): string {
@@ -102,12 +111,13 @@ export class AirhornTemplate {
 		return result;
 	}
 
-	public getText(providerType: AirhornProviderType, languageCode?: string): string {
-		let result = '';
+	public getText(providerType: AirhornProviderType, languageCode?: string): AirhornTemplateText | undefined {
+		let result;
+		languageCode ??= 'en';
 		const text = this._text.find(text => text.providerType === providerType && text.langCode === languageCode);
 
 		if (text) {
-			result = text.text;
+			result = text;
 		}
 
 		return result;
@@ -116,10 +126,9 @@ export class AirhornTemplate {
 	public render(providerType: AirhornProviderType, data?: any, languageCode?: string): string {
 		let result = '';
 		const text = this.getText(providerType, languageCode);
-
 		if (text) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-			result = this._ecto.renderSync(text, data);
+			result = this._ecto.renderSync(text.text, data, text.templateFormat);
 		}
 
 		return result;

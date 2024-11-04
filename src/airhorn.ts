@@ -68,7 +68,6 @@ export class Airhorn {
 
 			if (providers.length > 0) {
 				const message = template.render(providerType, data, languageCode);
-				console.log('message', message);
 
 				if (message) {
 					const random = Math.floor(Math.random() * providers.length);

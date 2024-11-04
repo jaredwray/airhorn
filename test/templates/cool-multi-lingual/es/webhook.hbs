@@ -1,6 +1,10 @@
 {
-	"firstName": "{{ firstName }}",
-	"lastName": "{{ lastName }}", 
-	"email": "{{ email }}",
-	"dowloads": [{{#each downloads}}"{{ download }}",{{#if @last}} "{{ download }}"{{/if}}{{/each}}]
+	"nombre": "{{ firstName }}",
+	"apellido": "{{ lastName }}", 
+	"correo": "{{ email }}",
+	"descargas": [
+	{{#each downloads}}
+		"{{this}}"{{#unless @last}},{{/unless}}
+	{{/each}}
+	]
 }

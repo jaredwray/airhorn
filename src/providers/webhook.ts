@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type {ProviderInterface} from '../provider-interface.js';
+import type {ProviderInterface} from '../provider-service.js';
 import {AirhornProviderType} from '../provider-type.js';
 
 export class WebHook implements ProviderInterface {

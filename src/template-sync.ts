@@ -115,6 +115,8 @@ export class AirhornTemplateSync {
 			templateText.properties.set(key, value as string);
 		}
 
+		templateText.templateFormat = ecto.getEngineByFilePath(filePath);
+
 		return templateText;
 	}
 
