@@ -4,10 +4,9 @@ import {
 } from 'vitest';
 import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
-import {Airhorn, type AirhornNotification, AirhornNotificationStatus} from '../src/airhorn.js';
+import {Airhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
-import { type CreateAirhornNotification } from '../src/store.js';
 import {TestingData} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
