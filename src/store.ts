@@ -40,12 +40,12 @@ export type AirhornStoreProvider = {
 	deleteNotificationById(id: string): Promise<void>;
 	getNotifications(): Promise<AirhornNotification[]>;
 	getNotificationById(id: string): Promise<AirhornNotification | undefined>;
-	getNotificationByTo(to: string): Promise<AirhornNotification[]>;
-	getNotificationByExternalId(externalId: string): Promise<AirhornNotification[]>;
-	getNotificationByTemplateName(templateName: string): Promise<AirhornNotification[]>;
-	getNotificationByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]>;
-	getNotificationByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]>;
-	getNotificationByProviderName(providerName: string): Promise<AirhornNotification[]>;
+	getNotificationsByTo(to: string): Promise<AirhornNotification[]>;
+	getNotificationsByExternalId(externalId: string): Promise<AirhornNotification[]>;
+	getNotificationsByTemplateName(templateName: string): Promise<AirhornNotification[]>;
+	getNotificationsByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]>;
+	getNotificationsByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]>;
+	getNotificationsByProviderName(providerName: string): Promise<AirhornNotification[]>;
 
 	createTemplate(template: AirhornTemplate): Promise<AirhornTemplate>;
 	updateTemplate(template: AirhornTemplate): Promise<AirhornTemplate>;

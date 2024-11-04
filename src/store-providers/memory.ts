@@ -108,32 +108,32 @@ export class MemoryStoreProvider implements AirhornStoreProvider {
 		return this._notifications.get(id);
 	}
 
-	async getNotificationByTo(to: string): Promise<AirhornNotification[]> {
+	async getNotificationsByTo(to: string): Promise<AirhornNotification[]> {
 		const notifications = await this.getNotifications();
 		return notifications.filter(notification => notification.to === to);
 	}
 
-	async getNotificationByExternalId(externalId: string): Promise<AirhornNotification[]> {
+	async getNotificationsByExternalId(externalId: string): Promise<AirhornNotification[]> {
 		const notifications = await this.getNotifications();
 		return notifications.filter(notification => notification.externalId === externalId);
 	}
 
-	async getNotificationByTemplateName(templateName: string): Promise<AirhornNotification[]> {
+	async getNotificationsByTemplateName(templateName: string): Promise<AirhornNotification[]> {
 		const notifications = await this.getNotifications();
 		return notifications.filter(notification => notification.templateName === templateName);
 	}
 
-	async getNotificationByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
+	async getNotificationsByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
 		const notifications = await this.getNotifications();
 		return notifications.filter(notification => notification.providerType === providerType);
 	}
 
-	async getNotificationByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
+	async getNotificationsByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
 		const notifications = await this.getNotifications();
 		return notifications.filter(notification => notification.status === status);
 	}
 
-	async getNotificationByProviderName(providerName: string): Promise<AirhornNotification[]> {
+	async getNotificationsByProviderName(providerName: string): Promise<AirhornNotification[]> {
 		const notifications = await this.getNotifications();
 		return notifications.filter(notification => notification.providerName === providerName);
 	}

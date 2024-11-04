@@ -283,7 +283,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
-		const result = await provider.getNotificationByTo('joe1@bar.com');
+		const result = await provider.getNotificationsByTo('joe1@bar.com');
 		expect(result.length).toBe(2);
 		await provider.notificationsCollection.deleteMany({});
 	});
@@ -315,7 +315,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
-		const result = await provider.getNotificationByExternalId(externalId);
+		const result = await provider.getNotificationsByExternalId(externalId);
 		expect(result.length).toBe(2);
 		expect(result[0].externalId).toBe(externalId);
 		await provider.notificationsCollection.deleteMany({});
@@ -346,7 +346,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
-		const result = await provider.getNotificationByTemplateName(templateName);
+		const result = await provider.getNotificationsByTemplateName(templateName);
 		expect(result.length).toBe(2);
 		expect(result[0].templateName).toBe(templateName);
 		await provider.notificationsCollection.deleteMany({});
@@ -377,7 +377,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
-		const result = await provider.getNotificationByProviderType(providerType);
+		const result = await provider.getNotificationsByProviderType(providerType);
 		expect(result.length).toBe(2);
 		expect(result[0].providerType).toBe(providerType);
 		await provider.notificationsCollection.deleteMany({});
@@ -403,7 +403,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
-		const result = await provider.getNotificationByStatus(status);
+		const result = await provider.getNotificationsByStatus(status);
 		expect(result.length).toBe(2);
 		expect(result[0].status).toBe(status);
 		await provider.notificationsCollection.deleteMany({});
@@ -426,7 +426,7 @@ describe('MongoStoreProvider Notifications', () => {
 		await provider.createNotification(createNotificationOne);
 		await provider.createNotification(createNotificationTwo);
 
-		const result = await provider.getNotificationByProviderName(providerName);
+		const result = await provider.getNotificationsByProviderName(providerName);
 		expect(result.length).toBe(2);
 		expect(result[0].providerName).toBe(providerName);
 		await provider.notificationsCollection.deleteMany({});

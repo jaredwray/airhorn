@@ -240,32 +240,32 @@ export class MongoStoreProvider implements AirhornStoreProvider {
 		return this.mapDocumentToNotification(document);
 	}
 
-	async getNotificationByTo(to: string): Promise<AirhornNotification[]> {
+	async getNotificationsByTo(to: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({to}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByExternalId(externalId: string): Promise<AirhornNotification[]> {
+	async getNotificationsByExternalId(externalId: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({externalId}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByTemplateName(templateName: string): Promise<AirhornNotification[]> {
+	async getNotificationsByTemplateName(templateName: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({templateName}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
+	async getNotificationsByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({providerType}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
+	async getNotificationsByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({status}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
 
-	async getNotificationByProviderName(providerName: string): Promise<AirhornNotification[]> {
+	async getNotificationsByProviderName(providerName: string): Promise<AirhornNotification[]> {
 		const documents = await this.notificationsCollection.find({providerName}).toArray();
 		return this.mapDocumentsToNotifications(documents);
 	}
