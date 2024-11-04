@@ -1,4 +1,3 @@
-import path from 'node:path';
 import { MemoryStoreProvider } from './store-providers/memory.js';
 import { AirhornTemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
@@ -104,49 +103,29 @@ export class Airhorn {
 	}
 
 	public async createSubscription(subscription: CreateAirhornSubscription): Promise<AirhornSubscription> {
-		if (this._store) {
-			return this._store.createSubscription(subscription);
-		}
-
-		throw new Error('Airhorn store not available');
+		return this._store.createSubscription(subscription);
 	}
 
 	public async updateSubscription(subscription: AirhornSubscription): Promise<AirhornSubscription> {
-		if (this._store) {
-			return this._store.updateSubscription(subscription);
-		}
-
-		throw new Error('Airhorn store not available');
+		return this._store.updateSubscription(subscription);
 	}
 
 	public async getSubscriptionById(id: string): Promise<AirhornSubscription | undefined> {
-		if (this._store) {
-			return this._store.getSubscriptionById(id);
-		}
-
-		throw new Error('Airhorn store not available');
+		return this._store.getSubscriptionById(id);
 	}
 
 	public async getSubscriptionByExternalId(externalId: string): Promise<AirhornSubscription[]> {
-		if (this._store) {
-			return this._store.getSubscriptionsByExternalId(externalId);
-		}
-
-		throw new Error('Airhorn store not available');
+		return this._store.getSubscriptionsByExternalId(externalId);
 	}
 
 	public async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
-		if (this._store) {
-			return this._store.deleteSubscription(subscription);
-		}
-
-		throw new Error('Airhorn store not available');
+		return this._store.deleteSubscription(subscription);
 	}
 
 	public async syncTemplates(templatesPath?: string): Promise<void> {
 		const fullTemplatesPath = templatesPath ?? this.options.TEMPLATE_PATH;
 		if (!fullTemplatesPath) {
-			throw new Error('Invalid template path');
+			throw new Error('No template path provided');
 		}
 
 		const templateSync = new AirhornTemplateSync(fullTemplatesPath, this._store, this.options.DEFAULT_TEMPLATE_LANGUAGE);

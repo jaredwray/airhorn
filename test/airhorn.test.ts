@@ -45,6 +45,19 @@ describe('Airhorn', async () => {
 		expect(airhorn.providers.options.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
 	});
 
+	test('Airhorn - Get Templates', async () => {
+		const options = { TEMPLATE_PATH: './foo/templates' };
+		const airhorn = new Airhorn(options);
+
+		expect(airhorn.templates).toBeDefined();
+	});
+
+	test('Airhorn - sync template throws due to invalid path', async () => {
+		const airhorn = new Airhorn();
+		airhorn.options.TEMPLATE_PATH = undefined;
+		await expect(airhorn.syncTemplates()).rejects.toThrow();
+	});
+
 	test('Airhorn - Options Validated in Config', () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
