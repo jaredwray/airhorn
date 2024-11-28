@@ -28,7 +28,7 @@
     "test:services:stop": "docker compose -f docker-compose.yml down"
   },
   "devDependencies": {
-    "@types/node": "^22.10.0",
+    "@types/node": "^22.10.1",
     "@vitest/coverage-v8": "^2.1.6",
     "docula": "^0.9.5",
     "rimraf": "^6.0.1",
