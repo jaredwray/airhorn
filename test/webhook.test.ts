@@ -4,14 +4,9 @@ import {
 	describe, test, expect, vi,
 } from 'vitest';
 import type * as admin from 'firebase-admin';
-import {AirhornProviderType} from '../src/provider-type.js';
-import {Airhorn, type AirhornNotification, AirhornNotificationStatus} from '../src/airhorn.js';
-import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
-import { MongoStoreProvider } from '../src/store-providers/mongo.js';
-import { MemoryStoreProvider } from '../src/store-providers/memory.js';
-import { AirhornStore } from '../src/store.js';
+import { createAirhorn} from '../src/airhorn.js';
 import { AirhornTemplateSync } from '../src/template-sync.js';
-import {TestingData, TestingDataTwo} from './testing-data.js';
+import {TestingDataTwo} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
@@ -42,9 +37,9 @@ describe('Airhorn', async () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
 		};
-		const airhorn = new Airhorn(options);
+		const airhorn = await createAirhorn(options);
 
-		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.store);
+		const airhornTemplateSync = new AirhornTemplateSync(path.resolve(options.TEMPLATE_PATH), airhorn.templates.provider);
 		await airhornTemplateSync.sync();
 
 		const userData = new TestingDataTwo();

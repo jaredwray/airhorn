@@ -2,8 +2,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { describe, test, expect} from 'vitest';
 import { AirhornTemplateSync } from '../src/template-sync.js';
-import { MemoryStoreProvider } from '../src/store-providers/memory.js';
-import { AirhornStore } from '../src/store.js';
+import { MemoryTemplateProvider } from '../src/template-providers/memory.js';
 import { AirhornProviderType } from '../src/provider-type.js';
 
 enum AirhornTemplatePaths {
@@ -13,7 +12,7 @@ enum AirhornTemplatePaths {
 	MUTLIPLE_TYPES = 'test/templates/multiple-types-bar',
 }
 
-const defaultStore = new AirhornStore(new MemoryStoreProvider());
+const defaultStore = new MemoryTemplateProvider();
 
 describe('template-sync', async () => {
 	test('should initialize with a default language', async () => {
@@ -137,7 +136,7 @@ describe('create template', async () => {
 
 describe('template sync', async () => {
 	test('should sync template to a store', async () => {
-		const memoryStore = new AirhornStore(new MemoryStoreProvider());
+		const memoryStore = new MemoryTemplateProvider();
 		const templatePath = path.resolve(process.cwd(), AirhornTemplatePaths.DEFAULT);
 		const airhornTemplateSync = new AirhornTemplateSync(templatePath, memoryStore);
 		await airhornTemplateSync.sync();
@@ -152,14 +151,14 @@ describe('template sync', async () => {
 	});
 
 	test('should error if source is bad', async () => {
-		const memoryStore = new AirhornStore(new MemoryStoreProvider());
+		const memoryStore = new MemoryTemplateProvider();
 		const templatePath = path.resolve(process.cwd(), AirhornTemplatePaths.DEFAULT);
 		const airhornTemplateSync = new AirhornTemplateSync('', memoryStore);
 		await expect(airhornTemplateSync.sync()).rejects.toThrow();
 	});
 
 	test('template sync when store already exists. No duplicates', async () => {
-		const memoryStore = new AirhornStore(new MemoryStoreProvider());
+		const memoryStore = new MemoryTemplateProvider();
 		const templatePath = path.resolve(process.cwd(), AirhornTemplatePaths.DEFAULT);
 		const airhornTemplateSync = new AirhornTemplateSync(templatePath, memoryStore);
 		await airhornTemplateSync.sync();

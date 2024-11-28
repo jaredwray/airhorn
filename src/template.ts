@@ -10,68 +10,28 @@ export type AirhornTemplateTextOptions = {
 };
 
 export class AirhornTemplateText {
-	private _langCode = 'en';
-	private _text = '';
-	private _templateFormat = 'ejs'; // Default to ejs
-	private _providerType: AirhornProviderType = AirhornProviderType.SMTP;
-	private _properties: Map<string, string> = new Map<string, string>();
+	public langCode = 'en';
+	public text = '';
+	public templateFormat = 'ejs'; // Default to ejs
+	public providerType: AirhornProviderType = AirhornProviderType.SMTP;
+	public properties: Map<string, string> = new Map<string, string>();
 
 	constructor(options?: AirhornTemplateTextOptions) {
 		if (options?.langCode) {
-			this._langCode = options.langCode;
+			this.langCode = options.langCode;
 		}
 
 		if (options?.text) {
-			this._text = options.text;
+			this.text = options.text;
 		}
 
 		if (options?.providerType) {
-			this._providerType = options.providerType;
+			this.providerType = options.providerType;
 		}
 
 		if (options?.properties) {
-			this._properties = options.properties;
+			this.properties = options.properties;
 		}
-	}
-
-	public get templateFormat(): string {
-		return this._templateFormat;
-	}
-
-	public set templateFormat(value: string) {
-		this._templateFormat = value;
-	}
-
-	public get langCode(): string {
-		return this._langCode;
-	}
-
-	public set langCode(value: string) {
-		this._langCode = value;
-	}
-
-	public get text(): string {
-		return this._text;
-	}
-
-	public set text(value: string) {
-		this._text = value;
-	}
-
-	public get providerType(): AirhornProviderType {
-		return this._providerType;
-	}
-
-	public set providerType(value: AirhornProviderType) {
-		this._providerType = value;
-	}
-
-	public get properties(): Map<string, string> {
-		return this._properties;
-	}
-
-	public set properties(value: Map<string, string>) {
-		this._properties = value;
 	}
 }
 
