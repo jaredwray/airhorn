@@ -4,7 +4,7 @@ import {
 } from 'vitest';
 import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
-import {Airhorn} from '../src/airhorn.js';
+import {Airhorn, createAirhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import { MongoStoreProvider } from '../src/store-providers/mongo.js';
 import {TestingData, TestingDataTwo} from './testing-data.js';
@@ -38,40 +38,18 @@ describe('Airhorn', async () => {
 		expect(new Airhorn()).toEqual(new Airhorn());
 	});
 
-	test('Airhorn - Get Providers', () => {
-		const options = { TEMPLATE_PATH: './foo/templates' };
-		const airhorn = new Airhorn(options);
-
-		expect(airhorn.providers.options.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
-	});
-
 	test('Airhorn - Get Templates', async () => {
-		const options = { TEMPLATE_PATH: './foo/templates' };
-		const airhorn = new Airhorn(options);
+		const options = { TEMPLATE_PATH: './test/templates' };
+		const airhorn = await createAirhorn(options);
 
 		expect(airhorn.templates).toBeDefined();
 	});
 
-	test('Airhorn - sync template throws due to invalid path', async () => {
-		const airhorn = new Airhorn();
-		airhorn.options.TEMPLATE_PATH = undefined;
-		await expect(airhorn.syncTemplates()).rejects.toThrow();
-	});
-
-	test('Airhorn - Options Validated in Config', () => {
+	test('Airhorn - Get Provider By Type', async () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
 		};
-		const airhorn = new Airhorn(options);
-
-		expect(airhorn.options.TEMPLATE_PATH).toEqual(options.TEMPLATE_PATH);
-	});
-
-	test('Airhorn - Get Provider By Type', () => {
-		const options = {
-			TEMPLATE_PATH: './test/templates',
-		};
-		const airhorn = new Airhorn(options);
+		const airhorn = await createAirhorn(options);
 
 		expect(airhorn.providers.getProviderByType(AirhornProviderType.WEBHOOK).length).toEqual(1);
 	});
@@ -80,8 +58,7 @@ describe('Airhorn', async () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
 		};
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		const userData = new TestingDataTwo();
 
@@ -92,8 +69,7 @@ describe('Airhorn', async () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
 		};
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		const userData = new TestingDataTwo();
 
@@ -102,7 +78,6 @@ describe('Airhorn', async () => {
 
 	test('Airhorn - Get Loaded Providers', () => {
 		const airhorn = new Airhorn({
-			TEMPLATE_PATH: './test/templates',
 			TWILIO_SMS_ACCOUNT_SID: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
 			TWILIO_SMS_AUTH_TOKEN: 'baz',
 			TWILIO_SENDGRID_API_KEY: 'foo',
@@ -116,8 +91,7 @@ describe('Airhorn', async () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
 		};
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		const userData = new TestingData();
 
@@ -138,8 +112,7 @@ describe('Airhorn', async () => {
 			TWILIO_SENDGRID_API_KEY: 'SG.test-key',
 		};
 
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		airhorn.send = vi.fn().mockReturnValue(true) as any;
 		const userData = new TestingData();
@@ -151,8 +124,7 @@ describe('Airhorn', async () => {
 		const options = {
 			TEMPLATE_PATH: './test/templates',
 		};
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		const userData = new TestingData();
 
@@ -172,8 +144,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 			FIREBASE_CERT,
 		};
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		const notification = {
 			title: 'Airhorn',
@@ -195,8 +166,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 			FIREBASE_CERT,
 		};
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		const notification = {
 			title: 'Airhorn',
@@ -218,8 +188,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 		};
 
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		airhorn.providers.removeProvider('firebase-messaging');
 
@@ -239,8 +208,7 @@ describe('Airhorn', async () => {
 			TEMPLATE_PATH: './test/templates',
 		};
 
-		const airhorn = new Airhorn(options);
-		await airhorn.syncTemplates();
+		const airhorn = await createAirhorn(options);
 
 		airhorn.providers.removeProvider('firebase-messaging');
 
