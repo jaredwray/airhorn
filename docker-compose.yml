@@ -21,10 +21,3 @@ services:
       REDIS_HOST: redis
     ports:
       - 6379:6379
-
-  httpbin:
-    image: kennethreitz/httpbin
-    container_name: httpbin_container
-    ports:
-      - "8081:80" # Maps port 8080 on your machine to port 80 in the container
-    restart: always
