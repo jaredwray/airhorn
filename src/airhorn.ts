@@ -2,9 +2,8 @@ import { MemoryStoreProvider } from './store-providers/memory.js';
 import { AirhornTemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
-import { type AirhornSubscription } from './subscription.js';
 import {
-	AirhornStore, type AirhornStoreProvider, type CreateAirhornSubscription,
+	AirhornStore, type AirhornStoreProvider,
 } from './store.js';
 import { AirhornTemplateSync } from './template-sync.js';
 
@@ -102,26 +101,6 @@ export class Airhorn {
 		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
 	}
 
-	public async createSubscription(subscription: CreateAirhornSubscription): Promise<AirhornSubscription> {
-		return this._store.createSubscription(subscription);
-	}
-
-	public async updateSubscription(subscription: AirhornSubscription): Promise<AirhornSubscription> {
-		return this._store.updateSubscription(subscription);
-	}
-
-	public async getSubscriptionById(id: string): Promise<AirhornSubscription | undefined> {
-		return this._store.getSubscriptionById(id);
-	}
-
-	public async getSubscriptionByExternalId(externalId: string): Promise<AirhornSubscription[]> {
-		return this._store.getSubscriptionsByExternalId(externalId);
-	}
-
-	public async deleteSubscription(subscription: AirhornSubscription): Promise<void> {
-		return this._store.deleteSubscription(subscription);
-	}
-
 	public async syncTemplates(templatesPath?: string): Promise<void> {
 		const fullTemplatesPath = templatesPath ?? this.options.TEMPLATE_PATH;
 		if (!fullTemplatesPath) {
@@ -137,5 +116,3 @@ export { AirhornProviderType } from './provider-type.js';
 export {
 	AirhornStore, type AirhornStoreProvider,
 } from './store.js';
-export {type AirhornNotification, AirhornNotificationStatus} from './notification.js';
-export {type AirhornSubscription} from './subscription.js';

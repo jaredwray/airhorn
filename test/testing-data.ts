@@ -1,6 +1,3 @@
-import { type CreateAirhornSubscription } from 'store.js';
-import { AirhornProviderType } from '../src/provider-type.js';
-import { AirhornNotificationStatus } from '../src/notification.js';
 import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
 
 export class TestingData {
@@ -33,38 +30,6 @@ export class TestingUser {
 		this.downloads = downloads;
 	}
 }
-
-export const createNotificationOneTestData = {
-	to: 'joe1@bar.com',
-	from: '',
-	subscriptionId: '123',
-	providerType: AirhornProviderType.SMTP,
-	status: AirhornNotificationStatus.SENT,
-	templateName: 'foo.template',
-	providerName: 'foo.provider',
-};
-export const createNotificationTwoTestData = {
-	to: 'joe1@bar.com',
-	from: '',
-	subscriptionId: '123',
-	providerType: AirhornProviderType.SMTP,
-	status: AirhornNotificationStatus.SENT,
-	templateName: 'foo.template',
-	providerName: 'foo.provider',
-};
-
-export const createSubscriptionOneTestData: CreateAirhornSubscription = {
-	to: 'me1@you1.com',
-	templateName: 'template1',
-	providerType: AirhornProviderType.SMTP,
-};
-
-export const createSubscriptionTwoTestData: CreateAirhornSubscription = {
-	to: 'me2@you2.com',
-	templateName: 'template2',
-	providerType: AirhornProviderType.MOBILE_PUSH,
-	externalId: '123',
-};
 
 export const airhornTestTemplateText = new AirhornTemplateText();
 airhornTestTemplateText.langCode = 'en';

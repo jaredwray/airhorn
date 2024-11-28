@@ -1,14 +1,9 @@
-import { type AirhornNotification, type AirhornNotificationStatus } from 'notification';
-import { type AirhornProviderType } from 'provider-type';
-import { type AirhornStoreProvider, type CreateAirhornNotification, type CreateAirhornSubscription } from 'store';
-import { type AirhornSubscription } from 'subscription';
 import { type AirhornTemplate } from 'template';
+import { type AirhornStoreProvider } from '../store.js';
 
 export class MemoryStoreProvider implements AirhornStoreProvider {
 	private _name = 'memory';
 	private _uri = 'memory://localhost';
-	private readonly _subscriptions: Map<string, AirhornSubscription> = new Map<string, AirhornSubscription>();
-	private readonly _notifications: Map<string, AirhornNotification> = new Map<string, AirhornNotification>();
 	private readonly _templates: Map<string, AirhornTemplate> = new Map<string, AirhornTemplate>();
 
 	public get name(): string {
@@ -29,113 +24,6 @@ export class MemoryStoreProvider implements AirhornStoreProvider {
 
 	public generateId(): string {
 		return Math.random().toString(36).slice(7);
-	}
-
-	async createSubscription(subscription: CreateAirhornSubscription): Promise<AirhornSubscription> {
-		const newSubscription: AirhornSubscription = {
-			...subscription,
-			id: this.generateId(),
-			createdAt: new Date(),
-			modifiedAt: new Date(),
-		};
-		this._subscriptions.set(newSubscription.id, newSubscription);
-		return newSubscription;
-	}
-
-	async updateSubscription(subscription: AirhornSubscription): Promise<AirhornSubscription> {
-		this._subscriptions.set(subscription.id, subscription);
-		return subscription;
-	}
-
-	async deleteSubscriptionById(id: string): Promise<void> {
-		this._subscriptions.delete(id);
-	}
-
-	async getSubscriptions(): Promise<AirhornSubscription[]> {
-		return [...this._subscriptions.values()];
-	}
-
-	async getSubscriptionById(id: string): Promise<AirhornSubscription | undefined> {
-		return this._subscriptions.get(id);
-	}
-
-	async getSubscriptionsByTo(to: string): Promise<AirhornSubscription[]> {
-		const subscriptions = await this.getSubscriptions();
-		return subscriptions.filter(subscription => subscription.to === to);
-	}
-
-	async getSubscriptionsByExternalId(externalId: string): Promise<AirhornSubscription[]> {
-		const subscriptions = await this.getSubscriptions();
-		return subscriptions.filter(subscription => subscription.externalId === externalId);
-	}
-
-	async getSubscriptionsByTemplateName(templateName: string): Promise<AirhornSubscription[]> {
-		const subscriptions = await this.getSubscriptions();
-		return subscriptions.filter(subscription => subscription.templateName === templateName);
-	}
-
-	async getSubscriptionsByProviderType(providerType: AirhornProviderType): Promise<AirhornSubscription[]> {
-		const subscriptions = await this.getSubscriptions();
-		return subscriptions.filter(subscription => subscription.providerType === providerType);
-	}
-
-	async createNotification(notification: CreateAirhornNotification): Promise<AirhornNotification> {
-		const newNotification: AirhornNotification = {
-			...notification,
-			id: this.generateId(),
-			createdAt: new Date(),
-			modifiedAt: new Date(),
-			providerResponse: [],
-		};
-		this._notifications.set(newNotification.id, newNotification);
-		return newNotification;
-	}
-
-	async updateNotification(notification: AirhornNotification): Promise<AirhornNotification> {
-		this._notifications.set(notification.id, notification);
-		return notification;
-	}
-
-	async deleteNotificationById(id: string): Promise<void> {
-		this._notifications.delete(id);
-	}
-
-	async getNotifications(): Promise<AirhornNotification[]> {
-		return [...this._notifications.values()];
-	}
-
-	async getNotificationById(id: string): Promise<AirhornNotification | undefined> {
-		return this._notifications.get(id);
-	}
-
-	async getNotificationsByTo(to: string): Promise<AirhornNotification[]> {
-		const notifications = await this.getNotifications();
-		return notifications.filter(notification => notification.to === to);
-	}
-
-	async getNotificationsByExternalId(externalId: string): Promise<AirhornNotification[]> {
-		const notifications = await this.getNotifications();
-		return notifications.filter(notification => notification.externalId === externalId);
-	}
-
-	async getNotificationsByTemplateName(templateName: string): Promise<AirhornNotification[]> {
-		const notifications = await this.getNotifications();
-		return notifications.filter(notification => notification.templateName === templateName);
-	}
-
-	async getNotificationsByProviderType(providerType: AirhornProviderType): Promise<AirhornNotification[]> {
-		const notifications = await this.getNotifications();
-		return notifications.filter(notification => notification.providerType === providerType);
-	}
-
-	async getNotificationsByStatus(status: AirhornNotificationStatus): Promise<AirhornNotification[]> {
-		const notifications = await this.getNotifications();
-		return notifications.filter(notification => notification.status === status);
-	}
-
-	async getNotificationsByProviderName(providerName: string): Promise<AirhornNotification[]> {
-		const notifications = await this.getNotifications();
-		return notifications.filter(notification => notification.providerName === providerName);
 	}
 
 	async createTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
