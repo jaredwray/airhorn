@@ -1,4 +1,4 @@
-import { MemoryTemplateProvider } from 'template-providers/memory.js';
+import { MemoryTemplateProvider } from './template-providers/memory.js';
 import { type AirhornTemplate } from './template.js';
 
 export type AirhornTemplateProvider = {
