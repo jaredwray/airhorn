@@ -4,7 +4,7 @@ import { AirhornProviderType } from './provider-type.js';
 import { AirhornTemplateSync } from './template-sync.js';
 
 export type CreateAirhornOptions = {
-	TEMPLATE_PATH: string;
+	TEMPLATE_PATH?: string;
 } & AirhornOptions;
 
 export type AirhornOptions = {

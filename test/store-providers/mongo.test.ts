@@ -1,6 +1,9 @@
+import { text } from 'node:stream/consumers';
 import {test, describe, expect} from 'vitest';
 import {MongoTemplateProvider} from '../../src/template-providers/mongo.js';
 import { airhornTestTemplate } from '../testing-data.js';
+import { AirhornTemplateText } from '../../src/template.js';
+import { AirhornProviderType } from '../../src/provider-type.js';
 
 const uri = 'mongodb://localhost:27017';
 const mongoStoreProvider = new MongoTemplateProvider({uri});
@@ -55,6 +58,25 @@ describe('MongoStoreProvider Templates', () => {
 	test('get umndefined template by name', async () => {
 		const provider = mongoStoreProvider;
 		const result = await provider.getTemplateById('undefined-template');
+		expect(result).toBeUndefined();
+	});
+
+	test('update template', async () => {
+		const provider = mongoStoreProvider;
+		await provider.templatesCollection.deleteMany({});
+		const template = await provider.createTemplate(airhornTestTemplate);
+		template.text = [new AirhornTemplateText({ text: 'updated', providerType: AirhornProviderType.SMS })];
+		const updatedTemplate = await provider.updateTemplate(template);
+		expect(updatedTemplate.getText(AirhornProviderType.SMS, 'en')?.text).toBe('updated');
+		await provider.templatesCollection.deleteMany({});
+	});
+
+	test('delete template by name', async () => {
+		const provider = mongoStoreProvider;
+		await provider.templatesCollection.deleteMany({});
+		const template = await provider.createTemplate(airhornTestTemplate);
+		await provider.deleteTemplateById(template.name);
+		const result = await provider.getTemplateById(template.name);
 		expect(result).toBeUndefined();
 	});
 });
