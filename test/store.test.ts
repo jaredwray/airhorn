@@ -1,7 +1,7 @@
 import {test, describe, expect} from 'vitest';
 import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
 import {AirhornStore} from '../src/store.js';
-import { MongoStoreProvider } from '../src/store-providers/mongo.js';
+import { MongoStoreProvider } from '../src/template-providers/mongo.js';
 
 const mongoUri = 'mongodb://localhost:27017/airhorn';
 

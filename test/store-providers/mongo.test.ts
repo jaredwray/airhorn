@@ -1,5 +1,5 @@
 import {test, describe, expect} from 'vitest';
-import {MongoStoreProvider} from '../../src/store-providers/mongo.js';
+import {MongoStoreProvider} from '../../src/template-providers/mongo.js';
 import { airhornTestTemplate } from '../testing-data.js';
 
 const uri = 'mongodb://localhost:27017';

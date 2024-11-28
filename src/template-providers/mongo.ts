@@ -2,7 +2,7 @@ import {
 	MongoClient, type Db, type Collection, ObjectId, type Document,
 } from 'mongodb';
 import { AirhornTemplate } from '../template.js';
-import { type AirhornStoreProvider } from '../airhorn.js';
+import { type AirhornTemplateProvider } from '../template-service.js';
 
 export type MongoStoreProviderOptions = {
 	uri?: string;
@@ -11,7 +11,7 @@ export type MongoStoreProviderOptions = {
 	templatesCollectionName?: string;
 };
 
-export class MongoStoreProvider implements AirhornStoreProvider {
+export class MongoTemplateProvider implements AirhornTemplateProvider {
 	public templatesCollectionName = 'airhornTemplates';
 	public uri = 'mongodb://localhost:27017';
 	public readonly db: Db;

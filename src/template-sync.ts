@@ -1,15 +1,15 @@
 import { promises as fs } from 'node:fs';
 import { Ecto } from 'ecto';
-import { type AirhornStore } from './store.js';
-import { AirhornTemplate, AirhornTemplateText, AirhornTemplateTextOptions } from './template.js';
+import { type AirhornTemplateProvider } from './template-service.js';
+import { AirhornTemplate, AirhornTemplateText } from './template.js';
 import { AirhornProviderType } from './provider-type.js';
 
 export class AirhornTemplateSync {
 	private readonly _src: string;
-	private readonly _destination: AirhornStore;
+	private readonly _destination: AirhornTemplateProvider;
 	private _defaultLanguage = 'en';
 
-	constructor(source: string, destination: AirhornStore, defaultLanguage?: string) {
+	constructor(source: string, destination: AirhornTemplateProvider, defaultLanguage?: string) {
 		this._src = source;
 		this._destination = destination;
 		if (defaultLanguage) {

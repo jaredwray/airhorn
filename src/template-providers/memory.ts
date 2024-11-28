@@ -1,7 +1,7 @@
-import { type AirhornTemplate } from 'template';
-import { type AirhornStoreProvider } from '../store.js';
+import { type AirhornTemplate } from '../template.js';
+import { type AirhornTemplateProvider } from '../template-service.js';
 
-export class MemoryStoreProvider implements AirhornStoreProvider {
+export class MemoryTemplateProvider implements AirhornTemplateProvider {
 	private _name = 'memory';
 	private _uri = 'memory://localhost';
 	private readonly _templates: Map<string, AirhornTemplate> = new Map<string, AirhornTemplate>();

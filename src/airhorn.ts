@@ -1,10 +1,6 @@
-import { MemoryStoreProvider } from './store-providers/memory.js';
-import { AirhornTemplateService } from './template-service.js';
+import { type AirhornTemplateProvider, AirhornTemplateService } from './template-service.js';
 import { ProviderService } from './provider-service.js';
 import { AirhornProviderType } from './provider-type.js';
-import {
-	AirhornStore, type AirhornStoreProvider,
-} from './store.js';
 import { AirhornTemplateSync } from './template-sync.js';
 
 export type CreateAirhornOptions = {
@@ -20,7 +16,7 @@ export type AirhornOptions = {
 	AWS_SMS_REGION?: string;
 	AWS_SNS_REGION?: string;
 	FIREBASE_CERT?: string;
-	STORE_PROVIDER?: AirhornStoreProvider;
+	TEMPLATE_PROVIDER?: AirhornTemplateProvider;
 };
 
 export class Airhorn {
@@ -28,22 +24,19 @@ export class Airhorn {
 		DEFAULT_TEMPLATE_LANGUAGE: 'en',
 	};
 
-	private readonly _templates: AirhornTemplateService;
+	private readonly _templates: AirhornTemplateService = new AirhornTemplateService();
 	private readonly _providerService = new ProviderService();
-	private readonly _store = new AirhornStore(new MemoryStoreProvider());
 
 	constructor(options?: AirhornOptions) {
 		if (options) {
 			this.options = { ...this.options, ...options };
 
-			if (this.options.STORE_PROVIDER) {
-				this._store = new AirhornStore(this.options.STORE_PROVIDER);
+			if (this.options.TEMPLATE_PROVIDER) {
+				this._templates = new AirhornTemplateService(this.options.TEMPLATE_PROVIDER);
 			}
 
 			this._providerService = new ProviderService(options);
 		}
-
-		this._templates = new AirhornTemplateService(this._store);
 	}
 
 	public get templates(): AirhornTemplateService {
@@ -52,10 +45,6 @@ export class Airhorn {
 
 	public get providers(): ProviderService {
 		return this._providerService;
-	}
-
-	public get store(): AirhornStore {
-		return this._store;
 	}
 
 	/* eslint max-params: [2, 6] */
@@ -107,7 +96,7 @@ export class Airhorn {
 export const createAirhorn = async (options?: CreateAirhornOptions) => {
 	const airhorn = new Airhorn(options);
 	if (options && options.TEMPLATE_PATH) {
-		const templateSync = new AirhornTemplateSync(options.TEMPLATE_PATH, airhorn.store, airhorn.options.DEFAULT_TEMPLATE_LANGUAGE);
+		const templateSync = new AirhornTemplateSync(options.TEMPLATE_PATH, airhorn.templates.provider, airhorn.options.DEFAULT_TEMPLATE_LANGUAGE);
 		await templateSync.sync();
 	}
 
@@ -115,6 +104,4 @@ export const createAirhorn = async (options?: CreateAirhornOptions) => {
 };
 
 export { AirhornProviderType } from './provider-type.js';
-export {
-	AirhornStore, type AirhornStoreProvider,
-} from './store.js';
+export { type AirhornTemplateProvider } from './template-service.js';

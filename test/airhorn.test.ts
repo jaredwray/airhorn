@@ -6,7 +6,6 @@ import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn, createAirhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
-import { MongoStoreProvider } from '../src/store-providers/mongo.js';
 import {TestingData, TestingDataTwo} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
@@ -221,14 +220,5 @@ describe('Airhorn', async () => {
 		});
 
 		expect(await airhorn.sendMobilePush('topicArnFromSns', '', 'generic-template-foo')).toEqual(true);
-	});
-});
-
-describe('Airhorn Store and Subscription', async () => {
-	test('Airhorn Store Initialization', async () => {
-		const provider = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
-		const airhorn = new Airhorn({STORE_PROVIDER: provider});
-		expect(airhorn.store).toBeDefined();
-		expect(airhorn?.store?.provider?.name).toBe('MongoStoreProvider');
 	});
 });

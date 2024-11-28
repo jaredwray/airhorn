@@ -2,7 +2,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { describe, test, expect} from 'vitest';
 import { AirhornTemplateSync } from '../src/template-sync.js';
-import { MemoryStoreProvider } from '../src/store-providers/memory.js';
+import { MemoryStoreProvider } from '../src/template-providers/memory.js';
 import { AirhornStore } from '../src/store.js';
 import { AirhornProviderType } from '../src/provider-type.js';
 
