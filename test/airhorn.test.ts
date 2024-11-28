@@ -31,7 +31,7 @@ vi.mock('firebase-admin', async () => {
 const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
 // eslint-disable-next-line n/prefer-global/process
-const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'http://localhost:8081/post';
+const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://mockhttp.org/post';
 
 describe('Airhorn', async () => {
 	test('Airhorn - Init', () => {
