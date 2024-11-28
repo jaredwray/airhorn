@@ -7,8 +7,11 @@ import {
 } from './store.js';
 import { AirhornTemplateSync } from './template-sync.js';
 
+export type CreateAirhornOptions = {
+	TEMPLATE_PATH: string;
+} & AirhornOptions;
+
 export type AirhornOptions = {
-	TEMPLATE_PATH?: string;
 	DEFAULT_TEMPLATE_LANGUAGE?: string;
 	TWILIO_SMS_ACCOUNT_SID?: string;
 	TWILIO_SMS_AUTH_TOKEN?: string;
@@ -22,7 +25,6 @@ export type AirhornOptions = {
 
 export class Airhorn {
 	options: AirhornOptions = {
-		TEMPLATE_PATH: './templates',
 		DEFAULT_TEMPLATE_LANGUAGE: 'en',
 	};
 
@@ -100,17 +102,17 @@ export class Airhorn {
 	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
 		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
 	}
+}
 
-	public async syncTemplates(templatesPath?: string): Promise<void> {
-		const fullTemplatesPath = templatesPath ?? this.options.TEMPLATE_PATH;
-		if (!fullTemplatesPath) {
-			throw new Error('No template path provided');
-		}
-
-		const templateSync = new AirhornTemplateSync(fullTemplatesPath, this._store, this.options.DEFAULT_TEMPLATE_LANGUAGE);
+export const createAirhorn = async (options?: CreateAirhornOptions) => {
+	const airhorn = new Airhorn(options);
+	if (options && options.TEMPLATE_PATH) {
+		const templateSync = new AirhornTemplateSync(options.TEMPLATE_PATH, airhorn.store, airhorn.options.DEFAULT_TEMPLATE_LANGUAGE);
 		await templateSync.sync();
 	}
-}
+
+	return airhorn;
+};
 
 export { AirhornProviderType } from './provider-type.js';
 export {
