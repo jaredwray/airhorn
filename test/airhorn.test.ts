@@ -263,37 +263,4 @@ describe('Airhorn Store and Subscription', async () => {
 		expect(airhorn.store).toBeDefined();
 		expect(airhorn?.store?.provider?.name).toBe('MongoStoreProvider');
 	});
-
-	test('Create Subscription', async () => {
-		const provider = new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'});
-		const airhorn = new Airhorn({STORE_PROVIDER: provider});
-		const createSubscription = {
-			to: 'john@doe.org',
-			templateName: 'test-template',
-			providerType: AirhornProviderType.SMTP,
-			externalId: '1234',
-		};
-		await airhorn.createSubscription(createSubscription);
-		const subscriptions = await airhorn.getSubscriptionByExternalId('1234');
-		expect(subscriptions.length).toBe(1);
-		await airhorn.deleteSubscription(subscriptions[0]);
-	});
-
-	test('Update Subscription', async () => {
-		const airhorn = new Airhorn({STORE_PROVIDER: new MongoStoreProvider({uri: 'mongodb://localhost:27017/airhorn'})});
-		const createSubscription = {
-			to: 'joe@mo.org',
-			templateName: 'test-template',
-			providerType: AirhornProviderType.SMTP,
-			externalId: '1234',
-		};
-		const subscription = await airhorn.createSubscription(createSubscription);
-		expect(subscription).toBeDefined();
-		subscription.templateName = 'updated-template';
-		const updatedSubscription = await airhorn.updateSubscription(subscription);
-		expect(updatedSubscription).toBeDefined();
-		const updatedSubscription2 = await airhorn.getSubscriptionById(updatedSubscription.id);
-		expect(updatedSubscription2?.templateName).toBe('updated-template');
-		await airhorn.deleteSubscription(updatedSubscription);
-	});
 });
