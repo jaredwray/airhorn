@@ -96,12 +96,19 @@ export class Airhorn {
 export const createAirhorn = async (options?: CreateAirhornOptions) => {
 	const airhorn = new Airhorn(options);
 	if (options && options.TEMPLATE_PATH) {
-		const templateSync = new AirhornTemplateSync(options.TEMPLATE_PATH, airhorn.templates.provider, airhorn.options.DEFAULT_TEMPLATE_LANGUAGE);
-		await templateSync.sync();
+		await syncTemplatesToAirhorn(options.TEMPLATE_PATH, airhorn);
 	}
 
 	return airhorn;
 };
 
+export const syncTemplatesToAirhorn = async (templatePath: string, airhorn: Airhorn) => {
+	const templateSync = new AirhornTemplateSync(templatePath, airhorn.templates.provider, airhorn.options.DEFAULT_TEMPLATE_LANGUAGE);
+	await templateSync.sync();
+};
+
 export { AirhornProviderType } from './provider-type.js';
 export { type AirhornTemplateProvider } from './template-service.js';
+export { AirhornTemplateSync } from './template-sync.js';
+export { MemoryTemplateProvider } from './template-providers/memory.js';
+export { MongoTemplateProvider } from './template-providers/mongo.js';
