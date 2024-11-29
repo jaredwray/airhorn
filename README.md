@@ -14,12 +14,17 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 
 # Table of Contents
 * [Features](#features)
-* [Getting Started](#gettign-started)
-* [Library API and Examples](#library-api)
+* [Getting Started](#getting-started)
+* [Library API](#library-api)
+* [Templates](#templates)
+* [Template Providers (In Memory, MongoDB, Postgres)](#template-providers-in-memory-mongodb-postgres)
+* [File System Templates](#file-system-templates)
+* [Examples for using this library](#examples-for-using-this-library)
 * [Supported Cloud Service Providers](#supported-cloud-service-providers)
+* [ESM and Node Version Support](#esm-and-node-version-support)
 * [How to Contribute](#how-to-contribute)
 * [Setting up your Development Environment](#setting-up-your-development-environment)
-* [Licensing](#licensing)
+* [Licensing and Copyright](#licensing-and-copyright)
 
 # Features
 
@@ -30,19 +35,25 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 * Webhook Notifications - Built right into the system as a native feature.
 * 100% Code Coverage / Tested with Integration Tests
 * Built using [ecto](https://github.org/jaredwray/ecto) for handling multiple templates such as EJS, Handlebars, and more.
-* Subscriptions - You can now specify a subscription for a profile and track it. Data is stored in MongoDB and Posgres will be supported soon.
-
-# ESM and Node Version Support
-
-This package is ESM only and tested on the current lts version and its previous. Please don't open issues for questions regarding CommonJS / ESM or previous Nodejs versions. To learn more about using ESM please read this from `sindresorhus`: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c
 
 # Gettign Started
 
-Airhorn allows you to use templates from the file system and sync them to the store that is provided. The in-memory store is great for just having templates that you load and then doing the `.send` functions. If you are planning to do `Notifications` or `Subscriptions` you should use the `Mongo` or `Postgres` provider for persistance. Here is an example of sending with the standard in-memory store. 
+To get started with Airhorn, you can install the package via npm:
+
+```bash
+npm install airhorn
+```
+
+Then, you can use the library in your code:
 
 ```js
-const airhorn = new Airhorn();
-await airhorn.syncTemplates('./templates'); // this will load your templates into memory
+import { createAirhorn, AirhornProviderType } from 'airhorn';
+
+const airhorn = new createAirhorn({
+    TEMPLATE_PATH: './your-template-path',
+    DEFAULT_TEMPLATE_LANGUAGE: 'en',
+    SENDGRID_API_KEY: 'YOUR_SEND_GRID_API_KEY',
+});
 const data = {
     // your data to render the template goes here
 }
@@ -116,11 +127,12 @@ The `AirhornOptions` enables you to configure the settings of Airhorn. It accept
 * `AWS_SMS_REGION` (string): For AWS, The endpoint region where an SMS is sent. By default, this value is undefined.
 * `AWS_SNS_REGION` (string): For AWS, the endpoint region where a push notification is sent. By default, this value is undefined.
 * `FIREBASE_CERT` (string): The certificate for sending push notifications through Google Firebase. By default, this value is undefined.
+* `TEMPLATE_PROVIDER` (AirhornTemplateProvider): The template provider to use. By default, this value is `MemoryTemplateProvider`.
 
 These settings can be overridden by passing them in when you create a new instance of `Airhorn`:
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
     TEMPLATE_PATH: './templates',
     DEFAULT_TEMPLATE_LANGUAGE: 'en',
     TWILIO_SMS_ACCOUNT_SID: 'YOUR TWILIO ACCOUNT SID',
@@ -129,15 +141,14 @@ const airhorn = new Airhorn({
     AWS_SES_REGION: 'YOUR AWS SES REGION',
     AWS_SMS_REGION: 'YOUR AWS SMS REGION',
     AWS_SNS_REGION: 'YOUR AWS SNS REGION',
-    FIREBASE_CERT: 'YOUR FIREBASE CERTIFICATE'
+    FIREBASE_CERT: 'YOUR FIREBASE CERTIFICATE',
+    TEMPLATE_PROVIDER: 'YOUR TEMPLATE PROVIDER'
 });
 ```
 
 # Templates
 
 This library supports the use of templates to easily send formatted messages to different providers. Sample templates can be found in `test/templates` within the subdirectories `cool-multi-lingual`, `generic-template-foo`, and `multiple-types-bar`.
-
-By default, `Config` will look for templates at `./templates`. However, this path can be manually adjusted if needed. 
 
 ## Language Localization
 
@@ -154,6 +165,75 @@ When looking at the sample templates, we can see that some of them support word 
 
 To substitute the appropriate text for `firstName`, `lastName`, and `email`, users can provide the appropriate data to the `send()` function. This data is then passed to the template and rendered automatically.
 
+# Template Providers (In Memory, MongoDB, Postgres)
+
+By default Airhorn uses an in-memory provider called `MemoryTemplateProvider`. This is great for testing and quick use cases. Which means that you can load your templates into memory and use then. This is done when you call `createAirhorn()` with the `TEMPLATE_PATH` set.
+
+```javascript
+import { createAirhorn } from 'airhorn';
+const airhorn = new createAirhorn({ TEMPLATE_PATH: './your-template-path' });
+```
+
+If you want to use `MongoDB` or `Postgres` you can use the `MongoTemplateProvider` or `PostgresTemplateProvider`. This is great for production and long running services. 
+
+```javascript
+import { createAirhorn, MongoTemplateProvider } from 'airhorn';
+
+const airhorn = new createAirhorn({
+    TEMPLATE_PATH: './your-template-path',
+    TEMPLATE_PROVIDER: new MongoTemplateProvider('mongodb://localhost:27017', 'airhorn')
+});
+```
+
+You can also do it by just passing in the uri note that the other options will be set to the defaults. :
+
+```javascript
+import { createAirhorn } from 'airhorn';
+
+const airhorn = new createAirhorn({
+    TEMPLATE_PATH: './your-template-path',
+    TEMPLATE_PROVIDER: 'postgres://localhost:5432/airhorn'
+});
+```
+
+Once you load a specific provider you will want to sync your templates to the provider. This is done using the `syncTemplatesToAirhorn` function. 
+
+```javascript
+import { syncTemplatesToAirhorn, createAirhorn } from 'airhorn';
+
+const airhorn = new createAirhorn({
+    TEMPLATE_PATH: './your-template-path',
+    TEMPLATE_PROVIDER: 'postgres://localhost:5432/airhorn'
+});
+
+await syncTemplatesToAirhorn('./your-template-path', airhorn);
+```
+
+# File System Templates
+
+In most cases we want to use the file system to store our templates for all the benefits of gitops and versioning. We have added good support for loading templates from the file system based on the following structure:
+
+```
+templates
+├── cool-multi-lingual
+│   ├── en
+│   │   ├── sms.hbs
+│   │   ├── smtp.hbs
+│   │   └── webhook.hbs
+│   └── es
+│       ├── sms.hbs
+│       ├── smtp.hbs
+│       └── webhook.hbs
+├── generic-template-foo
+│   ├── sms.hbs
+|   ├── smtp.hbs
+|   └── webhook.hbs
+```
+
+In this example you can see that we have the template name `cool-multi-lingual` and then the language code `en` for English. Then we have the type of template `sms`, `smtp`, and `webhook`. This is the structure that we use to load templates from the file system.
+
+If you do not need to support multiple languages you can just have the template name and the type of template like the example of `generic-template-foo`.
+
 # Examples for using this library
 
 This library can be used to easily send a variety of notifications. In this section, we'll cover how to implement some simple use cases.
@@ -163,18 +243,18 @@ This library can be used to easily send a variety of notifications. In this sect
 Using the send function, we can email 'john@doe.org' from 'hello@testing.com' using the generic template 'generic-template-foo'. We'll also use the provider type `AirhornProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
-import { Airhorn, AirhornProviderType } from 'airhorn';
-const airhorn = new Airhorn();
+import { createAirhorn, AirhornProviderType } from 'airhorn';
+const airhorn = new createAirhorn({ TEMPLATE_PATH: './your-template-path' });
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 ```
 
 ## Sending a simple webhook
 
-Here, we'll send a simple webhook to the URL 'https://httpbin.org/post':
+Here, we'll send a simple webhook to the URL 'https://mockhttp.org/post':
 
 ``` javascript
-const airhorn = new Airhorn();
-airhorn.send('https://httpbin.org/post', 'foo', 'bar', AirhornProviderType.WEBHOOK);
+const airhorn = new createAirhorn({ TEMPLATE_PATH: './your-template-path' });
+airhorn.send('https://mockhttp.org/post', 'foo', 'bar', AirhornProviderType.WEBHOOK);
 ```
 
 ## Using multiple providers
@@ -186,7 +266,8 @@ In this example, we'll send a message using multiple email providers:
 3. Send the message and it will randomly balance between the two providers.
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         AWS_SES_REGION = 'us-east-1',
         TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
 	});
@@ -194,7 +275,6 @@ const airhorn = new Airhorn({
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
 
 ```
-
 
 # Supported Cloud Service Providers
 
@@ -215,7 +295,8 @@ This library supports sending emails via AWS SES and Twilio Sendgrid.
 After configuring your system to use AWS SES, you can easily use `airhorn` to send emails. In this example, we'll email 'john@doe.org' from 'hello@testing.com' using the email template 'generic-template-foo'. We'll list the provider type as `AirhornProviderType.SMTP` to indicate that we're sending an email:
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         AWS_SES_REGION = 'us-east-1',
 	});
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
@@ -226,7 +307,8 @@ await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', 
 To send emails via Twilio Sendgrid, first update the `TWILIO_SENDGRID_API_KEY` value via `AirhornOptions`. Then, we can use the same syntax as above to send an email through Twilio Sendgrid:
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         TWILIO_SENDGRID_API_KEY = 'SENDGRID_API_KEY'
 	});
 await airhorn.send('john@doe.org', 'hello@testing.com', 'generic-template-foo', AirhornProviderType.SMTP);
@@ -241,7 +323,8 @@ This library supports sending SMS using AWS SMS and Twilio.
 Once your system is configured to use AWS SMS, you can send SMS notifications through AWS SMS. In this example, we'll send the notification to the phone number '5555555555' from the number '5552223333' with the raw text data 'Test message text'. Then, we'll list the provider type as `AirhornProviderType.SMS`.
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         AWS_SMS_REGION = 'us-east-1',
     });
 await airhorn.send('5555555555', '5552223333', 'Test message text', AirhornProviderType.SMS);
@@ -252,7 +335,8 @@ await airhorn.send('5555555555', '5552223333', 'Test message text', AirhornProvi
 To send SMS notifications via Twilio SMS, first update the `TWILIO_SMS_ACCOUNT_SID` and the `TWILIO_SMS_AUTH_TOKEN` values via the `AirhornOptions` as shown below. Then, we can send an SMS notification using the same syntax as above:
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         TWILIO_SMS_ACCOUNT_SID = 'TWILIO_SMS_ACCOUNT_SID',
         TWILIO_SMS_AUTH_TOKEN = 'TWILIO_SMS_AUTH_TOKEN'
     });
@@ -275,7 +359,8 @@ To use AWS SNS you will need to create a new SNS application in the AWS console 
 Then, you can send the push message to the device endpoint using `airhorn`:
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         AWS_SNS_REGION = 'us-east-1',
     });
 await airhorn.send('endpointArn', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH);
@@ -290,11 +375,16 @@ In your Firebase Project Settings, go to the `Service accounts` tab to generate 
 Then, you can send the push message to the device endpoint using `airhorn`:
 
 ```javascript
-const airhorn = new Airhorn({
+const airhorn = new createAirhorn({
+        TEMPLATE_PATH: './your-template-path',
         FIREBASE_CERT = 'FIREBASE_CERT'
     });
 await airhorn.send('endpointArn', '', 'generic-template-foo', AirhornProviderType.MOBILE_PUSH);
 ```
+
+# ESM and Node Version Support
+
+This package is ESM only and tested on the current lts version and its previous. Please don't open issues for questions regarding CommonJS / ESM or previous Nodejs versions.
 
 # How to Contribute 
 
