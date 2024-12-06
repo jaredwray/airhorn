@@ -1,9 +1,9 @@
-import { text } from 'node:stream/consumers';
+import {text} from 'node:stream/consumers';
 import {test, describe, expect} from 'vitest';
 import {MongoTemplateProvider} from '../../src/template-providers/mongo.js';
-import { airhornTestTemplate } from '../testing-data.js';
-import { AirhornTemplateText } from '../../src/template.js';
-import { AirhornProviderType } from '../../src/provider-type.js';
+import {airhornTestTemplate} from '../testing-data.js';
+import {AirhornTemplateText} from '../../src/template.js';
+import {AirhornProviderType} from '../../src/provider-type.js';
 
 const uri = 'mongodb://localhost:27017';
 const mongoStoreProvider = new MongoTemplateProvider({uri});
@@ -65,7 +65,7 @@ describe('MongoStoreProvider Templates', () => {
 		const provider = mongoStoreProvider;
 		await provider.templatesCollection.deleteMany({});
 		const template = await provider.createTemplate(airhornTestTemplate);
-		template.text = [new AirhornTemplateText({ text: 'updated', providerType: AirhornProviderType.SMS })];
+		template.text = [new AirhornTemplateText({text: 'updated', providerType: AirhornProviderType.SMS})];
 		const updatedTemplate = await provider.updateTemplate(template);
 		expect(updatedTemplate.getText(AirhornProviderType.SMS, 'en')?.text).toBe('updated');
 		await provider.templatesCollection.deleteMany({});

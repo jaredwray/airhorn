@@ -1,5 +1,5 @@
-import { type AirhornTemplate } from '../template.js';
-import { type AirhornTemplateProvider } from '../template-service.js';
+import {type AirhornTemplate} from '../template.js';
+import {type AirhornTemplateProvider} from '../template-service.js';
 
 export class MemoryTemplateProvider implements AirhornTemplateProvider {
 	private _name = 'memory';

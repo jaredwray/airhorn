@@ -1,5 +1,5 @@
 import {test, expect, vi} from 'vitest';
-import { TwilioSMS } from '../../src/providers/twilio-sms.js';
+import {TwilioSMS} from '../../src/providers/twilio-sms.js';
 
 const TWILIO_SMS_ACCOUNT_SID = 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
 const TWILIO_SMS_AUTH_TOKEN = 'your_auth_token';

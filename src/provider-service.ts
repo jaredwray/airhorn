@@ -1,12 +1,12 @@
-import { AirhornProviderType } from './provider-type.js';
-import { WebHook } from './providers/webhook.js';
-import { TwilioSMS } from './providers/twilio-sms.js';
-import { TwilioSendgrid } from './providers/twilio-sendgrid.js';
-import { AWSSES } from './providers/aws-ses.js';
-import { AWSSMS } from './providers/aws-sms.js';
-import { FirebaseMessaging } from './providers/firebase-messaging.js';
-import { AWSSNS } from './providers/aws-sns.js';
-import { type AirhornOptions } from './airhorn.js';
+import {AirhornProviderType} from './provider-type.js';
+import {WebHook} from './providers/webhook.js';
+import {TwilioSMS} from './providers/twilio-sms.js';
+import {TwilioSendgrid} from './providers/twilio-sendgrid.js';
+import {AWSSES} from './providers/aws-ses.js';
+import {AWSSMS} from './providers/aws-sms.js';
+import {FirebaseMessaging} from './providers/firebase-messaging.js';
+import {AWSSNS} from './providers/aws-sns.js';
+import {type AirhornOptions} from './airhorn.js';
 
 export type ProviderInterface = {
 	name: string;
@@ -20,7 +20,7 @@ export class ProviderService {
 
 	constructor(options?: any) {
 		if (options) {
-			this.options = { ...this.options, ...options };
+			this.options = {...this.options, ...options};
 		}
 
 		this.loadProviders();

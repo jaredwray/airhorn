@@ -1,8 +1,8 @@
 import {
 	MongoClient, type Db, type Collection, ObjectId, type Document,
 } from 'mongodb';
-import { AirhornTemplate } from '../template.js';
-import { type AirhornTemplateProvider } from '../template-service.js';
+import {AirhornTemplate} from '../template.js';
+import {type AirhornTemplateProvider} from '../template-service.js';
 
 export type MongoStoreProviderOptions = {
 	uri?: string;

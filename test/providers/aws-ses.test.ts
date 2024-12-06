@@ -1,5 +1,5 @@
 import {test, expect, vi} from 'vitest';
-import { AWSSES } from '../../src/providers/aws-ses.js';
+import {AWSSES} from '../../src/providers/aws-ses.js';
 
 const AWS_SES_REGION = 'us-east-1';
 

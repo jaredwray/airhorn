@@ -1,5 +1,5 @@
 import {test, expect, vi} from 'vitest';
-import { TwilioSendgrid } from '../../src/providers/twilio-sendgrid.js';
+import {TwilioSendgrid} from '../../src/providers/twilio-sendgrid.js';
 
 const TWILIO_SENGRID_API_KEY = 'SG.test-key';
 

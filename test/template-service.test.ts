@@ -1,8 +1,8 @@
 import {describe, test, expect} from 'vitest';
 import {AirhornTemplateService} from '../src/template-service.js';
-import { MemoryTemplateProvider } from '../src/template-providers/memory.js';
-import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
-import { AirhornProviderType } from '../src/provider-type.js';
+import {MemoryTemplateProvider} from '../src/template-providers/memory.js';
+import {AirhornTemplate, AirhornTemplateText} from '../src/template.js';
+import {AirhornProviderType} from '../src/provider-type.js';
 
 describe('TemplateService', () => {
 	test('template service can initialize', () => {

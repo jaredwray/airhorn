@@ -1,7 +1,7 @@
-import { type AirhornTemplateProvider, AirhornTemplateService } from './template-service.js';
-import { ProviderService } from './provider-service.js';
-import { AirhornProviderType } from './provider-type.js';
-import { AirhornTemplateSync } from './template-sync.js';
+import {type AirhornTemplateProvider, AirhornTemplateService} from './template-service.js';
+import {ProviderService} from './provider-service.js';
+import {AirhornProviderType} from './provider-type.js';
+import {AirhornTemplateSync} from './template-sync.js';
 
 export type CreateAirhornOptions = {
 	TEMPLATE_PATH?: string;
@@ -29,7 +29,7 @@ export class Airhorn {
 
 	constructor(options?: AirhornOptions) {
 		if (options) {
-			this.options = { ...this.options, ...options };
+			this.options = {...this.options, ...options};
 
 			if (this.options.TEMPLATE_PROVIDER) {
 				this._templates = new AirhornTemplateService(this.options.TEMPLATE_PROVIDER);
@@ -107,8 +107,8 @@ export const syncTemplatesToAirhorn = async (templatePath: string, airhorn: Airh
 	await templateSync.sync();
 };
 
-export { AirhornProviderType } from './provider-type.js';
-export { type AirhornTemplateProvider } from './template-service.js';
-export { AirhornTemplateSync } from './template-sync.js';
-export { MemoryTemplateProvider } from './template-providers/memory.js';
-export { MongoTemplateProvider } from './template-providers/mongo.js';
+export {AirhornProviderType} from './provider-type.js';
+export {type AirhornTemplateProvider} from './template-service.js';
+export {AirhornTemplateSync} from './template-sync.js';
+export {MemoryTemplateProvider} from './template-providers/memory.js';
+export {MongoTemplateProvider} from './template-providers/mongo.js';

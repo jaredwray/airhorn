@@ -1,4 +1,4 @@
-import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
+import {AirhornTemplate, AirhornTemplateText} from '../src/template.js';
 
 export class TestingData {
 	public users = new Array<TestingUser>();
