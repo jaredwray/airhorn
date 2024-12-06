@@ -10,6 +10,7 @@ test('AWS SES - Init', () => {
 test('AWS SES - Send', async () => {
 	const awsSES = new AWSSES(AWS_SES_REGION);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	awsSES.client = {
 		send: vi.fn().mockReturnValue({}),
 	} as any;
@@ -20,6 +21,7 @@ test('AWS SES - Send', async () => {
 test('AWS SES - Send with no Subject', async () => {
 	const awsSES = new AWSSES(AWS_SES_REGION);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	awsSES.client = {
 		send: vi.fn().mockReturnValue({}),
 	} as any;

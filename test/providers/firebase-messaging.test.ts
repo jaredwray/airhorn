@@ -31,6 +31,7 @@ test('Firebase Messaging to Device  - Send', async () => {
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	firebaseAdmin.client = {
 		send: vi.fn().mockReturnValue({}),
 	} as any;
@@ -43,6 +44,7 @@ test('Firebase Messaging to Device  - JSON', async () => {
 	const token = 'deviceIdToken';
 	const message = JSON.stringify(notification);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	firebaseAdmin.client = {
 		send: vi.fn().mockReturnValue({}),
 	} as any;

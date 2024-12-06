@@ -122,6 +122,7 @@ describe('Airhorn', async () => {
 
 		const airhorn = await createAirhorn(options);
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		airhorn.send = vi.fn().mockReturnValue(true) as any;
 		const userData = new TestingData();
 
@@ -161,6 +162,7 @@ describe('Airhorn', async () => {
 
 		airhorn.providers.removeProvider('firebase-messaging');
 		const firebaseAdmin = new FirebaseMessaging('{}');
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		firebaseAdmin.client = {
 			send: vi.fn().mockReturnValue({}),
 		} as any;
@@ -183,6 +185,7 @@ describe('Airhorn', async () => {
 
 		airhorn.providers.removeProvider('firebase-messaging');
 		const firebaseAdmin = new FirebaseMessaging(FIREBASE_CERT);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		firebaseAdmin.client = {
 			send: vi.fn().mockReturnValue({}),
 		} as any;

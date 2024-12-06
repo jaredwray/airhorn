@@ -11,6 +11,7 @@ test('TwilioSMS - Init', () => {
 test('TwilioSMS - Send', async () => {
 	const twilioSMS = new TwilioSMS(TWILIO_SMS_ACCOUNT_SID, TWILIO_SMS_AUTH_TOKEN);
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	twilioSMS.client = {
 		messages: {
 			create: vi.fn().mockReturnValue({}),

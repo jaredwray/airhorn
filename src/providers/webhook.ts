@@ -7,6 +7,7 @@ export class WebHook implements ProviderInterface {
 	type = AirhornProviderType.WEBHOOK;
 
 	public async send(to: string, from: string, message: string, subject?: string): Promise<boolean> {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const messageData = JSON.parse(message);
 
 		if (!subject) {
