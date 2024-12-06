@@ -6,6 +6,7 @@ export class AWSSNS implements ProviderInterface {
 	client: SNS;
 	name = 'aws-sns';
 	type = AirhornProviderType.MOBILE_PUSH;
+	// eslint-disable-next-line @typescript-eslint/parameter-properties
 	region?: string;
 
 	constructor(region?: string) {

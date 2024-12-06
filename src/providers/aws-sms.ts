@@ -6,6 +6,7 @@ export class AWSSMS implements ProviderInterface {
 	client: SNS;
 	name = 'aws-sms';
 	type = AirhornProviderType.SMS;
+	// eslint-disable-next-line @typescript-eslint/parameter-properties
 	region?: string;
 
 	constructor(region?: string) {
