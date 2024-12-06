@@ -6,6 +6,7 @@ export class AWSSES implements ProviderInterface {
 	client: SESClient;
 	name = 'aws-ses';
 	type = AirhornProviderType.SMTP;
+	// eslint-disable-next-line @typescript-eslint/parameter-properties
 	region?: string;
 
 	constructor(region?: string) {

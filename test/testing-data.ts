@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/parameter-properties */
 import {AirhornTemplate, AirhornTemplateText} from '../src/template.js';
 
 export class TestingData {

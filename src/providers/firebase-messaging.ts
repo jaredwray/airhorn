@@ -8,7 +8,8 @@ export class FirebaseMessaging implements ProviderInterface {
 	name = 'firebase-messaging';
 	type = AirhornProviderType.MOBILE_PUSH;
 
-	private readonly cert: string;
+	// eslint-disable-next-line @typescript-eslint/parameter-properties
+	cert: string;
 
 	constructor(cert: string) {
 		this.cert = cert;
