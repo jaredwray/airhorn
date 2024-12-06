@@ -1,4 +1,4 @@
-import { test, expect, vi } from 'vitest';
+import {test, expect, vi} from 'vitest';
 import type * as admin from 'firebase-admin';
 
 vi.mock('firebase-admin', async () => {
@@ -11,7 +11,7 @@ vi.mock('firebase-admin', async () => {
 		apps: [],
 		auth: vi.fn(() => ({
 			...actual.auth(), // Use actual auth methods
-			verifyIdToken: vi.fn().mockResolvedValue({ uid: 'mocked-uid' }), // Mock specific methods
+			verifyIdToken: vi.fn().mockResolvedValue({uid: 'mocked-uid'}), // Mock specific methods
 		})),
 	};
 });
@@ -19,7 +19,7 @@ vi.mock('firebase-admin', async () => {
 // eslint-disable-next-line n/prefer-global/process
 const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
-const { FirebaseMessaging } = await import('../../src/providers/firebase-messaging.js');
+const {FirebaseMessaging} = await import('../../src/providers/firebase-messaging.js');
 
 const notification = {
 	title: 'Sample notification Title',

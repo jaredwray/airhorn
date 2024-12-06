@@ -1,5 +1,5 @@
 import {Ecto} from 'ecto';
-import { AirhornProviderType } from './provider-type.js';
+import {AirhornProviderType} from './provider-type.js';
 
 export type AirhornTemplateTextOptions = {
 	langCode?: string;

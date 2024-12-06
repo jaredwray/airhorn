@@ -6,7 +6,7 @@ import type * as admin from 'firebase-admin';
 import {AirhornProviderType} from '../src/provider-type.js';
 import {Airhorn, createAirhorn} from '../src/airhorn.js';
 import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
-import { MemoryTemplateProvider } from '../src/template-providers/memory.js';
+import {MemoryTemplateProvider} from '../src/template-providers/memory.js';
 import {TestingData, TestingDataTwo} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
@@ -22,7 +22,7 @@ vi.mock('firebase-admin', async () => {
 		apps: [],
 		auth: vi.fn(() => ({
 			...actual.auth(), // Use actual auth methods
-			verifyIdToken: vi.fn().mockResolvedValue({ uid: 'mocked-uid' }), // Mock specific methods
+			verifyIdToken: vi.fn().mockResolvedValue({uid: 'mocked-uid'}), // Mock specific methods
 		})),
 	};
 });
@@ -39,7 +39,7 @@ describe('Airhorn', async () => {
 	});
 
 	test('Airhorn - Get Templates', async () => {
-		const options = { TEMPLATE_PATH: './test/templates' };
+		const options = {TEMPLATE_PATH: './test/templates'};
 		const airhorn = await createAirhorn(options);
 
 		expect(airhorn.templates).toBeDefined();
@@ -47,7 +47,7 @@ describe('Airhorn', async () => {
 
 	test('Airhorn - set the template provider', async () => {
 		const TEMPLATE_PROVIDER = new MemoryTemplateProvider();
-		const options = { TEMPLATE_PROVIDER };
+		const options = {TEMPLATE_PROVIDER};
 		const airhorn = await createAirhorn(options);
 
 		expect(airhorn.templates.provider).toBeDefined();

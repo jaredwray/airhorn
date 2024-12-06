@@ -4,8 +4,8 @@ import {
 	describe, test, expect, vi,
 } from 'vitest';
 import type * as admin from 'firebase-admin';
-import { createAirhorn} from '../src/airhorn.js';
-import { AirhornTemplateSync } from '../src/template-sync.js';
+import {createAirhorn} from '../src/airhorn.js';
+import {AirhornTemplateSync} from '../src/template-sync.js';
 import {TestingDataTwo} from './testing-data.js';
 
 // eslint-disable-next-line n/prefer-global/process
@@ -21,7 +21,7 @@ vi.mock('firebase-admin', async () => {
 		apps: [],
 		auth: vi.fn(() => ({
 			...actual.auth(), // Use actual auth methods
-			verifyIdToken: vi.fn().mockResolvedValue({ uid: 'mocked-uid' }), // Mock specific methods
+			verifyIdToken: vi.fn().mockResolvedValue({uid: 'mocked-uid'}), // Mock specific methods
 		})),
 	};
 });

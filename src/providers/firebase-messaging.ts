@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/no-negated-condition */
-import firebase, { type ServiceAccount} from 'firebase-admin';
+import firebase, {type ServiceAccount} from 'firebase-admin';
 import type {ProviderInterface} from '../provider-service.js';
 import {AirhornProviderType} from '../provider-type.js';
 

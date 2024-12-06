@@ -1,5 +1,5 @@
-import { describe, test, expect} from 'vitest';
-import { MemoryTemplateProvider } from '../../src/template-providers/memory.js';
+import {describe, test, expect} from 'vitest';
+import {MemoryTemplateProvider} from '../../src/template-providers/memory.js';
 import {
 	airhornTestTemplate,
 } from '../testing-data.js';

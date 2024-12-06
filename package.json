@@ -56,7 +56,6 @@
   "xo": {
     "rules": {
       "@typescript-eslint/naming-convention": 0,
-      "@typescript-eslint/object-curly-spacing": 0,
       "@typescript-eslint/parameter-properties": 0,
       "@typescript-eslint/no-unsafe-call": 0,
       "@typescript-eslint/no-unsafe-assignment": 0,

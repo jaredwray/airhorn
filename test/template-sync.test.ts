@@ -1,9 +1,9 @@
 import path from 'node:path';
 import process from 'node:process';
-import { describe, test, expect} from 'vitest';
-import { AirhornTemplateSync } from '../src/template-sync.js';
-import { MemoryTemplateProvider } from '../src/template-providers/memory.js';
-import { AirhornProviderType } from '../src/provider-type.js';
+import {describe, test, expect} from 'vitest';
+import {AirhornTemplateSync} from '../src/template-sync.js';
+import {MemoryTemplateProvider} from '../src/template-providers/memory.js';
+import {AirhornProviderType} from '../src/provider-type.js';
 
 enum AirhornTemplatePaths {
 	DEFAULT = 'test/templates',

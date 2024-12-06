@@ -1,6 +1,6 @@
 import {describe, test, expect} from 'vitest';
-import { AirhornProviderType } from '../src/provider-type.js';
-import { AirhornTemplate, AirhornTemplateText } from '../src/template.js';
+import {AirhornProviderType} from '../src/provider-type.js';
+import {AirhornTemplate, AirhornTemplateText} from '../src/template.js';
 
 describe('AirhornTemplate', () => {
 	test('AirhornTemplate initialize', () => {

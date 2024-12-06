@@ -1,5 +1,5 @@
 import {test, expect, vi} from 'vitest';
-import { AWSSNS } from '../../src/providers/aws-sns.js';
+import {AWSSNS} from '../../src/providers/aws-sns.js';
 
 const AWS_SNS_REGION = 'us-east-1';
 
