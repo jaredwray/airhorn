@@ -60,7 +60,7 @@ export class ProviderService {
 	public removeProvider(name: string) {
 		const index = this._providers.findIndex(provider => provider.name === name);
 
-		if (index > -1) {
+		if (index !== -1) {
 			this._providers.splice(index, 1);
 		}
 	}
