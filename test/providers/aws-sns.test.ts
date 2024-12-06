@@ -11,6 +11,7 @@ test('AWS SNS - Send to TopicArn', async () => {
 	const awsSNS = new AWSSNS(AWS_SNS_REGION);
 	const topicArn = 'topicArnDeviceIdFromSns';
 
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	awsSNS.client = {
 		publish: vi.fn().mockReturnValue({
 			promise: vi.fn(),

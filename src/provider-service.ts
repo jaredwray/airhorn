@@ -20,6 +20,7 @@ export class ProviderService {
 
 	constructor(options?: any) {
 		if (options) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			this.options = {...this.options, ...options};
 		}
 

@@ -25,11 +25,14 @@ export class FirebaseMessaging implements ProviderInterface {
 	}
 
 	public async send(to: string, from: string, message: string) {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		const {title, body} = JSON.parse(message);
 
 		const parameters: firebase.messaging.Message = {
 			notification: {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				title,
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				body,
 			},
 			token: to,

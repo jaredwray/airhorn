@@ -92,6 +92,7 @@ export class MongoTemplateProvider implements AirhornTemplateProvider {
 
 	mapDocumentToTemplate(document: Document): AirhornTemplate {
 		const template = new AirhornTemplate(document.name as string);
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		template.text = document.text;
 
 		return template;
