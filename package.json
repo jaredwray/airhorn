@@ -44,7 +44,7 @@
     "axios": "^1.7.9",
     "cacheable": "^1.8.5",
     "ecto": "^4.1.4",
-    "firebase-admin": "^13.0.1",
+    "firebase-admin": "^13.0.2",
     "gray-matter": "^4.0.3",
     "mongodb": "^6.12.0",
     "twilio": "^5.4.0"
