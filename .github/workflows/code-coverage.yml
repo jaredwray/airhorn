@@ -24,18 +24,18 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install Dependencies
-      run: npm install
+      run: npm install -g pnpm && pnpm install
 
     - name: Test Services    
-      run: npm run test:services:start
+      run: pnpm test:services:start
 
     - name: Build    
-      run: npm run build
+      run: pnpm build
 
     - name: Testing
       env:
         FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
-      run: npm run test
+      run: pnpm test
       
     - name: Code Coverage
       uses: codecov/codecov-action@v3
