@@ -28,7 +28,7 @@
     "test:services:stop": "docker compose -f docker-compose.yml down"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.10.5",
     "@vitest/coverage-v8": "^2.1.8",
     "docula": "^0.9.6",
     "rimraf": "^6.0.1",
@@ -38,8 +38,8 @@
     "xo": "^0.60.0"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.699.0",
-    "@aws-sdk/client-sns": "^3.699.0",
+    "@aws-sdk/client-ses": "^3.721.0",
+    "@aws-sdk/client-sns": "^3.721.0",
     "@sendgrid/mail": "^8.1.4",
     "axios": "^1.7.9",
     "cacheable": "^1.8.7",
