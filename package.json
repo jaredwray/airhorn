@@ -42,7 +42,7 @@
     "@aws-sdk/client-sns": "^3.699.0",
     "@sendgrid/mail": "^8.1.4",
     "axios": "^1.7.9",
-    "cacheable": "^1.8.5",
+    "cacheable": "^1.8.7",
     "ecto": "^4.1.5",
     "firebase-admin": "^13.0.2",
     "gray-matter": "^4.0.3",
