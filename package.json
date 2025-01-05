@@ -20,7 +20,7 @@
   "scripts": {
     "test": "xo --fix && vitest run --coverage",
     "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./yarn.lock ./pnpm-lock.yaml ./site/dist",
-    "prepare": "npm run build",
+    "prepare": "rimraf ./dist && tsup src/airhorn.ts --format esm --dts --clean",
     "build": "rimraf ./dist && tsup src/airhorn.ts --format esm --dts --clean",
     "website:build": "rimraf ./site/readme.md && npx -y docula build -s ./site -o ./site/dist",
     "website:serve": "rimraf ./site/readme.md && npx -y docula serve -s ./site -o ./site/dist",
