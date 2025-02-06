@@ -46,7 +46,7 @@
     "ecto": "^4.1.5",
     "firebase-admin": "^13.0.2",
     "gray-matter": "^4.0.3",
-    "mongodb": "^6.12.0",
+    "mongodb": "^6.13.0",
     "twilio": "^5.4.3"
   },
   "files": [
