@@ -34,11 +34,7 @@ jobs:
       run: pnpm website:build
 
     - name: Publish to Cloudflare Pages
-      uses: cloudflare/pages-action@1
+      uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        accountId: b09b24c345713c704e71dea8bd81f713
-        projectName: airhorn
-        branch: main
-        directory: site/dist
-        gitHubToken: ${{ secrets.GH_TOKEN }}
+        command: pages deploy site/dist --project-name=airhorn --branch=main
