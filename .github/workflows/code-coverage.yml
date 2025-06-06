@@ -7,21 +7,20 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
 jobs:
   test-coverage:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: ['20']
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 22
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22
 
     - name: Install Dependencies
       run: npm install -g pnpm && pnpm install
@@ -38,7 +37,7 @@ jobs:
       run: pnpm test
       
     - name: Code Coverage
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_KEY }}
         verbose: true
