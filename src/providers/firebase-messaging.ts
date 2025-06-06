@@ -15,6 +15,7 @@ export class FirebaseMessaging implements ProviderInterface {
 		this.cert = cert;
 
 		if (firebase.apps.length === 0) {
+			// eslint-disable-next-line no-negated-condition
 			const certSource = !this.cert.endsWith('.json') ? JSON.parse(this.cert) as ServiceAccount : this.cert;
 
 			firebase.initializeApp({
