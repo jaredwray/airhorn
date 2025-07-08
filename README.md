@@ -400,7 +400,7 @@ To set up your development environment, you'll need the following dependencies:
 Set up your firebase account and generate the firebase-cert.json file. Then, place the file in the root of the project. This is needed even for testing as mocking the firebase-admin is almost impossible. After that you should run the following commands:
 
 ```bash
-npm i && npm run test:services:start && npm test
+pnpm i && pnpm test:services:start && pnpm test
 ```
 
 This will start the services needed for testing and run the tests.
@@ -408,13 +408,13 @@ This will start the services needed for testing and run the tests.
 To stop the services, you can run:
 
 ```bash
-npm run test:services:stop
+pnpm test:services:stop
 ```
 
 If you are using `nvm` you can run the following:
 
 ```bash
-nvm use && npm i && npm run test:services:start && npm test
+nvm use && pnpm i && pnpm test:services:start && pnpm test
 ```
 
 # Licensing and Copyright
