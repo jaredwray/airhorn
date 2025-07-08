@@ -35,7 +35,7 @@
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.2",
-    "xo": "^1.0.5"
+    "xo": "^1.1.1"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.825.0",
