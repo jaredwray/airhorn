@@ -38,8 +38,8 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.840.0",
-    "@aws-sdk/client-sns": "^3.840.0",
+    "@aws-sdk/client-ses": "^3.859.0",
+    "@aws-sdk/client-sns": "^3.859.0",
     "@sendgrid/mail": "^8.1.5",
     "axios": "^1.11.0",
     "cacheable": "^1.10.3",
