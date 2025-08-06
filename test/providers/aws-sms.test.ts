@@ -10,7 +10,6 @@ test('AWS SNS - Init', () => {
 test('AWS SMS - Send', async () => {
 	const awsSMS = new AWSSMS(AWS_SES_REGION);
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	awsSMS.client = {
 		publish: vi.fn().mockReturnValue({
 			promise: vi.fn(),

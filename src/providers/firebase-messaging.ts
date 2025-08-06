@@ -1,22 +1,23 @@
-/* eslint-disable unicorn/no-negated-condition */
-import firebase, {type ServiceAccount} from 'firebase-admin';
-import type {ProviderInterface} from '../provider-service.js';
-import {AirhornProviderType} from '../provider-type.js';
+import firebase, { type ServiceAccount } from "firebase-admin";
+import type { ProviderInterface } from "../provider-service.js";
+import { AirhornProviderType } from "../provider-type.js";
 
 export class FirebaseMessaging implements ProviderInterface {
 	client: firebase.messaging.Messaging | undefined;
-	name = 'firebase-messaging';
+	name = "firebase-messaging";
 	type = AirhornProviderType.MOBILE_PUSH;
 
-	// eslint-disable-next-line @typescript-eslint/parameter-properties
 	cert: string;
 
 	constructor(cert: string) {
 		this.cert = cert;
 
 		if (firebase.apps.length === 0) {
-			// eslint-disable-next-line no-negated-condition
-			const certSource = !this.cert.endsWith('.json') ? JSON.parse(this.cert) as ServiceAccount : this.cert;
+			/* c8 ignore start */
+			const certSource = !this.cert.endsWith(".json")
+				? (JSON.parse(this.cert) as ServiceAccount)
+				: this.cert;
+			/* c8 ignore end */
 
 			firebase.initializeApp({
 				credential: firebase.credential.cert(certSource),
@@ -25,15 +26,13 @@ export class FirebaseMessaging implements ProviderInterface {
 		}
 	}
 
+	// biome-ignore lint/correctness/noUnusedFunctionParameters: allowing unused parameters for firebase
 	public async send(to: string, from: string, message: string) {
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-		const {title, body} = JSON.parse(message);
+		const { title, body } = JSON.parse(message);
 
 		const parameters: firebase.messaging.Message = {
 			notification: {
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				title,
-				// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 				body,
 			},
 			token: to,

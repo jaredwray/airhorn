@@ -8,7 +8,6 @@ import {createAirhorn} from '../src/airhorn.js';
 import {AirhornTemplateSync} from '../src/template-sync.js';
 import {TestingDataTwo} from './testing-data.js';
 
-// eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
 
 vi.mock('firebase-admin', async () => {
@@ -26,10 +25,8 @@ vi.mock('firebase-admin', async () => {
 	};
 });
 
-// eslint-disable-next-line n/prefer-global/process
 const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
-// eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://mockhttp.org/post';
 
 describe('Airhorn', async () => {

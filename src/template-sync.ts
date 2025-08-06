@@ -1,15 +1,19 @@
-import {promises as fs} from 'node:fs';
-import {Ecto} from 'ecto';
-import {type AirhornTemplateProvider} from './template-service.js';
-import {AirhornTemplate, AirhornTemplateText} from './template.js';
-import {AirhornProviderType} from './provider-type.js';
+import { promises as fs } from "node:fs";
+import { Ecto } from "ecto";
+import { AirhornProviderType } from "./provider-type.js";
+import { AirhornTemplate, AirhornTemplateText } from "./template.js";
+import type { AirhornTemplateProvider } from "./template-service.js";
 
 export class AirhornTemplateSync {
 	private readonly _src: string;
 	private readonly _destination: AirhornTemplateProvider;
-	private _defaultLanguage = 'en';
+	private _defaultLanguage = "en";
 
-	constructor(source: string, destination: AirhornTemplateProvider, defaultLanguage?: string) {
+	constructor(
+		source: string,
+		destination: AirhornTemplateProvider,
+		defaultLanguage?: string,
+	) {
 		this._src = source;
 		this._destination = destination;
 		if (defaultLanguage) {
@@ -36,25 +40,23 @@ export class AirhornTemplateSync {
 
 		// For each directory, create a template
 		for (const directory of directories) {
-			// eslint-disable-next-line no-await-in-loop
 			const template = await this.createTemplate(directory);
-			// eslint-disable-next-line no-await-in-loop
-			const templateExists = await this._destination.getTemplateById(template.name);
-			// eslint-disable-next-line unicorn/prefer-ternary
+			const templateExists = await this._destination.getTemplateById(
+				template.name,
+			);
+
 			if (templateExists) {
-				// eslint-disable-next-line no-await-in-loop
 				await this._destination.updateTemplate(template);
 			} else {
-				// eslint-disable-next-line no-await-in-loop
 				await this._destination.createTemplate(template);
 			}
 		}
 	}
 
 	public async createTemplate(directoryPath: string): Promise<AirhornTemplate> {
-		const directoryName = directoryPath.split('/').pop();
+		const directoryName = directoryPath.split("/").pop();
 		if (!directoryName) {
-			throw new Error('Invalid directory path');
+			throw new Error("Invalid directory path");
 		}
 
 		const template = new AirhornTemplate(directoryName);
@@ -66,13 +68,14 @@ export class AirhornTemplateSync {
 		// Loop through the sub directories as it is language specific
 		if (subDirectories.length > 0) {
 			for (const subDirectory of subDirectories) {
-				const langCode = subDirectory.split('/').pop() ?? '';
-				// eslint-disable-next-line no-await-in-loop
+				const langCode = subDirectory.split("/").pop() ?? "";
 				const subFiles = await fs.readdir(subDirectory);
 				for (const file of subFiles) {
 					const filePath = `${subDirectory}/${file}`;
-					// eslint-disable-next-line no-await-in-loop
-					const templateText = await this.createTemplateText(filePath, langCode);
+					const templateText = await this.createTemplateText(
+						filePath,
+						langCode,
+					);
 					template.text.push(templateText);
 				}
 			}
@@ -83,7 +86,6 @@ export class AirhornTemplateSync {
 		// This is a default language template
 		for (const file of files) {
 			const filePath = `${directoryPath}/${file}`;
-			// eslint-disable-next-line no-await-in-loop
 			const templateText = await this.createTemplateText(filePath);
 			template.text.push(templateText);
 		}
@@ -91,27 +93,30 @@ export class AirhornTemplateSync {
 		return template;
 	}
 
-	public async createTemplateText(filePath: string, languageCode?: string): Promise<AirhornTemplateText> {
+	public async createTemplateText(
+		filePath: string,
+		languageCode?: string,
+	): Promise<AirhornTemplateText> {
 		const templateText = new AirhornTemplateText();
 		templateText.langCode = languageCode ?? this._defaultLanguage;
-		const source = await fs.readFile(filePath, 'utf8');
+		const source = await fs.readFile(filePath, "utf8");
 
-		let typeName = filePath.split('/').pop() ?? '';
-		typeName = typeName.split('.').shift() ?? '';
+		let typeName = filePath.split("/").pop() ?? "";
+		typeName = typeName.split(".").shift() ?? "";
 
-		if (typeName === 'sms') {
+		if (typeName === "sms") {
 			templateText.providerType = AirhornProviderType.SMS;
 		}
 
-		if (typeName === 'webhook') {
+		if (typeName === "webhook") {
 			templateText.providerType = AirhornProviderType.WEBHOOK;
 		}
 
-		if (typeName === 'mobile-push') {
+		if (typeName === "mobile-push") {
 			templateText.providerType = AirhornProviderType.MOBILE_PUSH;
 		}
 
-		if (typeName === 'smtp') {
+		if (typeName === "smtp") {
 			templateText.providerType = AirhornProviderType.SMTP;
 		}
 
@@ -142,7 +147,6 @@ export class AirhornTemplateSync {
 		const directories = [];
 		for (const file of files) {
 			const filePath = `${path}/${file}`;
-			// eslint-disable-next-line no-await-in-loop
 			if (await this.dirExists(filePath)) {
 				directories.push(filePath);
 			}
@@ -151,4 +155,3 @@ export class AirhornTemplateSync {
 		return directories;
 	}
 }
-

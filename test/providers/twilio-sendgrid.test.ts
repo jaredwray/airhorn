@@ -14,7 +14,6 @@ test('TwilioSendgrid - Init with No Api Key', () => {
 test('TwilioSMS - Send', async () => {
 	const twilioSendgrid = new TwilioSendgrid(TWILIO_SENGRID_API_KEY);
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	twilioSendgrid.client = {
 		setApiKey: vi.fn().mockReturnValue({}),
 		send: vi.fn().mockReturnValue({}),
@@ -26,7 +25,6 @@ test('TwilioSMS - Send', async () => {
 test('TwilioSMS - Send with undefined subject will replace with `no subject` in  the field', async () => {
 	const twilioSendgrid = new TwilioSendgrid(TWILIO_SENGRID_API_KEY);
 
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 	twilioSendgrid.client = {
 		setApiKey: vi.fn().mockReturnValue({}),
 		send: vi.fn().mockReturnValue({}),

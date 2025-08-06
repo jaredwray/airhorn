@@ -1,7 +1,11 @@
-import {type AirhornTemplateProvider, AirhornTemplateService} from './template-service.js';
-import {ProviderService} from './provider-service.js';
-import {AirhornProviderType} from './provider-type.js';
-import {AirhornTemplateSync} from './template-sync.js';
+// biome-ignore-all lint/suspicious/noExplicitAny: allowing any for data
+import { ProviderService } from "./provider-service.js";
+import { AirhornProviderType } from "./provider-type.js";
+import {
+	type AirhornTemplateProvider,
+	AirhornTemplateService,
+} from "./template-service.js";
+import { AirhornTemplateSync } from "./template-sync.js";
 
 export type CreateAirhornOptions = {
 	TEMPLATE_PATH?: string;
@@ -21,10 +25,11 @@ export type AirhornOptions = {
 
 export class Airhorn {
 	options: AirhornOptions = {
-		DEFAULT_TEMPLATE_LANGUAGE: 'en',
+		DEFAULT_TEMPLATE_LANGUAGE: "en",
 	};
 
-	private readonly _templates: AirhornTemplateService = new AirhornTemplateService();
+	private readonly _templates: AirhornTemplateService =
+		new AirhornTemplateService();
 	private readonly _providerService = new ProviderService();
 
 	/**
@@ -33,10 +38,12 @@ export class Airhorn {
 	 */
 	constructor(options?: AirhornOptions) {
 		if (options) {
-			this.options = {...this.options, ...options};
+			this.options = { ...this.options, ...options };
 
 			if (this.options.TEMPLATE_PROVIDER) {
-				this._templates = new AirhornTemplateService(this.options.TEMPLATE_PROVIDER);
+				this._templates = new AirhornTemplateService(
+					this.options.TEMPLATE_PROVIDER,
+				);
 			}
 
 			this._providerService = new ProviderService(options);
@@ -67,8 +74,14 @@ export class Airhorn {
 	 * @param {string} languageCode - The language code in ISO 639-1 format (e.g. en, es, fr)
 	 * @returns {boolean} - The result if it was sent or not
 	 */
-	/* eslint max-params: [2, 6] */
-	public async send(to: string, from: string, templateName: string, providerType: AirhornProviderType, data?: any, languageCode?: string): Promise<boolean> {
+	public async send(
+		to: string,
+		from: string,
+		templateName: string,
+		providerType: AirhornProviderType,
+		data?: any,
+		languageCode?: string,
+	): Promise<boolean> {
 		let result = false;
 
 		const template = await this._templates.get(templateName);
@@ -83,7 +96,7 @@ export class Airhorn {
 					const provider = providers[random];
 
 					if (providerType === AirhornProviderType.SMTP) {
-						const subject = template.getProperty(providerType, 'subject');
+						const subject = template.getProperty(providerType, "subject");
 
 						result = await provider.send(to, from, message, subject);
 					} else {
@@ -105,8 +118,21 @@ export class Airhorn {
 	 * @param {string} languageCode - The language code in ISO 639-1 format (e.g. en, es, fr)
 	 * @returns {boolean} - The result if it was sent or not
 	 */
-	public async sendSMTP(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, AirhornProviderType.SMTP, data, languageCode);
+	public async sendSMTP(
+		to: string,
+		from: string,
+		templateName: string,
+		data?: any,
+		languageCode?: string,
+	): Promise<boolean> {
+		return this.send(
+			to,
+			from,
+			templateName,
+			AirhornProviderType.SMTP,
+			data,
+			languageCode,
+		);
 	}
 
 	/**
@@ -118,8 +144,21 @@ export class Airhorn {
 	 * @param {string} languageCode - The language code in ISO 639-1 format (e.g. en, es, fr)
 	 * @returns {boolean} - The result if it was sent or not
 	 */
-	public async sendSMS(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, AirhornProviderType.SMS, data, languageCode);
+	public async sendSMS(
+		to: string,
+		from: string,
+		templateName: string,
+		data?: any,
+		languageCode?: string,
+	): Promise<boolean> {
+		return this.send(
+			to,
+			from,
+			templateName,
+			AirhornProviderType.SMS,
+			data,
+			languageCode,
+		);
 	}
 
 	/**
@@ -131,8 +170,21 @@ export class Airhorn {
 	 * @param {string} languageCode - The language code in ISO 639-1 format (e.g. en, es, fr)
 	 * @returns {boolean} - The result if it was sent or not
 	 */
-	public async sendWebhook(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, AirhornProviderType.WEBHOOK, data, languageCode);
+	public async sendWebhook(
+		to: string,
+		from: string,
+		templateName: string,
+		data?: any,
+		languageCode?: string,
+	): Promise<boolean> {
+		return this.send(
+			to,
+			from,
+			templateName,
+			AirhornProviderType.WEBHOOK,
+			data,
+			languageCode,
+		);
 	}
 
 	/**
@@ -144,8 +196,21 @@ export class Airhorn {
 	 * @param {string} languageCode - The language code in ISO 639-1 format (e.g. en, es, fr)
 	 * @returns {boolean} - The result if it was sent or not
 	 */
-	public async sendMobilePush(to: string, from: string, templateName: string, data?: any, languageCode?: string): Promise<boolean> {
-		return this.send(to, from, templateName, AirhornProviderType.MOBILE_PUSH, data, languageCode);
+	public async sendMobilePush(
+		to: string,
+		from: string,
+		templateName: string,
+		data?: any,
+		languageCode?: string,
+	): Promise<boolean> {
+		return this.send(
+			to,
+			from,
+			templateName,
+			AirhornProviderType.MOBILE_PUSH,
+			data,
+			languageCode,
+		);
 	}
 }
 
@@ -156,7 +221,8 @@ export class Airhorn {
  */
 export const createAirhorn = async (options?: CreateAirhornOptions) => {
 	const airhorn = new Airhorn(options);
-	if (options && options.TEMPLATE_PATH) {
+
+	if (options?.TEMPLATE_PATH) {
 		await syncTemplatesToAirhorn(options.TEMPLATE_PATH, airhorn);
 	}
 
@@ -168,13 +234,20 @@ export const createAirhorn = async (options?: CreateAirhornOptions) => {
  * @param templatePath - The path to the templates
  * @param airhorn - The airhorn instance
  */
-export const syncTemplatesToAirhorn = async (templatePath: string, airhorn: Airhorn) => {
-	const templateSync = new AirhornTemplateSync(templatePath, airhorn.templates.provider, airhorn.options.DEFAULT_TEMPLATE_LANGUAGE);
+export const syncTemplatesToAirhorn = async (
+	templatePath: string,
+	airhorn: Airhorn,
+) => {
+	const templateSync = new AirhornTemplateSync(
+		templatePath,
+		airhorn.templates.provider,
+		airhorn.options.DEFAULT_TEMPLATE_LANGUAGE,
+	);
 	await templateSync.sync();
 };
 
-export {AirhornProviderType} from './provider-type.js';
-export {type AirhornTemplateProvider} from './template-service.js';
-export {AirhornTemplateSync} from './template-sync.js';
-export {MemoryTemplateProvider} from './template-providers/memory.js';
-export {MongoTemplateProvider} from './template-providers/mongo.js';
+export { AirhornProviderType } from "./provider-type.js";
+export { MemoryTemplateProvider } from "./template-providers/memory.js";
+export { MongoTemplateProvider } from "./template-providers/mongo.js";
+export type { AirhornTemplateProvider } from "./template-service.js";
+export { AirhornTemplateSync } from "./template-sync.js";
