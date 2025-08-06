@@ -13,10 +13,11 @@ export class FirebaseMessaging implements ProviderInterface {
 		this.cert = cert;
 
 		if (firebase.apps.length === 0) {
-			/* c8 ignore next 2 */
+			/* c8 ignore start */
 			const certSource = !this.cert.endsWith(".json")
 				? (JSON.parse(this.cert) as ServiceAccount)
 				: this.cert;
+			/* c8 ignore end */
 
 			firebase.initializeApp({
 				credential: firebase.credential.cert(certSource),
