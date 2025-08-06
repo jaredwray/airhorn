@@ -1,8 +1,6 @@
-import {
-	MongoClient, type Db, type Collection, ObjectId, type Document,
-} from 'mongodb';
-import {AirhornTemplate} from '../template.js';
-import {type AirhornTemplateProvider} from '../template-service.js';
+import { type Collection, type Db, type Document, MongoClient } from "mongodb";
+import { AirhornTemplate } from "../template.js";
+import type { AirhornTemplateProvider } from "../template-service.js";
 
 export type MongoStoreProviderOptions = {
 	uri?: string;
@@ -12,8 +10,8 @@ export type MongoStoreProviderOptions = {
 };
 
 export class MongoTemplateProvider implements AirhornTemplateProvider {
-	public templatesCollectionName = 'airhornTemplates';
-	public uri = 'mongodb://localhost:27017';
+	public templatesCollectionName = "airhornTemplates";
+	public uri = "mongodb://localhost:27017";
 	public readonly db: Db;
 	public readonly templatesCollection: Collection;
 
@@ -28,7 +26,7 @@ export class MongoTemplateProvider implements AirhornTemplateProvider {
 	}
 
 	get name(): string {
-		return 'MongoStoreProvider';
+		return "MongoStoreProvider";
 	}
 
 	async createTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
@@ -40,34 +38,41 @@ export class MongoTemplateProvider implements AirhornTemplateProvider {
 		};
 
 		const result = await this.templatesCollection.insertOne(templateDocument);
-		const document = await this.templatesCollection.findOne({_id: result.insertedId});
+		const document = await this.templatesCollection.findOne({
+			_id: result.insertedId,
+		});
 		/* c8 ignore next 3 */
 		if (!document) {
-			throw new Error('Failed to create template');
+			throw new Error("Failed to create template");
 		}
 
 		return this.mapDocumentToTemplate(document);
 	}
 
 	async updateTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
-		const result = await this.templatesCollection.updateOne({name: template.name}, {
-			$set: {
-				name: template.name,
-				text: template.text,
-				modifiedAt: new Date(),
+		await this.templatesCollection.updateOne(
+			{ name: template.name },
+			{
+				$set: {
+					name: template.name,
+					text: template.text,
+					modifiedAt: new Date(),
+				},
 			},
+		);
+		const updatedTemplate = await this.templatesCollection.findOne({
+			name: template.name,
 		});
-		const updatedTemplate = await this.templatesCollection.findOne({name: template.name});
 		/* c8 ignore next 3 */
 		if (!updatedTemplate) {
-			throw new Error('Failed to update template');
+			throw new Error("Failed to update template");
 		}
 
 		return this.mapDocumentToTemplate(updatedTemplate);
 	}
 
 	async deleteTemplateById(name: string): Promise<void> {
-		await this.templatesCollection.deleteOne({name});
+		await this.templatesCollection.deleteOne({ name });
 	}
 
 	async getTemplates(): Promise<AirhornTemplate[]> {
@@ -76,7 +81,7 @@ export class MongoTemplateProvider implements AirhornTemplateProvider {
 	}
 
 	async getTemplateById(name: string): Promise<AirhornTemplate | undefined> {
-		const document = await this.templatesCollection.findOne({name});
+		const document = await this.templatesCollection.findOne({ name });
 		if (!document) {
 			return undefined;
 		}
@@ -92,14 +97,13 @@ export class MongoTemplateProvider implements AirhornTemplateProvider {
 
 	mapDocumentToTemplate(document: Document): AirhornTemplate {
 		const template = new AirhornTemplate(document.name as string);
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		template.text = document.text;
 
 		return template;
 	}
 
 	mapDocumentsToTemplates(documents: Document[]): AirhornTemplate[] {
-		const templates = new Array<AirhornTemplate>();
+		const templates: AirhornTemplate[] = [];
 		for (const document of documents) {
 			templates.push(this.mapDocumentToTemplate(document));
 		}

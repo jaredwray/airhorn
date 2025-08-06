@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-useless-promise-resolve-reject */
 import {
 	describe, test, expect, vi,
 } from 'vitest';
@@ -9,7 +8,6 @@ import {FirebaseMessaging} from '../src/providers/firebase-messaging.js';
 import {MemoryTemplateProvider} from '../src/template-providers/memory.js';
 import {TestingData, TestingDataTwo} from './testing-data.js';
 
-// eslint-disable-next-line n/prefer-global/process
 process.env.PUBSUB_EMULATOR_HOST = 'localhost:8085';
 
 vi.mock('firebase-admin', async () => {
@@ -27,10 +25,8 @@ vi.mock('firebase-admin', async () => {
 	};
 });
 
-// eslint-disable-next-line n/prefer-global/process
 const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
 
-// eslint-disable-next-line n/prefer-global/process
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://mockhttp.org/post';
 
 describe('Airhorn', async () => {
@@ -122,7 +118,6 @@ describe('Airhorn', async () => {
 
 		const airhorn = await createAirhorn(options);
 
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		airhorn.send = vi.fn().mockReturnValue(true) as any;
 		const userData = new TestingData();
 
@@ -162,7 +157,6 @@ describe('Airhorn', async () => {
 
 		airhorn.providers.removeProvider('firebase-messaging');
 		const firebaseAdmin = new FirebaseMessaging('{}');
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		firebaseAdmin.client = {
 			send: vi.fn().mockReturnValue({}),
 		} as any;
@@ -185,7 +179,6 @@ describe('Airhorn', async () => {
 
 		airhorn.providers.removeProvider('firebase-messaging');
 		const firebaseAdmin = new FirebaseMessaging(FIREBASE_CERT);
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 		firebaseAdmin.client = {
 			send: vi.fn().mockReturnValue({}),
 		} as any;

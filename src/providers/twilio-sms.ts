@@ -1,14 +1,13 @@
-
-import twilio from 'twilio';
-import type {ProviderInterface} from '../provider-service.js';
-import {AirhornProviderType} from '../provider-type.js';
+import twilio from "twilio";
+import type { ProviderInterface } from "../provider-service.js";
+import { AirhornProviderType } from "../provider-type.js";
 
 export class TwilioSMS implements ProviderInterface {
-	name = 'twilio-sms';
+	name = "twilio-sms";
 	type = AirhornProviderType.SMS;
 
-	accountSID = '';
-	authToken = '';
+	accountSID = "";
+	authToken = "";
 
 	client: twilio.Twilio;
 
@@ -24,8 +23,14 @@ export class TwilioSMS implements ProviderInterface {
 		this.client = twilio(this.accountSID, this.authToken);
 	}
 
-	public async send(to: string, from: string, message: string, subject?: string): Promise<boolean> {
-		await this.client.messages.create({from, to, body: message});
+	public async send(
+		to: string,
+		from: string,
+		message: string,
+		// biome-ignore lint/correctness/noUnusedFunctionParameters: allowing unused parameters for sms
+		subject?: string,
+	): Promise<boolean> {
+		await this.client.messages.create({ from, to, body: message });
 
 		return true;
 	}

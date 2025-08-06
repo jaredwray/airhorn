@@ -1,5 +1,5 @@
-import {MemoryTemplateProvider} from './template-providers/memory.js';
-import {type AirhornTemplate} from './template.js';
+import type { AirhornTemplate } from "./template.js";
+import { MemoryTemplateProvider } from "./template-providers/memory.js";
 
 export type AirhornTemplateProvider = {
 	name: string;
@@ -28,11 +28,15 @@ export class AirhornTemplateService {
 		this._provider = provider;
 	}
 
-	public async createTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
+	public async createTemplate(
+		template: AirhornTemplate,
+	): Promise<AirhornTemplate> {
 		return this._provider.createTemplate(template);
 	}
 
-	public async updateTemplate(template: AirhornTemplate): Promise<AirhornTemplate> {
+	public async updateTemplate(
+		template: AirhornTemplate,
+	): Promise<AirhornTemplate> {
 		return this._provider.updateTemplate(template);
 	}
 
@@ -40,7 +44,9 @@ export class AirhornTemplateService {
 		return this._provider.getTemplates();
 	}
 
-	public async getTemplateById(name: string): Promise<AirhornTemplate | undefined> {
+	public async getTemplateById(
+		name: string,
+	): Promise<AirhornTemplate | undefined> {
 		return this._provider.getTemplateById(name);
 	}
 

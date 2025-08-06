@@ -1,27 +1,32 @@
-import {AirhornProviderType} from './provider-type.js';
-import {WebHook} from './providers/webhook.js';
-import {TwilioSMS} from './providers/twilio-sms.js';
-import {TwilioSendgrid} from './providers/twilio-sendgrid.js';
-import {AWSSES} from './providers/aws-ses.js';
-import {AWSSMS} from './providers/aws-sms.js';
-import {FirebaseMessaging} from './providers/firebase-messaging.js';
-import {AWSSNS} from './providers/aws-sns.js';
-import {type AirhornOptions} from './airhorn.js';
+import type { AirhornOptions } from "./airhorn.js";
+import { AirhornProviderType } from "./provider-type.js";
+import { AWSSES } from "./providers/aws-ses.js";
+import { AWSSMS } from "./providers/aws-sms.js";
+import { AWSSNS } from "./providers/aws-sns.js";
+import { FirebaseMessaging } from "./providers/firebase-messaging.js";
+import { TwilioSendgrid } from "./providers/twilio-sendgrid.js";
+import { TwilioSMS } from "./providers/twilio-sms.js";
+import { WebHook } from "./providers/webhook.js";
 
 export type ProviderInterface = {
 	name: string;
 	type: AirhornProviderType;
-	send(to: string, from: string, message: string, subject?: string): Promise<boolean>;
+	send(
+		to: string,
+		from: string,
+		message: string,
+		subject?: string,
+	): Promise<boolean>;
 };
 
 export class ProviderService {
 	options: AirhornOptions = {};
-	private readonly _providers = new Array<ProviderInterface>();
+	private readonly _providers = [] as ProviderInterface[];
 
+	// biome-ignore lint/suspicious/noExplicitAny: this is allowed for providers
 	constructor(options?: any) {
 		if (options) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			this.options = {...this.options, ...options};
+			this.options = { ...this.options, ...options };
 		}
 
 		this.loadProviders();
@@ -49,7 +54,9 @@ export class ProviderService {
 
 	public getProviderByType(type: AirhornProviderType): ProviderInterface[] {
 		let result: ProviderInterface[] = [];
-		const provider = this._providers.filter(provider => provider.type === type);
+		const provider = this._providers.filter(
+			(provider) => provider.type === type,
+		);
 
 		if (provider.length > 0) {
 			result = provider;
@@ -59,7 +66,9 @@ export class ProviderService {
 	}
 
 	public removeProvider(name: string) {
-		const index = this._providers.findIndex(provider => provider.name === name);
+		const index = this._providers.findIndex(
+			(provider) => provider.name === name,
+		);
 
 		if (index !== -1) {
 			this._providers.splice(index, 1);
@@ -102,12 +111,22 @@ export class ProviderService {
 	public loadProviders() {
 		this._providers.push(new WebHook());
 
-		if (this.options.TWILIO_SMS_ACCOUNT_SID !== undefined && this.options.TWILIO_SMS_AUTH_TOKEN !== undefined) {
-			this._providers.push(new TwilioSMS(this.options.TWILIO_SMS_ACCOUNT_SID, this.options.TWILIO_SMS_AUTH_TOKEN));
+		if (
+			this.options.TWILIO_SMS_ACCOUNT_SID !== undefined &&
+			this.options.TWILIO_SMS_AUTH_TOKEN !== undefined
+		) {
+			this._providers.push(
+				new TwilioSMS(
+					this.options.TWILIO_SMS_ACCOUNT_SID,
+					this.options.TWILIO_SMS_AUTH_TOKEN,
+				),
+			);
 		}
 
 		if (this.options.TWILIO_SENDGRID_API_KEY) {
-			this._providers.push(new TwilioSendgrid(this.options.TWILIO_SENDGRID_API_KEY));
+			this._providers.push(
+				new TwilioSendgrid(this.options.TWILIO_SENDGRID_API_KEY),
+			);
 		}
 
 		if (this.options.AWS_SES_REGION) {
