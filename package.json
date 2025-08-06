@@ -47,7 +47,7 @@
     "firebase-admin": "^13.4.0",
     "gray-matter": "^4.0.3",
     "mongodb": "^6.17.0",
-    "twilio": "^5.7.2"
+    "twilio": "^5.8.0"
   },
   "files": [
     "dist",
