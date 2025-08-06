@@ -8,7 +8,7 @@ export default defineConfig({
 				'dist/**',
 				'site/**',
 				'test/**',
-				'vite.config.ts',
+				'vitest.config.ts',
 			],
 		},
 	},
