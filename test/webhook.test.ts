@@ -25,8 +25,6 @@ vi.mock('firebase-admin', async () => {
 	};
 });
 
-const FIREBASE_CERT = process.env.FIREBASE_CERT ?? './firebase-cert.json';
-
 const WEBHOOK_MOCK_URL = process.env.WEBHOOK_MOCK_URL ?? 'https://mockhttp.org/post';
 
 describe('Airhorn', async () => {
