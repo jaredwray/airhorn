@@ -62,7 +62,7 @@ export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
 	private _cache: Cacheable = new Cacheable();
-	private _retryStrategy: AirhornRetryStrategy; // add function for this with backoff
+	private _retryStrategy: AirhornRetryStrategy;
 	private _timeout: number = 100;
 	private _sendStrategy: AirhornSendStrategy = AirhornSendStrategy.RoundRobin;
 	private _throwOnErrors: boolean = false;
@@ -70,10 +70,8 @@ export class Airhorn extends Hookified {
 	private _providers: Array<AirhornProvider> = [];
 
 	constructor(options?: AirhornOptions) {
-		super({
-			throwHookErrors: options?.throwOnErrors,
-			throwOnEmitError: options?.throwOnErrors,
-		});
+		// biome-ignore format: long format
+		super({ throwHookErrors: options?.throwOnErrors, throwOnEmitError: options?.throwOnErrors });
 
 		if (options?.cache !== undefined) {
 			this.setCache(options.cache);
@@ -87,10 +85,8 @@ export class Airhorn extends Hookified {
 			this.addProviders(options.providers);
 		}
 
-		if (
-			options?.useWebhookProvider !== undefined &&
-			options.useWebhookProvider === false
-		) {
+		// biome-ignore format: long format
+		if (options?.useWebhookProvider !== undefined && options.useWebhookProvider === false) {
 			this._providers = this._providers.filter(
 				(provider) => !(provider instanceof AirhornWebhookProvider),
 			);
@@ -265,6 +261,10 @@ export class Airhorn extends Hookified {
 		return providers;
 	}
 
+	/**
+	 * Set the cache. This is a helper to set the cache
+	 * @param {boolean | Cacheable | CacheableOptions} cache - The cache to set.
+	 */
 	public setCache(cache: boolean | Cacheable | CacheableOptions) {
 		if (cache === true) {
 			this._cache = new Cacheable();
@@ -275,12 +275,20 @@ export class Airhorn extends Hookified {
 		}
 	}
 
+	/**
+	 * Add providers to the Airhorn instance.
+	 * @param {Array<AirhornProvider>} providers - The providers to add.
+	 */
 	public addProviders(providers: Array<AirhornProvider>) {
 		for (const provider of providers) {
 			this.addProvider(provider);
 		}
 	}
 
+	/**
+	 * Add a provider to the Airhorn instance.
+	 * @param {AirhornProvider} provider - The provider to add.
+	 */
 	public addProvider(provider: AirhornProvider) {
 		if (!this._providers.includes(provider)) {
 			this._providers.push(provider);
