@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import { Cacheable, type CacheableOptions } from "cacheable";
 import { Ecto, type EctoOptions } from "ecto";
-import { Writr } from "writr";
 import { Hookified } from "hookified";
+import { Writr } from "writr";
 import {
 	type AirhornProvider,
 	type AirhornProviderMessage,
@@ -317,10 +317,12 @@ export class Airhorn extends Hookified {
 				from: writr.frontMatter.from,
 				subject: writr.frontMatter.subject,
 				content: writr.body,
-				// @ts-ignore
-				requiredFields: writr.frontMatter.requiredFields?.split(",").map((field) => field.trim()),
+				requiredFields: writr.frontMatter.requiredFields
+					?.split(",")
+					// @ts-ignore
+					.map((field) => field.trim()),
 				templateEngine: writr.frontMatter.templateEngine,
-			}
+			};
 		} catch (error) {
 			this.handleError(error as Error);
 		}
@@ -330,11 +332,11 @@ export class Airhorn extends Hookified {
 
 	/**
 	 * Handle Errors
-	 * @param {Error} error 
+	 * @param {Error} error
 	 */
 	private handleError(error: Error): void {
 		this.emit(AirhornEvent.Error, error);
-		if(this._throwOnErrors) {
+		if (this._throwOnErrors) {
 			throw error;
 		}
 	}
