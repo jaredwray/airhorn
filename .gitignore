@@ -106,6 +106,7 @@ dist
 # package managers
 yarn.lock
 package-lock.json
+pnpm-lock.yaml
 
 # Configuration files
 .env
@@ -114,5 +115,4 @@ firebase-cert.json
 
 # site
 site/dist
-pnpm-lock.yaml
 site/README.md
