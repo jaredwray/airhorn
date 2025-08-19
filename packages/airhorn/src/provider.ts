@@ -21,5 +21,5 @@ export type AirhornProviderSendResult = {
 export interface AirhornProvider {
 	name: string;
 	capabilities: Array<AirhornProviderType>;
-	send: (AirhornProviderMessage) => Promise<AirhornProviderSendResult>;
+	send: (message: AirhornProviderMessage) => Promise<AirhornProviderSendResult>;
 }

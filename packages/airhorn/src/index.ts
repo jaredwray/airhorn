@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { Cacheable, type CacheableOptions } from "cacheable";
-import { Ecto, EctoOptions } from "ecto";
+import { Ecto, type EctoOptions } from "ecto";
 import { Writr } from "writr";
 import { Hookified } from "hookified";
 import {
@@ -64,7 +64,7 @@ export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
 	private _cache: Cacheable = new Cacheable();
-	private _retryStrategy: AirhornRetryStrategy;
+	private _retryStrategy: AirhornRetryStrategy = 0;
 	private _timeout: number = 100;
 	private _sendStrategy: AirhornSendStrategy = AirhornSendStrategy.RoundRobin;
 	private _throwOnErrors: boolean = false;
@@ -317,6 +317,7 @@ export class Airhorn extends Hookified {
 				from: writr.frontMatter.from,
 				subject: writr.frontMatter.subject,
 				content: writr.body,
+				// @ts-ignore
 				requiredFields: writr.frontMatter.requiredFields?.split(",").map((field) => field.trim()),
 				templateEngine: writr.frontMatter.templateEngine,
 			}
