@@ -81,4 +81,32 @@ describe("Airhorn", () => {
 		expect(airhorn.cache.ttl).toBe(60);
 	});
 
+	test('should be able to load a template file', async () => {
+		const airhorn = new Airhorn();
+		const template = await airhorn.loadTemplate('./test/fixtures/full-template.md');
+		expect(template).toBeDefined();
+		expect(template.content).toContain('<%= new Date().getFullYear() %> Your Company. All rights reserved.');
+		expect(template.subject).toBe('Welcome to Our Service');
+		expect(template.from).toBe('me@you.com');
+		expect(template.requiredFields).toEqual(['firstName', 'lastName', 'loginUrl']);
+		expect(template.templateEngine).toBe('ejs');
+	});
+
+	test('should be able to load a template file with missing fields', async () => {
+		const airhorn = new Airhorn();
+		const template = await airhorn.loadTemplate('./test/fixtures/simple-template.md');
+		expect(template).toBeDefined();
+		expect(template.content).toContain('<%= new Date().getFullYear() %> Your Company. All rights reserved.');
+		expect(template.subject).toBe('Welcome to Our Service');
+		expect(template.from).toBe('me@you.com');
+		expect(template.requiredFields).toEqual(['firstName']);
+		expect(template.templateEngine).toBeUndefined();
+	});
+
+	test('should error when template file is missing', async () => {
+		const airhorn = new Airhorn({ throwOnErrors: true });
+		await expect(airhorn.loadTemplate('./test/fixtures/missing-template.md')).rejects.toThrowError(
+			'Template file not found: ./test/fixtures/missing-template.md',
+		);
+	});
 });

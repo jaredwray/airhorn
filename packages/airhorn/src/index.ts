@@ -1,5 +1,7 @@
+import fs from "node:fs";
 import { Cacheable, type CacheableOptions } from "cacheable";
 import { Ecto, EctoOptions } from "ecto";
+import { Writr } from "writr";
 import { Hookified } from "hookified";
 import {
 	type AirhornProvider,
@@ -71,7 +73,7 @@ export class Airhorn extends Hookified {
 
 	constructor(options?: AirhornOptions) {
 		// biome-ignore format: long format
-		super({ throwHookErrors: options?.throwOnErrors, throwOnEmitError: options?.throwOnErrors });
+		super({ throwHookErrors: options?.throwOnErrors });
 
 		if (options?.cache !== undefined) {
 			this.setCache(options.cache);
@@ -295,5 +297,44 @@ export class Airhorn extends Hookified {
 		}
 	}
 
-	//public async loadTemplate(path: string): Promise<AirhornTemplate> {}
+	/**
+	 * Load a template from a file. This is in markdown format with specific header values
+	 * @param {string} path - The path to the template file.
+	 * @returns {Promise<AirhornTemplate>} The loaded template.
+	 */
+	public async loadTemplate(path: string): Promise<AirhornTemplate> {
+		let template: AirhornTemplate = {
+			content: "",
+		};
+
+		try {
+			if (!fs.existsSync(path)) {
+				throw new Error(`Template file not found: ${path}`);
+			}
+			const templateContent = await fs.promises.readFile(path, "utf-8");
+			const writr = new Writr(templateContent);
+			template = {
+				from: writr.frontMatter.from,
+				subject: writr.frontMatter.subject,
+				content: writr.body,
+				requiredFields: writr.frontMatter.requiredFields?.split(",").map((field) => field.trim()),
+				templateEngine: writr.frontMatter.templateEngine,
+			}
+		} catch (error) {
+			this.handleError(error as Error);
+		}
+
+		return template;
+	}
+
+	/**
+	 * Handle Errors
+	 * @param {Error} error 
+	 */
+	private handleError(error: Error): void {
+		this.emit(AirhornEvent.Error, error);
+		if(this._throwOnErrors) {
+			throw error;
+		}
+	}
 }
