@@ -52,7 +52,11 @@ export type AirhornOptions = {
 	statistics?: boolean;
 	providers?: Array<AirhornProvider>;
 	useWebhookProvider?: boolean;
-} & AirhornSendOptions;
+	retryStrategy?: AirhornRetryStrategy;
+	timeout?: number;
+	sendStrategy?: AirhornSendStrategy;
+	throwOnErrors?: boolean;
+};
 
 export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
@@ -85,10 +89,11 @@ export class Airhorn extends Hookified {
 
 		if (
 			options?.useWebhookProvider !== undefined &&
-			options.useWebhookProvider === true
+			options.useWebhookProvider === false
 		) {
-			// add the provider
-			this._providers.push(new AirhornWebhookProvider());
+			this._providers = this._providers.filter(
+				(provider) => !(provider instanceof AirhornWebhookProvider),
+			);
 		}
 
 		if (options?.retryStrategy !== undefined) {
@@ -108,50 +113,107 @@ export class Airhorn extends Hookified {
 		}
 	}
 
+	/**
+	 * Get the cache instance.
+	 * @returns {Cacheable} The cache instance.
+	 */
 	public get cache(): Cacheable {
 		return this._cache;
 	}
 
+	/**
+	 * Set the cache instance.
+	 * @param {Cacheable} cache - The cache instance.
+	 */
 	public set cache(cache: Cacheable) {
 		this._cache = cache;
 	}
 
+	/**
+	 * Get the Retry Strategy.
+	 * @returns {AirhornRetryStrategy} The retry strategy.
+	 */
 	public get retryStrategy(): AirhornRetryStrategy {
 		return this._retryStrategy;
 	}
 
+	/**
+	 * Set the Retry Strategy.
+	 * @param {AirhornRetryStrategy} retryStrategy - The retry strategy.
+	 */
 	public set retryStrategy(retryStrategy: AirhornRetryStrategy) {
 		this._retryStrategy = retryStrategy;
 	}
 
+	/**
+	 * Get the default timeout. This can be overridden individually on send calls with options.
+	 * @returns {number} The timeout.
+	 */
 	public get timeout(): number {
 		return this._timeout;
 	}
 
+	/**
+	 * Set the default timeout. This can be overridden individually on send calls with options.
+	 * @param {number} timeout - The timeout.
+	 */
 	public set timeout(timeout: number) {
 		this._timeout = timeout;
 	}
 
+	/**
+	 * Get the default send strategy. This can be overridden individually on send calls with options.
+	 * @returns {AirhornSendStrategy} The send strategy.
+	 */
 	public get sendStrategy(): AirhornSendStrategy {
 		return this._sendStrategy;
 	}
 
+	/**
+	 * Set the default send strategy. This can be overridden individually on send calls with options.
+	 * @param {AirhornSendStrategy} sendStrategy - The send strategy.
+	 */
+	public set sendStrategy(sendStrategy: AirhornSendStrategy) {
+		this._sendStrategy = sendStrategy;
+	}
+
+	/**
+	 * Get the throw on errors flag. By default this is set to false
+	 * @returns {boolean} The throw on errors flag.
+	 */
 	public get throwOnErrors(): boolean {
 		return this._throwOnErrors;
 	}
 
+	/**
+	 * Set the throw on errors flag. By default this is set to false
+	 * @param {boolean} throwOnErrors - The throw on errors flag.
+	 */
 	public set throwOnErrors(throwOnErrors: boolean) {
 		this._throwOnErrors = throwOnErrors;
 	}
 
+	/**
+	 * Get the statistics. By default it is disabled.
+	 * To enable it set `statistics.enabled` to true or via options.
+	 * @returns {AirhornStatistics} The statistics.
+	 */
 	public get statistics(): AirhornStatistics {
 		return this._statistics;
 	}
 
+	/**
+	 * Get the providers.
+	 * @returns {Array<AirhornProvider>} The providers.
+	 */
 	public get providers(): Array<AirhornProvider> {
 		return this._providers;
 	}
 
+	/**
+	 * Set the providers.
+	 * @param {Array<AirhornProvider>} providers - The providers.
+	 */
 	public set providers(providers: Array<AirhornProvider>) {
 		this._providers = providers;
 	}
@@ -215,9 +277,13 @@ export class Airhorn extends Hookified {
 
 	public addProviders(providers: Array<AirhornProvider>) {
 		for (const provider of providers) {
-			if (!this._providers.includes(provider)) {
-				this._providers.push(provider);
-			}
+			this.addProvider(provider);
+		}
+	}
+
+	public addProvider(provider: AirhornProvider) {
+		if (!this._providers.includes(provider)) {
+			this._providers.push(provider);
 		}
 	}
 
