@@ -216,8 +216,13 @@ export class Airhorn extends Hookified {
 		this._providers = providers;
 	}
 
-	// biome-ignore format: disable for this function
-	public async send(template: AirhornTemplate, data: Record<string, string>, type: AirhornProviderType, options: AirhornSendOptions): Promise<AirhornSendResult> {
+	public async send(
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornProviderType,
+		options: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
 		const result: AirhornSendResult = {
 			success: false,
 			response: null,
@@ -230,23 +235,39 @@ export class Airhorn extends Hookified {
 		return result;
 	}
 
-	// biome-ignore format: disable for this function
-	public async sendSMS(template: AirhornTemplate, data: Record<string, string>, options: AirhornSendOptions): Promise<AirhornSendResult> {
+	public async sendSMS(
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		options: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
 		return this.send(template, data, AirhornProviderType.SMS, options);
 	}
 
-	// biome-ignore format: disable for this function
-	public async sendEmail(template: AirhornTemplate, data: Record<string, string>, options: AirhornSendOptions): Promise<AirhornSendResult> {
+	public async sendEmail(
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		options: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
 		return this.send(template, data, AirhornProviderType.Email, options);
 	}
 
-	// biome-ignore format: disable for this function
-	public async sendWebhook(template: AirhornTemplate, data: Record<string, string>, options: AirhornSendOptions): Promise<AirhornSendResult> {
+	public async sendWebhook(
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		options: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
 		return this.send(template, data, AirhornProviderType.Webhook, options);
 	}
 
-	// biome-ignore format: disable for this function
-	public async sendMobilePush(template: AirhornTemplate, data: Record<string, string>, options: AirhornSendOptions): Promise<AirhornSendResult> {
+	public async sendMobilePush(
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		options: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
 		return this.send(template, data, AirhornProviderType.MobilePush, options);
 	}
 
@@ -306,7 +327,8 @@ export class Airhorn extends Hookified {
 	public async generateMessage(
 		to: string,
 		template: AirhornTemplate,
-		data: Record<string, string>,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
 		providerType: AirhornProviderType,
 	): Promise<AirhornProviderMessage> {
 		const ecto = new Ecto();
@@ -344,14 +366,24 @@ export class Airhorn extends Hookified {
 			}
 			const templateContent = await fs.promises.readFile(path, "utf-8");
 			const writr = new Writr(templateContent);
+
+			// Handle requiredFields as either array or comma-separated string
+			let requiredFields = writr.frontMatter.requiredFields;
+			if (requiredFields) {
+				if (typeof requiredFields === "string") {
+					requiredFields = requiredFields
+						.split(",")
+						.map((field: string) => field.trim());
+				} else if (!Array.isArray(requiredFields)) {
+					requiredFields = [requiredFields];
+				}
+			}
+
 			template = {
-				from: writr.frontMatter.from,
+				from: writr.frontMatter.from || "",
 				subject: writr.frontMatter.subject,
 				content: writr.body,
-				requiredFields: writr.frontMatter.requiredFields
-					?.split(",")
-					// @ts-ignore
-					.map((field) => field.trim()),
+				requiredFields: requiredFields,
 				templateEngine: writr.frontMatter.templateEngine,
 			};
 		} catch (error) {

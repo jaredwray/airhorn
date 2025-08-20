@@ -17,6 +17,7 @@ export class AirhornWebhookProvider implements AirhornProvider {
 	// biome-ignore format: disable for this function
 	public async send(message: AirhornProviderMessage, options?: { headers?: Record<string, string> }): Promise<AirhornProviderSendResult> {
 		const errors: Array<Error> = [];
+		// biome-ignore lint/suspicious/noExplicitAny: fetch response
 		let response: any = {};
 		let success = false;
 

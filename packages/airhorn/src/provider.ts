@@ -28,6 +28,7 @@ export interface AirhornProvider {
 	capabilities: Array<AirhornProviderType>;
 	send: (
 		message: AirhornProviderMessage,
+		// biome-ignore lint/suspicious/noExplicitAny: any options
 		options?: any,
 	) => Promise<AirhornProviderSendResult>;
 }

@@ -2,6 +2,8 @@ import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { AirhornWebhookProvider } from "../src/webhook.js";
 import { AirhornProviderType } from "../src/provider.js";
 import type { AirhornProviderMessage } from "../src/provider.js";
+import type { AirhornTemplate } from "../src/template.js";
+import { Airhorn } from "../src/index.js";
 
 describe("AirhornWebhookProvider", () => {
 	let provider: AirhornWebhookProvider;
@@ -285,6 +287,183 @@ describe("AirhornWebhookProvider", () => {
 			expect(result.success).toBe(true);
 			expect(result.errors).toEqual([]);
 			expect(result.response.data).toEqual({});
+		});
+
+		test("should send webhook with template converted to message", async () => {
+			const airhorn = new Airhorn();
+			const webhookUrl = "https://api.example.com/webhooks/notifications";
+			
+			// Load template from file
+			const template = await airhorn.loadTemplate("./test/fixtures/webhook-simple.md");
+
+			// Verify template loaded correctly
+			expect(template.from).toBe("webhook@notifications.com");
+			expect(template.subject).toBe("User Profile Update");
+			expect(template.templateEngine).toBe("ejs");
+			expect(template.requiredFields).toEqual(["name", "age", "vegetables"]);
+
+			// Data to populate the template
+			const templateData = {
+				name: "John Doe",
+				age: 30,
+				vegetables: ["carrots", "broccoli", "spinach"]
+			};
+
+			// Generate message from template
+			const message = await airhorn.generateMessage(
+				webhookUrl,
+				template,
+				templateData,
+				AirhornProviderType.Webhook
+			);
+
+			// Verify the generated message
+			expect(message.to).toBe(webhookUrl);
+			expect(message.from).toBe("webhook@notifications.com");
+			expect(message.subject).toBe("User Profile Update");
+			expect(message.type).toBe(AirhornProviderType.Webhook);
+			
+			// Parse the JSON content that was generated
+			const generatedContent = JSON.parse(message.content);
+			expect(generatedContent.event).toBe("user.profile.updated");
+			expect(generatedContent.user.name).toBe("John Doe");
+			expect(generatedContent.user.age).toBe(30);
+			expect(generatedContent.user.preferences.favoriteVegetables).toEqual(["carrots", "broccoli", "spinach"]);
+			expect(generatedContent.metadata.source).toBe("profile-service");
+			expect(generatedContent.metadata.version).toBe("1.0.0");
+			expect(message.template).toEqual(template);
+
+			// Mock successful webhook response
+			const mockResponse = {
+				ok: true,
+				status: 200,
+				statusText: "OK",
+				json: vi.fn().mockResolvedValue({ 
+					received: true, 
+					message: "Webhook processed successfully" 
+				}),
+				headers: new Headers({ 
+					"content-type": "application/json",
+					"x-webhook-id": "webhook-123"
+				}),
+			};
+
+			mockFetch.mockResolvedValueOnce(mockResponse);
+
+			// Send the generated message via webhook
+			const result = await provider.send(message);
+
+			// Verify the webhook was called correctly
+			expect(mockFetch).toHaveBeenCalledWith(
+				webhookUrl,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: expect.any(String),
+				}
+			);
+
+			// Verify the payload sent to webhook
+			const callArgs = mockFetch.mock.calls[mockFetch.mock.calls.length - 1];
+			const body = JSON.parse(callArgs[1].body);
+			expect(body.from).toBe("webhook@notifications.com");
+			expect(body.timestamp).toBeDefined();
+			
+			// Verify the webhook payload contains the generated JSON content
+			const payloadContent = JSON.parse(body.content);
+			expect(payloadContent.event).toBe("user.profile.updated");
+			expect(payloadContent.user.name).toBe("John Doe");
+			expect(payloadContent.user.age).toBe(30);
+
+			// Verify the result
+			expect(result.success).toBe(true);
+			expect(result.errors).toEqual([]);
+			expect(result.response.status).toBe(200);
+			expect(result.response.data.received).toBe(true);
+		});
+
+		test("should send webhook with JSON template content", async () => {
+			const airhorn = new Airhorn();
+			const webhookUrl = "https://api.example.com/webhooks/json";
+			
+			// Create a template with JSON content
+			const template: AirhornTemplate = {
+				from: "api@myservice.com",
+				content: JSON.stringify({
+					event: "user.updated",
+					user: {
+						name: "<%= name %>",
+						email: "<%= email %>",
+						status: "<%= status %>"
+					},
+					timestamp: "<%= new Date().toISOString() %>"
+				}),
+				templateEngine: "ejs",
+				requiredFields: ["name", "email", "status"]
+			};
+
+			// Data to populate the template
+			const templateData = {
+				name: "Jane Smith",
+				email: "jane@example.com",
+				status: "active"
+			};
+
+			// Generate message from template
+			const message = await airhorn.generateMessage(
+				webhookUrl,
+				template,
+				templateData,
+				AirhornProviderType.Webhook
+			);
+
+			// Parse the generated JSON content to verify it
+			const generatedContent = JSON.parse(message.content);
+			expect(generatedContent.event).toBe("user.updated");
+			expect(generatedContent.user.name).toBe("Jane Smith");
+			expect(generatedContent.user.email).toBe("jane@example.com");
+			expect(generatedContent.user.status).toBe("active");
+			expect(generatedContent.timestamp).toBeDefined();
+
+			// Mock successful webhook response
+			const mockResponse = {
+				ok: true,
+				status: 201,
+				statusText: "Created",
+				json: vi.fn().mockResolvedValue({ id: "event-456" }),
+				headers: new Headers(),
+			};
+
+			mockFetch.mockResolvedValueOnce(mockResponse);
+
+			// Send the generated message via webhook with custom headers
+			const customHeaders = {
+				"X-API-Key": "secret-key-123",
+				"X-Webhook-Version": "2.0"
+			};
+			
+			const result = await provider.send(message, { headers: customHeaders });
+
+			// Verify the webhook was called with custom headers
+			expect(mockFetch).toHaveBeenCalledWith(
+				webhookUrl,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"X-API-Key": "secret-key-123",
+						"X-Webhook-Version": "2.0"
+					},
+					body: expect.any(String),
+				}
+			);
+
+			// Verify the result
+			expect(result.success).toBe(true);
+			expect(result.response.status).toBe(201);
+			expect(result.response.data.id).toBe("event-456");
 		});
 	});
 
