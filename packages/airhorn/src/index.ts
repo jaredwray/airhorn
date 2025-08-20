@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { Cacheable, type CacheableOptions } from "cacheable";
-import { Ecto, type EctoOptions } from "ecto";
+import { Ecto } from "ecto";
 import { Hookified } from "hookified";
 import { Writr } from "writr";
 import {
@@ -298,12 +298,43 @@ export class Airhorn extends Hookified {
 	}
 
 	/**
+	 * Generate a message from a template and data.
+	 * @param template - The template to use.
+	 * @param data - The data to populate the template.
+	 * @returns The generated message.
+	 */
+	public async generateMessage(
+		to: string,
+		template: AirhornTemplate,
+		data: Record<string, string>,
+		providerType: AirhornProviderType,
+	): Promise<AirhornProviderMessage> {
+		const ecto = new Ecto();
+
+		const message: AirhornProviderMessage = {
+			to,
+			from: template.from,
+			subject: template.subject,
+			type: providerType,
+			content: await ecto.render(
+				template.content,
+				data,
+				template.templateEngine,
+			),
+			template: template,
+		};
+
+		return message;
+	}
+
+	/**
 	 * Load a template from a file. This is in markdown format with specific header values
 	 * @param {string} path - The path to the template file.
 	 * @returns {Promise<AirhornTemplate>} The loaded template.
 	 */
 	public async loadTemplate(path: string): Promise<AirhornTemplate> {
 		let template: AirhornTemplate = {
+			from: "",
 			content: "",
 		};
 

@@ -1,5 +1,5 @@
 export type AirhornTemplate = {
-	from?: string;
+	from: string;
 	subject?: string;
 	content: string;
 	requiredFields?: Array<string>;

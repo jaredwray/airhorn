@@ -1,21 +1,16 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import axios from "axios";
 import { AirhornWebhookProvider } from "../src/webhook.js";
 import { AirhornProviderType } from "../src/provider.js";
 import type { AirhornProviderMessage } from "../src/provider.js";
 
-vi.mock("axios");
-
 describe("AirhornWebhookProvider", () => {
 	let provider: AirhornWebhookProvider;
-	const mockAxios = axios as typeof axios & {
-		post: ReturnType<typeof vi.fn>;
-		isAxiosError: ReturnType<typeof vi.fn>;
-	};
+	const mockFetch = vi.fn();
 
 	beforeEach(() => {
 		provider = new AirhornWebhookProvider();
 		vi.clearAllMocks();
+		global.fetch = mockFetch;
 	});
 
 	afterEach(() => {
@@ -30,26 +25,33 @@ describe("AirhornWebhookProvider", () => {
 	});
 
 	describe("send", () => {
+		const webhookUrl = "https://example.com/webhook";
+
 		const mockMessage: AirhornProviderMessage = {
+			to: webhookUrl,
 			type: AirhornProviderType.Webhook,
 			content: "Test message content",
 			from: "sender@example.com",
 			subject: "Test Subject",
+			template: {
+				from: "sender@example.com",
+				subject: "Test Subject",
+				content: "Test message content",
+			}
 		};
-
-		const webhookUrl = "https://example.com/webhook";
 
 		test("should send successful webhook request", async () => {
 			const mockResponse = {
+				ok: true,
 				status: 200,
 				statusText: "OK",
-				data: { success: true },
-				headers: { "content-type": "application/json" },
+				json: vi.fn().mockResolvedValue({ success: true }),
+				headers: new Headers({ "content-type": "application/json" }),
 			};
 
-			mockAxios.post.mockResolvedValueOnce(mockResponse);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(true);
 			expect(result.errors).toEqual([]);
@@ -60,129 +62,126 @@ describe("AirhornWebhookProvider", () => {
 				headers: { "content-type": "application/json" },
 			});
 
-			expect(mockAxios.post).toHaveBeenCalledWith(
-				webhookUrl,
+			expect(mockFetch).toHaveBeenCalledWith(
+				mockMessage.to,
 				{
-					type: AirhornProviderType.Webhook,
-					from: "sender@example.com",
-					content: "Test message content",
-					timestamp: expect.any(String),
-				},
-				{
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
+					body: expect.any(String),
 				}
 			);
+
+			const callArgs = mockFetch.mock.calls[0];
+			const body = JSON.parse(callArgs[1].body);
+			expect(body.from).toBe("sender@example.com");
+			expect(body.content).toBe("Test message content");
+			expect(body.timestamp).toBeDefined();
 		});
 
 		test("should send webhook request with custom headers", async () => {
 			const mockResponse = {
+				ok: true,
 				status: 200,
 				statusText: "OK",
-				data: { success: true },
-				headers: {},
+				json: vi.fn().mockResolvedValue({ success: true }),
+				headers: new Headers(),
 			};
 
-			mockAxios.post.mockResolvedValueOnce(mockResponse);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
 			const customHeaders = {
 				"X-API-Key": "test-key",
 				"X-Custom-Header": "custom-value",
 			};
 
-			await provider.send(webhookUrl, mockMessage, { headers: customHeaders });
+			await provider.send(mockMessage, { headers: customHeaders });
 
-			expect(mockAxios.post).toHaveBeenCalledWith(
+			expect(mockFetch).toHaveBeenCalledWith(
 				webhookUrl,
-				expect.any(Object),
 				{
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 						"X-API-Key": "test-key",
 						"X-Custom-Header": "custom-value",
 					},
+					body: expect.any(String),
 				}
 			);
 		});
 
 		test("should handle successful response with status 201", async () => {
 			const mockResponse = {
+				ok: true,
 				status: 201,
 				statusText: "Created",
-				data: { id: "123" },
-				headers: {},
+				json: vi.fn().mockResolvedValue({ id: "123" }),
+				headers: new Headers(),
 			};
 
-			mockAxios.post.mockResolvedValueOnce(mockResponse);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(true);
 			expect(result.errors).toEqual([]);
 		});
 
 		test("should handle failed response with status 400", async () => {
-			const errorResponse = {
-				response: {
-					status: 400,
-					statusText: "Bad Request",
-					data: { error: "Invalid payload" },
-				},
-				message: "Request failed with status code 400",
+			const mockResponse = {
+				ok: false,
+				status: 400,
+				statusText: "Bad Request",
+				json: vi.fn().mockResolvedValue({ error: "Invalid payload" }),
+				headers: new Headers(),
 			};
 
-			mockAxios.post.mockRejectedValueOnce(errorResponse);
-			mockAxios.isAxiosError.mockReturnValueOnce(true);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(false);
-			expect(result.errors).toHaveLength(1);
-			expect(result.errors[0].message).toBe("Webhook request failed: Request failed with status code 400");
+			expect(result.errors).toEqual([]);
 			expect(result.response).toEqual({
 				status: 400,
 				statusText: "Bad Request",
 				data: { error: "Invalid payload" },
+				headers: {},
 			});
 		});
 
-		test("should handle network error without response", async () => {
-			const networkError = {
-				message: "Network Error",
-				code: "ECONNREFUSED",
-			};
+		test("should handle network error", async () => {
+			const networkError = new Error("Network Error");
 
-			mockAxios.post.mockRejectedValueOnce(networkError);
-			mockAxios.isAxiosError.mockReturnValueOnce(true);
+			mockFetch.mockRejectedValueOnce(networkError);
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
 			expect(result.errors[0].message).toBe("Webhook request failed: Network Error");
-			expect(result.response).toEqual({});
+			expect(result.response).toEqual({ error: "Network Error" });
 		});
 
-		test("should handle non-axios error", async () => {
+		test("should handle generic error", async () => {
 			const genericError = new Error("Something went wrong");
 
-			mockAxios.post.mockRejectedValueOnce(genericError);
-			mockAxios.isAxiosError.mockReturnValueOnce(false);
+			mockFetch.mockRejectedValueOnce(genericError);
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
-			expect(result.errors[0].message).toBe("Something went wrong");
-			expect(result.response).toEqual({});
+			expect(result.errors[0].message).toBe("Webhook request failed: Something went wrong");
+			expect(result.response).toEqual({ error: "Something went wrong" });
 		});
 
 		test("should handle non-error thrown value", async () => {
-			mockAxios.post.mockRejectedValueOnce("String error");
-			mockAxios.isAxiosError.mockReturnValueOnce(false);
+			mockFetch.mockRejectedValueOnce("String error");
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
@@ -191,72 +190,101 @@ describe("AirhornWebhookProvider", () => {
 
 		test("should include timestamp in payload", async () => {
 			const mockResponse = {
+				ok: true,
 				status: 200,
 				statusText: "OK",
-				data: {},
-				headers: {},
+				json: vi.fn().mockResolvedValue({}),
+				headers: new Headers(),
 			};
 
-			mockAxios.post.mockResolvedValueOnce(mockResponse);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
-			await provider.send(webhookUrl, mockMessage);
+			await provider.send(mockMessage);
 
-			const callArgs = mockAxios.post.mock.calls[0];
-			const payload = callArgs[1];
+			const callArgs = mockFetch.mock.calls[0];
+			const body = JSON.parse(callArgs[1].body);
 
-			expect(payload.timestamp).toBeDefined();
-			expect(new Date(payload.timestamp).toISOString()).toBe(payload.timestamp);
+			expect(body.timestamp).toBeDefined();
+			expect(new Date(body.timestamp).toISOString()).toBe(body.timestamp);
 		});
 
 		test("should handle message without optional fields", async () => {
 			const minimalMessage: AirhornProviderMessage = {
+				to: webhookUrl,
+				from: "test@example.com",
 				type: AirhornProviderType.Webhook,
 				content: "Minimal content",
+				template: {
+					from: "test@example.com",
+					content: "Test Body"
+				}
 			};
 
 			const mockResponse = {
+				ok: true,
 				status: 200,
 				statusText: "OK",
-				data: {},
-				headers: {},
+				json: vi.fn().mockResolvedValue({}),
+				headers: new Headers(),
 			};
 
-			mockAxios.post.mockResolvedValueOnce(mockResponse);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
-			const result = await provider.send(webhookUrl, minimalMessage);
+			const result = await provider.send(minimalMessage);
 
 			expect(result.success).toBe(true);
-			expect(mockAxios.post).toHaveBeenCalledWith(
+			expect(mockFetch).toHaveBeenCalledWith(
 				webhookUrl,
 				{
-					type: AirhornProviderType.Webhook,
-					from: undefined,
-					content: "Minimal content",
-					timestamp: expect.any(String),
-				},
-				{
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
+					body: expect.any(String),
 				}
 			);
+			
+			const callArgs = mockFetch.mock.calls[0];
+			const body = JSON.parse(callArgs[1].body);
+			expect(body.from).toBe("test@example.com");
+			expect(body.content).toBe("Minimal content");
+			expect(body.timestamp).toBeDefined();
 		});
 
 		test("should mark as unsuccessful for 3xx status codes", async () => {
 			const mockResponse = {
+				ok: false,
 				status: 301,
 				statusText: "Moved Permanently",
-				data: {},
-				headers: { location: "https://new-url.com" },
+				json: vi.fn().mockResolvedValue({}),
+				headers: new Headers({ location: "https://new-url.com" }),
 			};
 
-			mockAxios.post.mockResolvedValueOnce(mockResponse);
+			mockFetch.mockResolvedValueOnce(mockResponse);
 
-			const result = await provider.send(webhookUrl, mockMessage);
+			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toEqual([]);
 			expect(result.response.status).toBe(301);
+		});
+
+		test("should handle response body parse error", async () => {
+			const mockResponse = {
+				ok: true,
+				status: 200,
+				statusText: "OK",
+				json: vi.fn().mockRejectedValue(new Error("Invalid JSON")),
+				headers: new Headers(),
+			};
+
+			mockFetch.mockResolvedValueOnce(mockResponse);
+
+			const result = await provider.send(mockMessage);
+
+			expect(result.success).toBe(true);
+			expect(result.errors).toEqual([]);
+			expect(result.response.data).toEqual({});
 		});
 	});
 

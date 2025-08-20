@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
 	type AirhornProvider,
 	type AirhornProviderMessage,
@@ -16,45 +15,44 @@ export class AirhornWebhookProvider implements AirhornProvider {
 	}
 
 	// biome-ignore format: disable for this function
-	public async send(to: string, message: AirhornProviderMessage, options?: { headers?: Record<string, string> }): Promise<AirhornProviderSendResult> {
+	public async send(message: AirhornProviderMessage, options?: { headers?: Record<string, string> }): Promise<AirhornProviderSendResult> {
 		const errors: Array<Error> = [];
 		let response: any = {};
 		let success = false;
 
 		try {
 			const payload = {
-				type: message.type,
 				from: message.from,
 				content: message.content,
 				timestamp: new Date().toISOString(),
 			};
 
-			const axiosResponse = await axios.post(to, payload, {
+			const fetchResponse = await fetch(message.to, {
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					...options?.headers,
 				},
+				body: JSON.stringify(payload),
 			});
 
+			const responseData = await fetchResponse.json().catch(() => ({}));
+
 			response = {
-				status: axiosResponse.status,
-				statusText: axiosResponse.statusText,
-				data: axiosResponse.data,
-				headers: axiosResponse.headers,
+				status: fetchResponse.status,
+				statusText: fetchResponse.statusText,
+				data: responseData,
+				headers: Object.fromEntries(fetchResponse.headers.entries()),
 			};
-			success = axiosResponse.status >= 200 && axiosResponse.status < 300;
+			success = fetchResponse.status >= 200 && fetchResponse.status < 300;
 		} catch (error) {
-			if (axios.isAxiosError(error)) {
+			if (error instanceof Error) {
 				errors.push(new Error(`Webhook request failed: ${error.message}`));
-				if (error.response) {
-					response = {
-						status: error.response.status,
-						statusText: error.response.statusText,
-						data: error.response.data,
-					};
-				}
+				response = {
+					error: error.message,
+				};
 			} else {
-				errors.push(error instanceof Error ? error : new Error(String(error)));
+				errors.push(new Error(String(error)));
 			}
 		}
 

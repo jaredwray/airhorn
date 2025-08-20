@@ -8,8 +8,13 @@ export enum AirhornProviderType {
 }
 
 export type AirhornProviderMessage = {
+	to: string;
+	from: string;
+	subject?: string;
+	content: string;
 	type: AirhornProviderType;
-} & AirhornTemplate;
+	template: AirhornTemplate;
+};
 
 export type AirhornProviderSendResult = {
 	success: boolean;
@@ -22,7 +27,6 @@ export interface AirhornProvider {
 	name: string;
 	capabilities: Array<AirhornProviderType>;
 	send: (
-		to: string,
 		message: AirhornProviderMessage,
 		options?: any,
 	) => Promise<AirhornProviderSendResult>;
