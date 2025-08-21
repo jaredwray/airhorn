@@ -20,8 +20,10 @@ describe("Airhorn", () => {
 
 	test('should be able to set the providers via options', () => {
 		const airhorn = new Airhorn({ providers: [new AirhornWebhookProvider()] });
-		expect(airhorn.providers).toHaveLength(1);
+		// Should have 2 providers: default webhook provider + the one we added
+		expect(airhorn.providers).toHaveLength(2);
 		expect(airhorn.providers[0]).toBeInstanceOf(AirhornWebhookProvider);
+		expect(airhorn.providers[1]).toBeInstanceOf(AirhornWebhookProvider);
 		airhorn.providers = [new AirhornWebhookProvider()];
 		expect(airhorn.providers).toHaveLength(1);
 	});

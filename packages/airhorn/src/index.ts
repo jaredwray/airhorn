@@ -43,6 +43,7 @@ export type AirhornRetryFunction = (
 ) => number;
 
 export type AirhornSendOptions = {
+	to?: string;
 	retryStrategy?: AirhornRetryStrategy;
 	timeout?: number;
 	sendStrategy?: AirhornSendStrategy;
@@ -70,6 +71,7 @@ export class Airhorn extends Hookified {
 	private _throwOnErrors: boolean = false;
 	private _statistics: AirhornStatistics = new AirhornStatistics();
 	private _providers: Array<AirhornProvider> = [];
+	private _roundRobinIndex: number = 0;
 
 	constructor(options?: AirhornOptions) {
 		// biome-ignore format: long format
@@ -83,15 +85,13 @@ export class Airhorn extends Hookified {
 			this._statistics.enabled = options.statistics;
 		}
 
-		if (options?.providers !== undefined) {
-			this.addProviders(options.providers);
+		// Add default webhook provider unless explicitly disabled
+		if (options?.useWebhookProvider !== false) {
+			this._providers.push(new AirhornWebhookProvider());
 		}
 
-		// biome-ignore format: long format
-		if (options?.useWebhookProvider !== undefined && options.useWebhookProvider === false) {
-			this._providers = this._providers.filter(
-				(provider) => !(provider instanceof AirhornWebhookProvider),
-			);
+		if (options?.providers !== undefined) {
+			this.addProviders(options.providers);
 		}
 
 		if (options?.retryStrategy !== undefined) {
@@ -223,6 +223,7 @@ export class Airhorn extends Hookified {
 		type: AirhornProviderType,
 		options: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
+		const startTime = Date.now();
 		const result: AirhornSendResult = {
 			success: false,
 			response: null,
@@ -232,6 +233,116 @@ export class Airhorn extends Hookified {
 			errors: [],
 		};
 
+		try {
+			// Get providers that support this type
+			const providers = this.getProvidersByType(type);
+
+			if (providers.length === 0) {
+				throw new Error(`No providers available for type: ${type}`);
+			}
+
+			// Generate the message from template
+			const message = await this.generateMessage(
+				options.to || "",
+				template,
+				data,
+				type,
+			);
+
+			result.message = message;
+
+			// Determine send strategy
+			const sendStrategy = options.sendStrategy || this._sendStrategy;
+
+			// Send based on strategy
+			if (sendStrategy === AirhornSendStrategy.All) {
+				// Send to all providers
+				const sendPromises = providers.map(async (provider) => {
+					try {
+						const providerResult = await provider.send(message, options);
+						if (providerResult.success) {
+							result.success = true;
+						}
+						return { provider, result: providerResult };
+					} catch (error) {
+						const err =
+							error instanceof Error ? error : new Error(String(error));
+						result.errors.push(err);
+						return { provider, error: err };
+					}
+				});
+
+				const results = await Promise.all(sendPromises);
+				result.providers = providers;
+				result.response = results;
+			} else if (sendStrategy === AirhornSendStrategy.RoundRobin) {
+				// Round-robin through providers
+				if (providers.length > 0) {
+					const providerIndex = this._roundRobinIndex % providers.length;
+					const provider = providers[providerIndex];
+					if (provider) {
+						this._roundRobinIndex =
+							(this._roundRobinIndex + 1) % providers.length;
+
+						try {
+							const providerResult = await provider.send(message, options);
+							result.success = providerResult.success;
+							result.response = providerResult;
+							result.providers = [provider];
+						} catch (error) {
+							const err =
+								error instanceof Error ? error : new Error(String(error));
+							result.errors.push(err);
+						}
+					}
+				}
+			} else {
+				// FailOver strategy (default)
+				for (const provider of providers) {
+					try {
+						const providerResult = await provider.send(message, options);
+						if (providerResult.success) {
+							result.success = true;
+							result.response = providerResult;
+							result.providers = [provider];
+							break;
+						} else {
+							// Provider failed but didn't throw - collect its errors
+							if (providerResult.errors && providerResult.errors.length > 0) {
+								result.errors.push(...providerResult.errors);
+							}
+						}
+					} catch (error) {
+						const err =
+							error instanceof Error ? error : new Error(String(error));
+						result.errors.push(err);
+						// Continue to next provider
+					}
+				}
+			}
+
+			// Emit events
+			if (result.success) {
+				this.emit(AirhornEvent.NotificationSent, result);
+			} else {
+				this.emit(AirhornEvent.NotificationFailed, result);
+			}
+
+			// Update statistics
+			if (this._statistics.enabled) {
+				if (result.success) {
+					this._statistics.incrementSuccess();
+				} else {
+					this._statistics.incrementFailure();
+				}
+			}
+		} catch (error) {
+			const err = error instanceof Error ? error : new Error(String(error));
+			result.errors.push(err);
+			this.handleError(err);
+		}
+
+		result.executionTime = Date.now() - startTime;
 		return result;
 	}
 

@@ -1,6 +1,6 @@
 export class AirhornStatistics {
 	private _totalSendSuccesses: number = 0;
-	private _totalSendFailure: number = 0;
+	private _totalSendFailures: number = 0;
 	private _enabled: boolean = false;
 
 	constructor() {}
@@ -18,6 +18,14 @@ export class AirhornStatistics {
 	}
 
 	public get totalSendFailures() {
-		return this._totalSendFailure;
+		return this._totalSendFailures;
+	}
+
+	public incrementSuccess() {
+		this._totalSendSuccesses++;
+	}
+
+	public incrementFailure() {
+		this._totalSendFailures++;
 	}
 }
