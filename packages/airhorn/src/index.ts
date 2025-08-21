@@ -43,7 +43,6 @@ export type AirhornRetryFunction = (
 ) => number;
 
 export type AirhornSendOptions = {
-	to?: string;
 	retryStrategy?: AirhornRetryStrategy;
 	timeout?: number;
 	sendStrategy?: AirhornSendStrategy;
@@ -217,11 +216,12 @@ export class Airhorn extends Hookified {
 	}
 
 	public async send(
+		to: string,
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
 		type: AirhornProviderType,
-		options: AirhornSendOptions,
+		options: AirhornSendOptions = {},
 	): Promise<AirhornSendResult> {
 		const startTime = Date.now();
 		const result: AirhornSendResult = {
@@ -242,12 +242,7 @@ export class Airhorn extends Hookified {
 			}
 
 			// Generate the message from template
-			const message = await this.generateMessage(
-				options.to || "",
-				template,
-				data,
-				type,
-			);
+			const message = await this.generateMessage(to, template, data, type);
 
 			result.message = message;
 
@@ -347,39 +342,49 @@ export class Airhorn extends Hookified {
 	}
 
 	public async sendSMS(
+		to: string,
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions,
+		options: AirhornSendOptions = {},
 	): Promise<AirhornSendResult> {
-		return this.send(template, data, AirhornProviderType.SMS, options);
+		return this.send(to, template, data, AirhornProviderType.SMS, options);
 	}
 
 	public async sendEmail(
+		to: string,
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions,
+		options: AirhornSendOptions = {},
 	): Promise<AirhornSendResult> {
-		return this.send(template, data, AirhornProviderType.Email, options);
+		return this.send(to, template, data, AirhornProviderType.Email, options);
 	}
 
 	public async sendWebhook(
+		to: string,
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions,
+		options: AirhornSendOptions = {},
 	): Promise<AirhornSendResult> {
-		return this.send(template, data, AirhornProviderType.Webhook, options);
+		return this.send(to, template, data, AirhornProviderType.Webhook, options);
 	}
 
 	public async sendMobilePush(
+		to: string,
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions,
+		options: AirhornSendOptions = {},
 	): Promise<AirhornSendResult> {
-		return this.send(template, data, AirhornProviderType.MobilePush, options);
+		return this.send(
+			to,
+			template,
+			data,
+			AirhornProviderType.MobilePush,
+			options,
+		);
 	}
 
 	public getProvidersByType(type: AirhornProviderType): Array<AirhornProvider> {

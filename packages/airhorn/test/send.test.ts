@@ -37,9 +37,9 @@ describe("Airhorn send function", () => {
 
 		// Send webhook
 		const result = await airhorn.sendWebhook(
+			webhookUrl,
 			template,
-			{ name: "John" },
-			{ to: webhookUrl }
+			{ name: "John" }
 		);
 
 		// Verify the result
@@ -75,9 +75,9 @@ describe("Airhorn send function", () => {
 
 		// Send should fail with no providers
 		const result = await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 
 		expect(result.success).toBe(false);
@@ -108,10 +108,10 @@ describe("Airhorn send function", () => {
 
 		// Send with All strategy
 		const result = await airhorn.sendWebhook(
+			"https://example.com",
 			template,
 			{},
 			{ 
-				to: "https://example.com",
 				sendStrategy: AirhornSendStrategy.All
 			}
 		);
@@ -146,27 +146,27 @@ describe("Airhorn send function", () => {
 
 		// First send should use first provider
 		const result1 = await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 		expect(result1.success).toBe(true);
 		expect(result1.providers).toHaveLength(1);
 
 		// Second send should use second provider
 		const result2 = await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 		expect(result2.success).toBe(true);
 		expect(result2.providers).toHaveLength(1);
 
 		// Third send should use first provider again
 		const result3 = await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 		expect(result3.success).toBe(true);
 		expect(result3.providers).toHaveLength(1);
@@ -199,9 +199,9 @@ describe("Airhorn send function", () => {
 		};
 
 		const result = await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 
 		// Should succeed with second provider
@@ -238,9 +238,9 @@ describe("Airhorn send function", () => {
 
 		// Send successful message
 		await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 
 		// Stats should be updated
@@ -252,9 +252,9 @@ describe("Airhorn send function", () => {
 		airhorn.providers = [new AirhornWebhookProvider()]; // Reset providers
 		
 		await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 
 		// Stats should be updated
@@ -291,9 +291,9 @@ describe("Airhorn send function", () => {
 
 		// Send successful message
 		await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 
 		expect(sentEvents).toHaveLength(1);
@@ -305,9 +305,9 @@ describe("Airhorn send function", () => {
 		airhorn.providers = [new AirhornWebhookProvider()]; // Reset providers
 		
 		await airhorn.sendWebhook(
+			"https://example.com",
 			template,
-			{},
-			{ to: "https://example.com" }
+			{}
 		);
 
 		expect(sentEvents).toHaveLength(1);
