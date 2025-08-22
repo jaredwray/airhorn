@@ -64,6 +64,10 @@ export class AirhornStatistics {
 		return this._totalExecutionTime;
 	}
 
+	public get top10ExecutionTimes(): number[] {
+		return [...this._executionTimes].sort((a, b) => b - a).slice(0, 10);
+	}
+
 	public submitExecutionTime(executionTime: number) {
 		this._executionTimes.push(executionTime);
 		this._totalExecutionTime += executionTime;
