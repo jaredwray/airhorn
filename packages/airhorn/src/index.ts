@@ -19,13 +19,34 @@ export enum AirhornSendStrategy {
 }
 
 export type AirhornSendResult = {
+	/**
+	 * The providers that were used to send the message.
+	 */
 	providers: Array<AirhornProvider>;
+	/**
+	 * The message that was sent.
+	 */
 	message?: AirhornProviderMessage;
+	/**
+	 * Whether the message was sent successfully.
+	 */
 	success: boolean;
+	/**
+	 * The response from the provider.
+	 */
 	// biome-ignore lint/suspicious/noExplicitAny: expected
 	response: any;
+	/**
+	 * The number of times the message was retried.
+	 */
 	retries: number;
+	/**
+	 * The errors that occurred while sending the message.
+	 */
 	errors: Array<Error>;
+	/**
+	 * The time taken to execute the send operation.
+	 */
 	executionTime: number;
 };
 
@@ -44,23 +65,73 @@ export type AirhornRetryFunction = (
 ) => number;
 
 export type AirhornSendOptions = {
+	/**
+	 * The retry strategy to use when sending messages. This will override the instance retry strategy.
+	 */
 	retryStrategy?: AirhornRetryStrategy;
+	/**
+	 * The timeout to use when sending messages. This will overide the instance timeout. 
+	 */
 	timeout?: number;
+	/**
+	 * The send strategy to use when sending messages. This will override the instance send strategy.
+	 * @default AirhornSendStrategy.RoundRobin
+	 */
 	sendStrategy?: AirhornSendStrategy;
+	/**
+	 * Whether to throw an error if sending fails. By default we use emitting for errors. This will override the instance throwOnErrors setting.
+	 * @default false
+	 */
 	throwOnErrors?: boolean;
 };
 
 export type AirhornOptions = {
+	/**
+	 * Whether to enable caching.
+	 * @default true
+	 */
 	cache?: boolean | Cacheable | CacheableOptions;
+	/**
+	 * Whether to collect statistics.
+	 * @default false
+	 */
 	statistics?: boolean;
+	/**
+	 * The providers to add to the Airhorn instance. AirhornWebhook is added by default unless `useWebhookProvider` is set to false.
+	 */
 	providers?: Array<AirhornProvider>;
+	/**
+	 * Whether to use the built-in webhook provider.
+	 * @default true
+	 */
 	useWebhookProvider?: boolean;
+	/**
+	 * The retry strategy to use when sending messages.
+	 * @default 0
+	 */
 	retryStrategy?: AirhornRetryStrategy;
+	/**
+	 * The timeout to use when sending messages.
+	 * @default 100
+	 */
 	timeout?: number;
+	/**
+	 * The send strategy to use when sending messages.
+	 * @default AirhornSendStrategy.RoundRobin
+	 */
 	sendStrategy?: AirhornSendStrategy;
+	/**
+	 * Whether to throw an error if sending fails. By default we use emitting for errors
+	 * @default false
+	 */
 	throwOnErrors?: boolean;
 };
 
+/**
+ * The retry strategy to use when sending messages. If set to a number that is greater than 0, 
+ * it will be used as the maximum number of retries. If set to a function, it will be called with the
+ * message, failed provider, and Airhorn instance to determine the number of retries.
+ */
 export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
@@ -216,6 +287,15 @@ export class Airhorn extends Hookified {
 		this._providers = providers;
 	}
 
+	/**
+	 * Send a notification
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornProviderType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
 	public async send(
 		to: string,
 		template: AirhornTemplate,
