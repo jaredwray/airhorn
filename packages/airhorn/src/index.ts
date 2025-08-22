@@ -22,6 +22,7 @@ export type AirhornSendResult = {
 	providers: Array<AirhornProvider>;
 	message?: AirhornProviderMessage;
 	success: boolean;
+	// biome-ignore lint/suspicious/noExplicitAny: expected
 	response: any;
 	retries: number;
 	errors: Array<Error>;
@@ -221,7 +222,7 @@ export class Airhorn extends Hookified {
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
 		type: AirhornProviderType,
-		options: AirhornSendOptions = {},
+		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		const startTime = Date.now();
 		const result: AirhornSendResult = {
@@ -247,7 +248,7 @@ export class Airhorn extends Hookified {
 			result.message = message;
 
 			// Determine send strategy
-			const sendStrategy = options.sendStrategy || this._sendStrategy;
+			const sendStrategy = options?.sendStrategy || this._sendStrategy;
 
 			// Send based on strategy
 			if (sendStrategy === AirhornSendStrategy.All) {
@@ -346,7 +347,7 @@ export class Airhorn extends Hookified {
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions = {},
+		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		return this.send(to, template, data, AirhornProviderType.SMS, options);
 	}
@@ -356,7 +357,7 @@ export class Airhorn extends Hookified {
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions = {},
+		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		return this.send(to, template, data, AirhornProviderType.Email, options);
 	}
@@ -366,7 +367,7 @@ export class Airhorn extends Hookified {
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions = {},
+		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		return this.send(to, template, data, AirhornProviderType.Webhook, options);
 	}
@@ -376,7 +377,7 @@ export class Airhorn extends Hookified {
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		options: AirhornSendOptions = {},
+		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		return this.send(
 			to,

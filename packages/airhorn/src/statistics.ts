@@ -3,6 +3,7 @@ export class AirhornStatistics {
 	private _totalSendFailures: number = 0;
 	private _enabled: boolean = false;
 
+	// biome-ignore lint/complexity/noUselessConstructor: fix
 	constructor() {}
 
 	public get enabled(): boolean {

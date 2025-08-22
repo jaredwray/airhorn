@@ -9,6 +9,7 @@ export default defineConfig({
 				'site/**',
 				'test/**',
 				'vitest.config.ts',
+				'src/template.ts'
 			],
 		},
 	},
