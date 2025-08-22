@@ -89,33 +89,63 @@ describe("AirhornStatistics", () => {
 		expect(stats.executionTimes).toEqual([100, 200]);
 	});
 
-	test("should return top 10 execution times in descending order", () => {
+	test("should return slowest execution times in descending order", () => {
 		const stats = new AirhornStatistics();
 		
 		// Test with fewer than 10 times
 		stats.submitExecutionTime(100);
 		stats.submitExecutionTime(300);
 		stats.submitExecutionTime(200);
-		expect(stats.top10ExecutionTimes).toEqual([300, 200, 100]);
+		expect(stats.slowestExecutionTimes).toEqual([300, 200, 100]);
 		
 		// Clear and test with exactly 10 times
 		stats.clearExecutionTimes();
 		const times = [150, 250, 50, 350, 450, 100, 200, 300, 400, 500];
 		times.forEach(time => stats.submitExecutionTime(time));
-		expect(stats.top10ExecutionTimes).toEqual([500, 450, 400, 350, 300, 250, 200, 150, 100, 50]);
+		expect(stats.slowestExecutionTimes).toEqual([500, 450, 400, 350, 300, 250, 200, 150, 100, 50]);
 		
 		// Add more than 10 times
 		stats.submitExecutionTime(600);
 		stats.submitExecutionTime(25);
 		stats.submitExecutionTime(375);
 		
-		// Should only return top 10
-		const top10 = stats.top10ExecutionTimes;
-		expect(top10).toHaveLength(10);
-		expect(top10).toEqual([600, 500, 450, 400, 375, 350, 300, 250, 200, 150]);
+		// Should only return slowest 10
+		const slowest = stats.slowestExecutionTimes;
+		expect(slowest).toHaveLength(10);
+		expect(slowest).toEqual([600, 500, 450, 400, 375, 350, 300, 250, 200, 150]);
 		
 		// Verify it returns a copy and doesn't modify original
-		top10.push(999);
-		expect(stats.top10ExecutionTimes).toHaveLength(10);
+		slowest.push(999);
+		expect(stats.slowestExecutionTimes).toHaveLength(10);
+	});
+
+	test("should return fastest execution times in ascending order", () => {
+		const stats = new AirhornStatistics();
+		
+		// Test with fewer than 10 times
+		stats.submitExecutionTime(100);
+		stats.submitExecutionTime(300);
+		stats.submitExecutionTime(200);
+		expect(stats.fastestExecutionTimes).toEqual([100, 200, 300]);
+		
+		// Clear and test with exactly 10 times
+		stats.clearExecutionTimes();
+		const times = [150, 250, 50, 350, 450, 100, 200, 300, 400, 500];
+		times.forEach(time => stats.submitExecutionTime(time));
+		expect(stats.fastestExecutionTimes).toEqual([50, 100, 150, 200, 250, 300, 350, 400, 450, 500]);
+		
+		// Add more than 10 times
+		stats.submitExecutionTime(600);
+		stats.submitExecutionTime(25);
+		stats.submitExecutionTime(375);
+		
+		// Should only return fastest 10
+		const fastest = stats.fastestExecutionTimes;
+		expect(fastest).toHaveLength(10);
+		expect(fastest).toEqual([25, 50, 100, 150, 200, 250, 300, 350, 375, 400]);
+		
+		// Verify it returns a copy and doesn't modify original
+		fastest.push(999);
+		expect(stats.fastestExecutionTimes).toHaveLength(10);
 	});
 });
