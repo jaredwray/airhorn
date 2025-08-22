@@ -22,8 +22,8 @@
 - Load a template from a file for easy GitOps based workflows.
 - Many supported providers such as Twilio (with Sendgrid), AWS, and Google Cloud.
 - Robust (6+ template formats) templating via [ecto](https://github.com/jaredwray/ecto)
-- Easily build your own provider with minimal effort via `AirhornProvider` type.
-- Statistics tracking for send successes, failures, and execution times.
+- Easily build your own provider with minimal effort via `AirhornProvider` interface.
+- Statistics tracking for send successes, failures, and execution times (instance only).
 - ESM and Typescript based supporting Nodejs 20+
 - Maintained on a regular basis with updates and improvements.
 
