@@ -234,9 +234,10 @@ describe("Airhorn send function", () => {
 		// Check initial stats
 		expect(airhorn.statistics.totalSendSuccesses).toBe(0);
 		expect(airhorn.statistics.totalSendFailures).toBe(0);
+		expect(airhorn.statistics.executionTimes).toEqual([]);
 
 		// Send successful message
-		await airhorn.sendWebhook(
+		const result1 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
 			{}
@@ -245,12 +246,15 @@ describe("Airhorn send function", () => {
 		// Stats should be updated
 		expect(airhorn.statistics.totalSendSuccesses).toBe(1);
 		expect(airhorn.statistics.totalSendFailures).toBe(0);
+		expect(airhorn.statistics.executionTimes).toHaveLength(1);
+		expect(airhorn.statistics.executionTimes[0]).toBe(result1.executionTime);
+		expect(airhorn.statistics.totalExecutionTime).toBe(result1.executionTime);
 
 		// Send failed message
 		mockFetch.mockRejectedValueOnce(new Error("Network error"));
 		airhorn.providers = [new AirhornWebhookProvider()]; // Reset providers
 		
-		await airhorn.sendWebhook(
+		const result2 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
 			{}
@@ -259,6 +263,10 @@ describe("Airhorn send function", () => {
 		// Stats should be updated
 		expect(airhorn.statistics.totalSendSuccesses).toBe(1);
 		expect(airhorn.statistics.totalSendFailures).toBe(1);
+		expect(airhorn.statistics.executionTimes).toHaveLength(2);
+		expect(airhorn.statistics.executionTimes[1]).toBe(result2.executionTime);
+		expect(airhorn.statistics.totalExecutionTime).toBe(result1.executionTime + result2.executionTime);
+		expect(airhorn.statistics.averageExecutionTime).toBe((result1.executionTime + result2.executionTime) / 2);
 	});
 
 	test("should emit events on send", async () => {
