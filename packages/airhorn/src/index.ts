@@ -533,3 +533,9 @@ export class Airhorn extends Hookified {
 		}
 	}
 }
+
+export {
+	type AirhornProvider,
+	type AirhornProviderMessage,
+	AirhornProviderType,
+};
