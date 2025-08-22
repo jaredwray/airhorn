@@ -1,6 +1,8 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
+import fs from "node:fs";
 import { Airhorn, AirhornSendStrategy } from "../src/index.js";
 import { AirhornTemplate } from "../src/template.js";
+import { AirhornProviderType } from "../src/provider.js";
 import { AirhornWebhookProvider } from "../src/webhook.js";
 import { Cacheable } from "cacheable";
 
@@ -231,5 +233,286 @@ describe("AirhornSendOptions is optional", () => {
 
 		expect(result).toBeDefined();
 		expect(mockFetch).toHaveBeenCalled();
+	});
+
+	// Coverage tests for error handling in different strategies
+	test("should handle error in RoundRobin strategy when provider throws", async () => {
+		const airhorn = new Airhorn();
+		// Set RoundRobin strategy
+		airhorn.sendStrategy = AirhornSendStrategy.RoundRobin;
+		
+		// Create a custom provider that throws an error
+		const errorProvider = {
+			name: "ErrorProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue(new Error("Provider error"))
+		};
+		
+		airhorn.providers = [errorProvider];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{}
+		);
+
+		// Should fail but capture the error
+		expect(result.success).toBe(false);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].message).toBe("Provider error");
+		expect(errorProvider.send).toHaveBeenCalled();
+	});
+
+	test("should handle non-Error objects thrown in RoundRobin strategy", async () => {
+		const airhorn = new Airhorn();
+		// Set RoundRobin strategy
+		airhorn.sendStrategy = AirhornSendStrategy.RoundRobin;
+		
+		// Create a custom provider that throws a non-Error object
+		const errorProvider = {
+			name: "ErrorProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue("String error")
+		};
+		
+		airhorn.providers = [errorProvider];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{}
+		);
+
+		// Should fail but capture the error as Error object
+		expect(result.success).toBe(false);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0]).toBeInstanceOf(Error);
+		expect(result.errors[0].message).toBe("String error");
+	});
+
+	test("should handle error in FailOver strategy when provider throws", async () => {
+		const airhorn = new Airhorn();
+		// FailOver is the default strategy
+		airhorn.sendStrategy = AirhornSendStrategy.FailOver;
+		
+		// Create providers where first throws, second succeeds
+		const errorProvider = {
+			name: "ErrorProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue(new Error("First provider error"))
+		};
+		
+		const successProvider = {
+			name: "SuccessProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockResolvedValue({
+				success: true,
+				response: { data: "success" },
+				errors: []
+			})
+		};
+		
+		airhorn.providers = [errorProvider, successProvider];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{}
+		);
+
+		// Should succeed with second provider but have error from first
+		expect(result.success).toBe(true);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].message).toBe("First provider error");
+		expect(errorProvider.send).toHaveBeenCalled();
+		expect(successProvider.send).toHaveBeenCalled();
+	});
+
+	test("should handle non-Error objects thrown in FailOver strategy", async () => {
+		const airhorn = new Airhorn();
+		// FailOver is the default strategy
+		airhorn.sendStrategy = AirhornSendStrategy.FailOver;
+		
+		// Create providers where both throw non-Error objects
+		const errorProvider1 = {
+			name: "ErrorProvider1",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue("String error 1")
+		};
+		
+		const errorProvider2 = {
+			name: "ErrorProvider2",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue({ message: "Object error" })
+		};
+		
+		airhorn.providers = [errorProvider1, errorProvider2];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{}
+		);
+
+		// Should fail with errors from both providers
+		expect(result.success).toBe(false);
+		expect(result.errors).toHaveLength(2);
+		expect(result.errors[0]).toBeInstanceOf(Error);
+		expect(result.errors[0].message).toBe("String error 1");
+		expect(result.errors[1]).toBeInstanceOf(Error);
+		expect(result.errors[1].message).toBe("[object Object]");
+	});
+
+	test("should handle error in All strategy when provider throws", async () => {
+		const airhorn = new Airhorn();
+		// Set All strategy
+		airhorn.sendStrategy = AirhornSendStrategy.All;
+		
+		// Create multiple providers, one throws an error
+		const successProvider = {
+			name: "SuccessProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockResolvedValue({
+				success: true,
+				response: { data: "success" },
+				errors: []
+			})
+		};
+		
+		const errorProvider = {
+			name: "ErrorProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue(new Error("Provider error in All strategy"))
+		};
+		
+		airhorn.providers = [successProvider, errorProvider];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{}
+		);
+
+		// Should succeed overall (because one provider succeeded) but have error from the failing provider
+		expect(result.success).toBe(true);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].message).toBe("Provider error in All strategy");
+		expect(successProvider.send).toHaveBeenCalled();
+		expect(errorProvider.send).toHaveBeenCalled();
+	});
+
+	test("should handle non-Error objects thrown in All strategy", async () => {
+		const airhorn = new Airhorn();
+		// Set All strategy
+		airhorn.sendStrategy = AirhornSendStrategy.All;
+		
+		// Create multiple providers, one throws a non-Error object
+		const successProvider = {
+			name: "SuccessProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockResolvedValue({
+				success: true,
+				response: { data: "success" },
+				errors: []
+			})
+		};
+		
+		const errorProvider = {
+			name: "ErrorProvider",
+			capabilities: [AirhornProviderType.Webhook],
+			send: vi.fn().mockRejectedValue("String error in All")
+		};
+		
+		airhorn.providers = [successProvider, errorProvider];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{}
+		);
+
+		// Should succeed overall but have error from the failing provider
+		expect(result.success).toBe(true);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0]).toBeInstanceOf(Error);
+		expect(result.errors[0].message).toBe("String error in All");
+		expect(successProvider.send).toHaveBeenCalled();
+		expect(errorProvider.send).toHaveBeenCalled();
+	});
+
+	test("should handle requiredFields as non-string, non-array value", async () => {
+		// Create a template file with requiredFields as a number
+		const templatePath = "/tmp/test-template.md";
+		const templateContent = `---
+from: sender@example.com
+subject: Test Subject
+requiredFields: 123
+---
+Test content with <%= name %>`;
+
+		// Mock fs.promises.readFile
+		vi.spyOn(fs.promises, "readFile").mockResolvedValue(templateContent);
+		vi.spyOn(fs, "existsSync").mockReturnValue(true);
+
+		const airhorn = new Airhorn();
+		const template = await airhorn.loadTemplate(templatePath);
+
+		expect(template.requiredFields).toEqual([123]);
+		expect(template.from).toBe("sender@example.com");
+		expect(template.subject).toBe("Test Subject");
+		expect(template.content).toBe("Test content with <%= name %>");
+	});
+
+	test("should handle requiredFields as object", async () => {
+		// Create a template file with requiredFields as an object
+		const templatePath = "/tmp/test-template-obj.md";
+		const templateContent = `---
+from: sender@example.com
+subject: Test Subject
+requiredFields:
+  field1: value1
+  field2: value2
+---
+Test content`;
+
+		// Mock fs.promises.readFile
+		vi.spyOn(fs.promises, "readFile").mockResolvedValue(templateContent);
+		vi.spyOn(fs, "existsSync").mockReturnValue(true);
+
+		const airhorn = new Airhorn();
+		const template = await airhorn.loadTemplate(templatePath);
+
+		// When requiredFields is an object (not string or array), it should be wrapped in array
+		expect(template.requiredFields).toEqual([{ field1: "value1", field2: "value2" }]);
 	});
 });
