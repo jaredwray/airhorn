@@ -247,7 +247,8 @@ describe("Airhorn send function", () => {
 		expect(airhorn.statistics.totalSendSuccesses).toBe(1);
 		expect(airhorn.statistics.totalSendFailures).toBe(0);
 		expect(airhorn.statistics.executionTimes).toHaveLength(1);
-		expect(airhorn.statistics.executionTimes[0]).toBe(result1.executionTime);
+		expect(airhorn.statistics.executionTimes[0].duration).toBe(result1.executionTime);
+		expect(airhorn.statistics.executionTimes[0].to).toBe("https://example.com");
 		expect(airhorn.statistics.totalExecutionTime).toBe(result1.executionTime);
 
 		// Send failed message
@@ -264,7 +265,8 @@ describe("Airhorn send function", () => {
 		expect(airhorn.statistics.totalSendSuccesses).toBe(1);
 		expect(airhorn.statistics.totalSendFailures).toBe(1);
 		expect(airhorn.statistics.executionTimes).toHaveLength(2);
-		expect(airhorn.statistics.executionTimes[1]).toBe(result2.executionTime);
+		expect(airhorn.statistics.executionTimes[1].duration).toBe(result2.executionTime);
+		expect(airhorn.statistics.executionTimes[1].to).toBe("https://example.com");
 		expect(airhorn.statistics.totalExecutionTime).toBe(result1.executionTime + result2.executionTime);
 		expect(airhorn.statistics.averageExecutionTime).toBe((result1.executionTime + result2.executionTime) / 2);
 	});

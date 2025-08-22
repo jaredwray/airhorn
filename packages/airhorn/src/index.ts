@@ -341,8 +341,14 @@ export class Airhorn extends Hookified {
 		result.executionTime = Date.now() - startTime;
 
 		// Submit execution time to statistics
-		if (this._statistics.enabled) {
-			this._statistics.submitExecutionTime(result.executionTime);
+		if (this._statistics.enabled && result.message) {
+			this._statistics.submitExecutionTime({
+				to: result.message.to,
+				from: result.message.from,
+				providerType: result.message.type,
+				startTime: new Date(startTime),
+				duration: result.executionTime,
+			});
 		}
 
 		return result;
