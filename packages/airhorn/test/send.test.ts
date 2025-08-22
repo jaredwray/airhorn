@@ -1,7 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import { Airhorn, AirhornSendStrategy } from "../src/index.js";
 import { AirhornWebhookProvider } from "../src/webhook.js";
-import { AirhornProviderType } from "../src/provider.js";
 import type { AirhornTemplate } from "../src/template.js";
 
 describe("Airhorn send function", () => {

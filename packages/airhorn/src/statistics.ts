@@ -1,10 +1,17 @@
+export type AirhornStatisticsOptions = {
+	enabled?: boolean;
+};
+
 export class AirhornStatistics {
 	private _totalSendSuccesses: number = 0;
 	private _totalSendFailures: number = 0;
 	private _enabled: boolean = false;
 
-	// biome-ignore lint/complexity/noUselessConstructor: fix
-	constructor() {}
+	constructor(options?: AirhornStatisticsOptions) {
+		if (options?.enabled !== undefined) {
+			this._enabled = options.enabled;
+		}
+	}
 
 	public get enabled(): boolean {
 		return this._enabled;
