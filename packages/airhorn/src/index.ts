@@ -6,6 +6,7 @@ import { Writr } from "writr";
 import {
 	type AirhornProvider,
 	type AirhornProviderMessage,
+	type AirhornProviderSendResult,
 	AirhornProviderType,
 } from "./provider.js";
 import { AirhornStatistics } from "./statistics.js";
@@ -617,5 +618,6 @@ export class Airhorn extends Hookified {
 export {
 	type AirhornProvider,
 	type AirhornProviderMessage,
+	type AirhornProviderSendResult,
 	AirhornProviderType,
 };
