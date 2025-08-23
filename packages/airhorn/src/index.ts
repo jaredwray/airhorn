@@ -70,7 +70,7 @@ export type AirhornSendOptions = {
 	 */
 	retryStrategy?: AirhornRetryStrategy;
 	/**
-	 * The timeout to use when sending messages. This will overide the instance timeout. 
+	 * The timeout to use when sending messages. This will overide the instance timeout.
 	 */
 	timeout?: number;
 	/**
@@ -128,7 +128,7 @@ export type AirhornOptions = {
 };
 
 /**
- * The retry strategy to use when sending messages. If set to a number that is greater than 0, 
+ * The retry strategy to use when sending messages. If set to a number that is greater than 0,
  * it will be used as the maximum number of retries. If set to a function, it will be called with the
  * message, failed provider, and Airhorn instance to determine the number of retries.
  */
