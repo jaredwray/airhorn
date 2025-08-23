@@ -1,4 +1,4 @@
-import type {
+import {
 	AirhornProvider,
 	AirhornProviderMessage,
 	AirhornProviderSendResult,
@@ -46,7 +46,7 @@ export class TwilioProvider implements AirhornProvider {
 		};
 
 		try {
-			if (message.type !== "sms") {
+			if (message.type !== AirhornProviderType.SMS) {
 				throw new Error(
 					`TwilioProvider only supports SMS, got ${message.type}`,
 				);
