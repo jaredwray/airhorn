@@ -28,7 +28,6 @@ import { TwilioProvider } from '@airhorn/twilio';
 const twilioProvider = new TwilioProvider({
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
-  fromPhoneNumber: '+1234567890', // Optional default from number
 });
 
 // Create Airhorn instance with Twilio provider
@@ -59,9 +58,7 @@ import { TwilioProvider } from '@airhorn/twilio';
 const twilioProvider = new TwilioProvider({
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
-  fromPhoneNumber: '+1234567890',
   sendGridApiKey: 'your-sendgrid-api-key', // Enables email support
-  fromEmail: 'noreply@example.com', // Optional default from email
 });
 
 // Create Airhorn instance
@@ -92,11 +89,9 @@ const provider = new TwilioProvider({
   // Twilio SMS configuration
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
-  fromPhoneNumber: '+1234567890',
   
   // SendGrid Email configuration
   sendGridApiKey: 'your-sendgrid-api-key',
-  fromEmail: 'noreply@example.com',
   
   // Optional Twilio configuration
   region: 'sydney',
@@ -113,9 +108,7 @@ console.log(provider.capabilities); // ['sms', 'email']
 
 - `accountSid` (required): Your Twilio Account SID
 - `authToken` (required): Your Twilio Auth Token
-- `fromPhoneNumber` (optional): Default from phone number for SMS messages
 - `sendGridApiKey` (optional): Your SendGrid API key (enables email support)
-- `fromEmail` (optional): Default from email address for email messages
 - `region` (optional): Twilio region
 - `edge` (optional): Twilio edge location
 

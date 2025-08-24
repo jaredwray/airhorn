@@ -10,9 +10,7 @@ import { Twilio } from "twilio";
 export type AirhornTwilioOptions = {
 	accountSid: string;
 	authToken: string;
-	fromPhoneNumber?: string;
 	sendGridApiKey?: string;
-	fromEmail?: string;
 	region?: string;
 	edge?: string;
 };
@@ -25,8 +23,6 @@ export class AirhornTwilio implements AirhornProvider {
 	];
 
 	private twilioClient: Twilio;
-	private fromPhoneNumber?: string;
-	private fromEmail?: string;
 	private sendGridEnabled = false;
 
 	constructor(options: AirhornTwilioOptions) {
@@ -39,13 +35,10 @@ export class AirhornTwilio implements AirhornProvider {
 			edge: options.edge,
 		});
 
-		this.fromPhoneNumber = options.fromPhoneNumber;
-
 		// Configure SendGrid if API key is provided
 		if (options.sendGridApiKey) {
 			sgMail.setApiKey(options.sendGridApiKey);
 			this.sendGridEnabled = true;
-			this.fromEmail = options.fromEmail;
 		}
 	}
 
@@ -101,15 +94,13 @@ export class AirhornTwilio implements AirhornProvider {
 		};
 
 		try {
-			const from = message.from || this.fromPhoneNumber;
-			/* c8 ignore next 4 */
-			if (!from) {
+			if (!message.from) {
 				throw new Error("From phone number is required for SMS messages");
 			}
 
 			const twilioMessage = await this.twilioClient.messages.create({
 				body: message.content,
-				from,
+				from: message.from,
 				to: message.to,
 				...options,
 			});
@@ -150,14 +141,13 @@ export class AirhornTwilio implements AirhornProvider {
 		};
 
 		try {
-			const from = message.from || this.fromEmail;
-			if (!from) {
+			if (!message.from) {
 				throw new Error("From email address is required for email messages");
 			}
 
 			const msg = {
 				to: message.to,
-				from,
+				from: message.from,
 				subject: message.subject || "Notification",
 				text: message.content,
 				html: message.content,

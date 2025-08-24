@@ -9,7 +9,6 @@ describe("AirhornTwilio", () => {
 	const mockOptions = {
 		accountSid: "AC1234567890",
 		authToken: "test-auth-token",
-		fromPhoneNumber: "+1234567890",
 	};
 
 	beforeEach(() => {
@@ -30,7 +29,6 @@ describe("AirhornTwilio", () => {
 			const providerWithEmail = new AirhornTwilio({
 				...mockOptions,
 				sendGridApiKey: "SG.test-api-key",
-				fromEmail: "test@example.com",
 			});
 
 			expect(providerWithEmail.capabilities).toContain(AirhornProviderType.SMS);
@@ -89,24 +87,15 @@ describe("AirhornTwilio", () => {
 			expect(result.errors).toHaveLength(0);
 		});
 
-		it("should use default from number when not in message", async () => {
-			mockTwilioCreate.mockResolvedValueOnce({
-				sid: "SM456",
-				status: "sent",
-				to: mockMessage.to,
-				from: mockOptions.fromPhoneNumber,
-				body: mockMessage.content,
-			});
-
+		it("should require from phone number in message", async () => {
 			const messageWithoutFrom = { ...mockMessage, from: "" };
 			const result = await provider.send(messageWithoutFrom);
 
-			expect(result.success).toBe(true);
-			expect(mockTwilioCreate).toHaveBeenCalledWith({
-				body: mockMessage.content,
-				from: mockOptions.fromPhoneNumber,
-				to: mockMessage.to,
-			});
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toContain(
+				"From phone number is required for SMS messages",
+			);
 		});
 
 		it("should handle SMS send errors", async () => {
@@ -137,7 +126,6 @@ describe("AirhornTwilio", () => {
 			providerWithEmail = new AirhornTwilio({
 				...mockOptions,
 				sendGridApiKey: "SG.test-api-key",
-				fromEmail: "default@example.com",
 			});
 		});
 
@@ -169,23 +157,14 @@ describe("AirhornTwilio", () => {
 			});
 		});
 
-		it("should use default from email when not in message", async () => {
-			mockSgSend.mockResolvedValueOnce([
-				{
-					statusCode: 202,
-					headers: { "x-message-id": "msg-456" },
-					body: "",
-				},
-			]);
-
+		it("should require from email in message", async () => {
 			const messageWithoutFrom = { ...mockEmailMessage, from: "" };
 			const result = await providerWithEmail.send(messageWithoutFrom);
 
-			expect(result.success).toBe(true);
-			expect(mockSgSend).toHaveBeenCalledWith(
-				expect.objectContaining({
-					from: "default@example.com",
-				}),
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toContain(
+				"From email address is required for email messages",
 			);
 		});
 
@@ -307,7 +286,6 @@ describe("AirhornTwilio", () => {
 			const providerWithEmail = new AirhornTwilio({
 				...mockOptions,
 				sendGridApiKey: "SG.test-api-key",
-				fromEmail: "test@example.com",
 			});
 
 			const message = {
