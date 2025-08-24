@@ -1,4 +1,4 @@
-![Airhorn](../../site/logo.svg "Airhorn")
+![Airhorn](https://airhorn.org/logo.svg "Airhorn")
 
 ---
 
