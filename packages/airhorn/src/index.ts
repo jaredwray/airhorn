@@ -72,8 +72,8 @@ export enum AirhornEvent {
 	Info = "info",
 	Warning = "warning",
 	Error = "error",
-	NotificationSent = "notification.sent",
-	NotificationFailed = "notification.failed",
+	SendSuccess = "send.success",
+	SendFailure = "send.failure",
 }
 
 export type AirhornRetryFunction = (
@@ -422,9 +422,9 @@ export class Airhorn extends Hookified {
 
 			// Emit events
 			if (result.success) {
-				this.emit(AirhornEvent.NotificationSent, result);
+				this.emit(AirhornEvent.SendSuccess, result);
 			} else {
-				this.emit(AirhornEvent.NotificationFailed, result);
+				this.emit(AirhornEvent.SendFailure, result);
 			}
 		} catch (error) {
 			const err = error instanceof Error ? error : new Error(String(error));

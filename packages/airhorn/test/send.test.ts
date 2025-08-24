@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { Airhorn, AirhornSendStrategy } from "../src/index.js";
+import { Airhorn, AirhornEvent, AirhornSendStrategy } from "../src/index.js";
 import { AirhornWebhookProvider } from "../src/webhook.js";
 import type { AirhornTemplate } from "../src/template.js";
 
@@ -274,12 +274,12 @@ describe("Airhorn send function", () => {
 	test("should emit events on send", async () => {
 		const sentEvents: any[] = [];
 		const failedEvents: any[] = [];
-		
-		airhorn.on("notification.sent", (result) => {
+
+		airhorn.on(AirhornEvent.SendSuccess, (result) => {
 			sentEvents.push(result);
 		});
-		
-		airhorn.on("notification.failed", (result) => {
+
+		airhorn.on(AirhornEvent.SendFailure, (result) => {
 			failedEvents.push(result);
 		});
 		

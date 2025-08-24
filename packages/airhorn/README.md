@@ -27,6 +27,24 @@
 - ESM and Typescript based supporting Nodejs 20+
 - Maintained on a regular basis with updates and improvements.
 
+# Table of Contents
+
+- [Getting Started](#getting-started)
+- [Airhorn Options](#airhorn-options)
+- [Using Send Helper Methods](#using-send-helper-methods)
+- [Airhorn Send Response](#airhorn-send-response)
+- [Send Strategies](#send-strategies)
+- [Airhorn API](#airhorn-api)
+- [Using Webhooks](#using-webhooks)
+- [Statistics](#statistics)
+- [Emitting Events](#emitting-events)
+- [Load Template Helper](#load-template-helper)
+- [Core Supported Providers](#core-supported-providers)
+- [Third Party Providers](#third-party-providers)
+- [Creating a Provider](#creating-a-provider)
+- [How to Contribute](#how-to-contribute)
+- [Licensing and Copyright](#licensing-and-copyright)
+
 # Getting Started
 
 To get started with Airhorn, you can install it via npm:
@@ -221,6 +239,24 @@ export type AirhornSendResult = {
 };
 ```
 
+# Send Strategies
+
+Airhorn supports multiple send strategies to control how notifications are delivered. You can choose from the following strategies:
+
+- **Round Robin**: Distributes notifications evenly across all available providers.
+- **Fail Over**: Tries each provider in order until one succeeds.
+- **All**: Sends the notification to all providers simultaneously.
+
+You can configure the send strategy when creating the Airhorn instance:
+
+```typescript
+import { Airhorn, AirhornSendStrategy } from "airhorn";
+
+const airhorn = new Airhorn({
+	sendStrategy: AirhornSendStrategy.RoundRobin
+});
+```
+
 # Airhorn API
 
 Here are all the properties and methods available and a brief description of each:
@@ -283,24 +319,6 @@ const data = { name: "John" };
 await airhorn.sendWebhook("https://mockhttp.org/post", template, data);
 ```
 
-# Send Strategies
-
-Airhorn supports multiple send strategies to control how notifications are delivered. You can choose from the following strategies:
-
-- **Round Robin**: Distributes notifications evenly across all available providers.
-- **Fail Over**: Tries each provider in order until one succeeds.
-- **All**: Sends the notification to all providers simultaneously.
-
-You can configure the send strategy when creating the Airhorn instance:
-
-```typescript
-import { Airhorn, AirhornSendStrategy } from "airhorn";
-
-const airhorn = new Airhorn({
-	sendStrategy: AirhornSendStrategy.RoundRobin
-});
-```
-
 # Statistics
 
 Airhorn provides built-in statistics to help you monitor the performance of your notifications. You can access the statistics instance through the `.statistics` property:
@@ -345,6 +363,30 @@ import { Airhorn } from "airhorn";
 const airhorn = new Airhorn();
 
 airhorn.statistics.reset();
+```
+
+# Emitting Events
+
+Airhorn provides event emitting by default with the following events:
+
+- `error`: Emitted when there is an error.
+- `send.success`: Emitted when a notification is successfully sent.
+- `send.failure`: Emitted when a notification fails to send.
+
+You can listen for these events using the `on` method:
+
+```typescript
+import { Airhorn, AirhornEvent, type AirhornSendResult } from "airhorn";
+
+const airhorn = new Airhorn();
+
+airhorn.on(AirhornEvent.SendSuccess, (data: AirhornSendResult) => {
+  console.log(`Notification sent successfully: ${data}`);
+});
+
+airhorn.on(AirhornEvent.SendFailure, (data: AirhornSendResult) => {
+  console.error(`Failed to send notification: ${data}`);
+});
 ```
 
 # Load Template Helper
