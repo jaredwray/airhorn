@@ -1,17 +1,17 @@
-import {
-	type AirhornProvider,
-	type AirhornProviderMessage,
-	type AirhornProviderSendResult,
-	AirhornProviderType,
+import { AirhornSendType } from "./index.js";
+import type {
+	AirhornProvider,
+	AirhornProviderMessage,
+	AirhornProviderSendResult,
 } from "./provider.js";
 
 export class AirhornWebhookProvider implements AirhornProvider {
 	private _name: string;
-	private _capabilities: Array<AirhornProviderType>;
+	private _capabilities: Array<AirhornSendType>;
 
 	constructor() {
 		this._name = "AirhornWebhookProvider";
-		this._capabilities = [AirhornProviderType.Webhook];
+		this._capabilities = [AirhornSendType.Webhook];
 	}
 
 	// biome-ignore format: disable for this function
@@ -68,7 +68,7 @@ export class AirhornWebhookProvider implements AirhornProvider {
 		return this._name;
 	}
 
-	public get capabilities(): Array<AirhornProviderType> {
+	public get capabilities(): Array<AirhornSendType> {
 		return this._capabilities;
 	}
 }

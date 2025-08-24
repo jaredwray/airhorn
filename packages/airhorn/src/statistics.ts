@@ -1,4 +1,4 @@
-import type { AirhornProviderType } from "./provider.js";
+import type { AirhornSendType } from "./index.js";
 
 /**
  * Configuration options for AirhornStatistics
@@ -17,7 +17,7 @@ export type SendStatistic = {
 	/** The sender of the message */
 	from: string;
 	/** The type of provider used for sending */
-	providerType: AirhornProviderType;
+	providerType: AirhornSendType;
 	/** The timestamp when the operation started */
 	startTime: Date;
 	/** The duration of the operation in milliseconds */

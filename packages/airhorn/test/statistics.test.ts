@@ -1,6 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { AirhornStatistics, type SendStatistic } from "../src/statistics";
-import { AirhornProviderType } from "../src/provider";
+import { AirhornSendType } from "../src/index.js";
 
 describe("AirhornStatistics", () => {
 	test("should initialize with default values", () => {
@@ -18,7 +18,7 @@ describe("AirhornStatistics", () => {
 		stats.submit({
 			to: "user@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration: 100,
 			success: true
@@ -38,7 +38,7 @@ describe("AirhornStatistics", () => {
 		stats.submit({
 			to: "user@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration: 100,
 			success: true
@@ -60,7 +60,7 @@ describe("AirhornStatistics", () => {
 		stats.submit({
 			to: "user@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration: 100,
 			success: true
@@ -78,7 +78,7 @@ describe("AirhornStatistics", () => {
 		stats.submit({
 			to: "user@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.SMS,
+			providerType: AirhornSendType.SMS,
 			startTime: new Date(),
 			duration: 50,
 			success: false
@@ -100,7 +100,7 @@ describe("AirhornStatistics", () => {
 		const entry1: SendStatistic = {
 			to: "user1@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration: 100,
 			success: true
@@ -117,7 +117,7 @@ describe("AirhornStatistics", () => {
 		const entry2: SendStatistic = {
 			to: "user2@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.SMS,
+			providerType: AirhornSendType.SMS,
 			startTime: new Date(),
 			duration: 200,
 			success: true
@@ -133,7 +133,7 @@ describe("AirhornStatistics", () => {
 		const entry3: SendStatistic = {
 			to: "https://webhook.example.com",
 			from: "app@example.com",
-			providerType: AirhornProviderType.Webhook,
+			providerType: AirhornSendType.Webhook,
 			startTime: new Date(),
 			duration: 50,
 			success: false
@@ -153,7 +153,7 @@ describe("AirhornStatistics", () => {
 		const createEntry = (duration: number): SendStatistic => ({
 			to: "test@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration,
 			success: true
@@ -182,7 +182,7 @@ describe("AirhornStatistics", () => {
 		const entry1: SendStatistic = {
 			to: "user1@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration: 100,
 			success: true
@@ -190,7 +190,7 @@ describe("AirhornStatistics", () => {
 		const entry2: SendStatistic = {
 			to: "user2@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.SMS,
+			providerType: AirhornSendType.SMS,
 			startTime: new Date(),
 			duration: 200,
 			success: false
@@ -203,7 +203,7 @@ describe("AirhornStatistics", () => {
 		times.push({
 			to: "user3@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Webhook,
+			providerType: AirhornSendType.Webhook,
 			startTime: new Date(),
 			duration: 300,
 			success: true
@@ -219,7 +219,7 @@ describe("AirhornStatistics", () => {
 		const createEntry = (duration: number): SendStatistic => ({
 			to: `user${duration}@example.com`,
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration,
 			success: true
@@ -264,7 +264,7 @@ describe("AirhornStatistics", () => {
 		const createEntry = (duration: number): SendStatistic => ({
 			to: `user${duration}@example.com`,
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration,
 			success: true
@@ -276,7 +276,7 @@ describe("AirhornStatistics", () => {
 		stats.submit({
 			to: "failed@example.com",
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration: 150,
 			success: false
@@ -309,7 +309,7 @@ describe("AirhornStatistics", () => {
 		const createEntry = (duration: number): SendStatistic => ({
 			to: `user${duration}@example.com`,
 			from: "sender@example.com",
-			providerType: AirhornProviderType.Email,
+			providerType: AirhornSendType.Email,
 			startTime: new Date(),
 			duration,
 			success: true
@@ -351,7 +351,7 @@ describe("AirhornStatistics", () => {
 		const firstEntry = fastest[0];
 		expect(firstEntry.to).toBe("user25@example.com");
 		expect(firstEntry.from).toBe("sender@example.com");
-		expect(firstEntry.providerType).toBe(AirhornProviderType.Email);
+		expect(firstEntry.providerType).toBe(AirhornSendType.Email);
 		expect(firstEntry.startTime).toBeInstanceOf(Date);
 		expect(firstEntry.duration).toBe(25);
 	});

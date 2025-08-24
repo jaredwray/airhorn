@@ -3,7 +3,7 @@ import {
 	type AirhornProvider,
 	type AirhornProviderMessage,
 	type AirhornProviderSendResult,
-	AirhornProviderType,
+	AirhornSendType,
 } from "airhorn";
 import { Twilio } from "twilio";
 
@@ -17,9 +17,9 @@ export type AirhornTwilioOptions = {
 
 export class AirhornTwilio implements AirhornProvider {
 	public name = "twilio";
-	public capabilities: AirhornProviderType[] = [
-		AirhornProviderType.SMS,
-		AirhornProviderType.Email,
+	public capabilities: AirhornSendType[] = [
+		AirhornSendType.SMS,
+		AirhornSendType.Email,
 	];
 
 	private twilioClient: Twilio;
@@ -54,11 +54,11 @@ export class AirhornTwilio implements AirhornProvider {
 		};
 
 		try {
-			if (message.type === AirhornProviderType.SMS) {
+			if (message.type === AirhornSendType.SMS) {
 				return this.sendSMS(message, options);
 			}
 
-			if (message.type === AirhornProviderType.Email) {
+			if (message.type === AirhornSendType.Email) {
 				if (!this.sendGridEnabled) {
 					throw new Error(
 						"SendGrid is not configured. Please provide sendGridApiKey in options",

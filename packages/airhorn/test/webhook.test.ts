@@ -1,9 +1,8 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { AirhornWebhookProvider } from "../src/webhook.js";
-import { AirhornProviderType } from "../src/provider.js";
 import type { AirhornProviderMessage } from "../src/provider.js";
 import type { AirhornTemplate } from "../src/template.js";
-import { Airhorn } from "../src/index.js";
+import { Airhorn, AirhornSendType } from "../src/index.js";
 
 describe("AirhornWebhookProvider", () => {
 	let provider: AirhornWebhookProvider;
@@ -22,7 +21,7 @@ describe("AirhornWebhookProvider", () => {
 	describe("constructor", () => {
 		test("should initialize with correct name and capabilities", () => {
 			expect(provider.name).toBe("AirhornWebhookProvider");
-			expect(provider.capabilities).toEqual([AirhornProviderType.Webhook]);
+			expect(provider.capabilities).toEqual([AirhornSendType.Webhook]);
 		});
 	});
 
@@ -31,7 +30,7 @@ describe("AirhornWebhookProvider", () => {
 
 		const mockMessage: AirhornProviderMessage = {
 			to: webhookUrl,
-			type: AirhornProviderType.Webhook,
+			type: AirhornSendType.Webhook,
 			content: "Test message content",
 			from: "sender@example.com",
 			subject: "Test Subject"
@@ -209,7 +208,7 @@ describe("AirhornWebhookProvider", () => {
 			const minimalMessage: AirhornProviderMessage = {
 				to: webhookUrl,
 				from: "test@example.com",
-				type: AirhornProviderType.Webhook,
+				type: AirhornSendType.Webhook,
 				content: "Minimal content",
 			};
 
@@ -305,14 +304,14 @@ describe("AirhornWebhookProvider", () => {
 				webhookUrl,
 				template,
 				templateData,
-				AirhornProviderType.Webhook
+				AirhornSendType.Webhook
 			);
 
 			// Verify the generated message
 			expect(message.to).toBe(webhookUrl);
 			expect(message.from).toBe("webhook@notifications.com");
 			expect(message.subject).toBe("User Profile Update");
-			expect(message.type).toBe(AirhornProviderType.Webhook);
+			expect(message.type).toBe(AirhornSendType.Webhook);
 			
 			// Parse the JSON content that was generated
 			const generatedContent = JSON.parse(message.content);
@@ -406,7 +405,7 @@ describe("AirhornWebhookProvider", () => {
 				webhookUrl,
 				template,
 				templateData,
-				AirhornProviderType.Webhook
+				AirhornSendType.Webhook
 			);
 
 			// Parse the generated JSON content to verify it
@@ -463,7 +462,7 @@ describe("AirhornWebhookProvider", () => {
 		});
 
 		test("should return correct capabilities", () => {
-			expect(provider.capabilities).toEqual([AirhornProviderType.Webhook]);
+			expect(provider.capabilities).toEqual([AirhornSendType.Webhook]);
 			expect(provider.capabilities).toHaveLength(1);
 		});
 	});

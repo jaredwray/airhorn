@@ -1,16 +1,11 @@
-export enum AirhornProviderType {
-	SMS = "sms",
-	Email = "email",
-	MobilePush = "mobilepush",
-	Webhook = "webhook",
-}
+import type { AirhornSendType } from "./index.js";
 
 export type AirhornProviderMessage = {
 	to: string;
 	from: string;
 	subject?: string;
 	content: string;
-	type: AirhornProviderType;
+	type: AirhornSendType;
 };
 
 export type AirhornProviderSendResult = {
@@ -22,7 +17,7 @@ export type AirhornProviderSendResult = {
 
 export interface AirhornProvider {
 	name: string;
-	capabilities: Array<AirhornProviderType>;
+	capabilities: Array<AirhornSendType>;
 	send: (
 		message: AirhornProviderMessage,
 		// biome-ignore lint/suspicious/noExplicitAny: any options

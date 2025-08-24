@@ -1,8 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import fs from "node:fs";
-import { Airhorn, AirhornSendStrategy } from "../src/index.js";
+import { Airhorn, AirhornSendStrategy, AirhornSendType } from "../src/index.js";
 import { AirhornTemplate } from "../src/template.js";
-import { AirhornProviderType } from "../src/provider.js";
 import { AirhornWebhookProvider } from "../src/webhook.js";
 import { Cacheable } from "cacheable";
 
@@ -244,7 +243,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Create a custom provider that throws an error
 		const errorProvider = {
 			name: "ErrorProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue(new Error("Provider error"))
 		};
 		
@@ -276,7 +275,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Create a custom provider that throws a non-Error object
 		const errorProvider = {
 			name: "ErrorProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue("String error")
 		};
 		
@@ -308,13 +307,13 @@ describe("AirhornSendOptions is optional", () => {
 		// Create providers where first throws, second succeeds
 		const errorProvider = {
 			name: "ErrorProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue(new Error("First provider error"))
 		};
 		
 		const successProvider = {
 			name: "SuccessProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockResolvedValue({
 				success: true,
 				response: { data: "success" },
@@ -351,13 +350,13 @@ describe("AirhornSendOptions is optional", () => {
 		// Create providers where both throw non-Error objects
 		const errorProvider1 = {
 			name: "ErrorProvider1",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue("String error 1")
 		};
 		
 		const errorProvider2 = {
 			name: "ErrorProvider2",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue({ message: "Object error" })
 		};
 		
@@ -391,7 +390,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Create multiple providers, one throws an error
 		const successProvider = {
 			name: "SuccessProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockResolvedValue({
 				success: true,
 				response: { data: "success" },
@@ -401,7 +400,7 @@ describe("AirhornSendOptions is optional", () => {
 		
 		const errorProvider = {
 			name: "ErrorProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue(new Error("Provider error in All strategy"))
 		};
 		
@@ -434,7 +433,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Create multiple providers, one throws a non-Error object
 		const successProvider = {
 			name: "SuccessProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockResolvedValue({
 				success: true,
 				response: { data: "success" },
@@ -444,7 +443,7 @@ describe("AirhornSendOptions is optional", () => {
 		
 		const errorProvider = {
 			name: "ErrorProvider",
-			capabilities: [AirhornProviderType.Webhook],
+			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockRejectedValue("String error in All")
 		};
 		

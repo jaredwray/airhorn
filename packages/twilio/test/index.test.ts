@@ -1,5 +1,5 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: test file
-import { AirhornProviderType } from "airhorn";
+import { AirhornSendType } from "airhorn";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AirhornTwilio } from "../src/index";
 import { mockSgSend, mockSgSetApiKey, mockTwilioCreate } from "./setup";
@@ -20,8 +20,8 @@ describe("AirhornTwilio", () => {
 		it("should create instance with both SMS and Email capabilities", () => {
 			expect(provider).toBeDefined();
 			expect(provider.name).toBe("twilio");
-			expect(provider.capabilities).toContain(AirhornProviderType.SMS);
-			expect(provider.capabilities).toContain(AirhornProviderType.Email);
+			expect(provider.capabilities).toContain(AirhornSendType.SMS);
+			expect(provider.capabilities).toContain(AirhornSendType.Email);
 		});
 
 		it("should configure SendGrid when API key is provided", () => {
@@ -31,10 +31,8 @@ describe("AirhornTwilio", () => {
 				sendGridApiKey: "SG.test-api-key",
 			});
 
-			expect(providerWithEmail.capabilities).toContain(AirhornProviderType.SMS);
-			expect(providerWithEmail.capabilities).toContain(
-				AirhornProviderType.Email,
-			);
+			expect(providerWithEmail.capabilities).toContain(AirhornSendType.SMS);
+			expect(providerWithEmail.capabilities).toContain(AirhornSendType.Email);
 			expect(mockSgSetApiKey).toHaveBeenCalledWith("SG.test-api-key");
 		});
 
@@ -62,7 +60,7 @@ describe("AirhornTwilio", () => {
 			to: "+0987654321",
 			from: "+1234567890",
 			content: "Test SMS message",
-			type: AirhornProviderType.SMS,
+			type: AirhornSendType.SMS,
 		};
 
 		it("should send SMS successfully", async () => {
@@ -116,7 +114,7 @@ describe("AirhornTwilio", () => {
 			from: "sender@example.com",
 			subject: "Test Email",
 			content: "<p>Test email content</p>",
-			type: AirhornProviderType.Email,
+			type: AirhornSendType.Email,
 		};
 
 		beforeEach(() => {
@@ -228,7 +226,7 @@ describe("AirhornTwilio", () => {
 				to: "test",
 				from: "test",
 				content: "test",
-				type: AirhornProviderType.MobilePush,
+				type: AirhornSendType.MobilePush,
 			};
 
 			const result = await provider.send(unsupportedMessage);
@@ -252,7 +250,7 @@ describe("AirhornTwilio", () => {
 				to: "+0987654321",
 				from: "+1234567890",
 				content: "Test",
-				type: AirhornProviderType.SMS,
+				type: AirhornSendType.SMS,
 			};
 
 			const additionalOptions = {
@@ -289,7 +287,7 @@ describe("AirhornTwilio", () => {
 				from: "sender@example.com",
 				subject: "Test",
 				content: "Test content",
-				type: AirhornProviderType.Email,
+				type: AirhornSendType.Email,
 			};
 
 			const additionalOptions = {

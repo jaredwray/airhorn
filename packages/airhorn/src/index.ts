@@ -3,11 +3,10 @@ import { Cacheable, type CacheableOptions } from "cacheable";
 import { Ecto } from "ecto";
 import { Hookified } from "hookified";
 import { Writr } from "writr";
-import {
-	type AirhornProvider,
-	type AirhornProviderMessage,
-	type AirhornProviderSendResult,
-	AirhornProviderType,
+import type {
+	AirhornProvider,
+	AirhornProviderMessage,
+	AirhornProviderSendResult,
 } from "./provider.js";
 import { AirhornStatistics } from "./statistics.js";
 import type { AirhornTemplate } from "./template.js";
@@ -17,6 +16,13 @@ export enum AirhornSendStrategy {
 	All = "All",
 	FailOver = "FailOver",
 	RoundRobin = "RoundRobin",
+}
+
+export enum AirhornSendType {
+	SMS = "sms",
+	Email = "email",
+	MobilePush = "mobilepush",
+	Webhook = "webhook",
 }
 
 export type AirhornSendResult = {
@@ -302,7 +308,7 @@ export class Airhorn extends Hookified {
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		type: AirhornProviderType,
+		type: AirhornSendType,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		const startTime = Date.now();
@@ -434,7 +440,7 @@ export class Airhorn extends Hookified {
 		data: Record<string, any>,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(to, template, data, AirhornProviderType.SMS, options);
+		return this.send(to, template, data, AirhornSendType.SMS, options);
 	}
 
 	public async sendEmail(
@@ -444,7 +450,7 @@ export class Airhorn extends Hookified {
 		data: Record<string, any>,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(to, template, data, AirhornProviderType.Email, options);
+		return this.send(to, template, data, AirhornSendType.Email, options);
 	}
 
 	public async sendWebhook(
@@ -454,7 +460,7 @@ export class Airhorn extends Hookified {
 		data: Record<string, any>,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(to, template, data, AirhornProviderType.Webhook, options);
+		return this.send(to, template, data, AirhornSendType.Webhook, options);
 	}
 
 	public async sendMobilePush(
@@ -464,16 +470,10 @@ export class Airhorn extends Hookified {
 		data: Record<string, any>,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(
-			to,
-			template,
-			data,
-			AirhornProviderType.MobilePush,
-			options,
-		);
+		return this.send(to, template, data, AirhornSendType.MobilePush, options);
 	}
 
-	public getProvidersByType(type: AirhornProviderType): Array<AirhornProvider> {
+	public getProvidersByType(type: AirhornSendType): Array<AirhornProvider> {
 		const providers: Array<AirhornProvider> = [];
 
 		// iterate over all providers and add the ones that match the type
@@ -531,7 +531,7 @@ export class Airhorn extends Hookified {
 		template: AirhornTemplate,
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
-		providerType: AirhornProviderType,
+		providerType: AirhornSendType,
 	): Promise<AirhornProviderMessage> {
 		const ecto = new Ecto();
 
@@ -606,9 +606,8 @@ export class Airhorn extends Hookified {
 	}
 }
 
-export {
-	type AirhornProvider,
-	type AirhornProviderMessage,
-	type AirhornProviderSendResult,
-	AirhornProviderType,
+export type {
+	AirhornProvider,
+	AirhornProviderMessage,
+	AirhornProviderSendResult,
 };
