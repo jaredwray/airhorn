@@ -7,7 +7,7 @@ import {
 } from "airhorn";
 import { Twilio } from "twilio";
 
-export type TwilioProviderOptions = {
+export type AirhornTwilioOptions = {
 	accountSid: string;
 	authToken: string;
 	fromPhoneNumber?: string;
@@ -29,7 +29,7 @@ export class AirhornTwilio implements AirhornProvider {
 	private fromEmail?: string;
 	private sendGridEnabled = false;
 
-	constructor(options: TwilioProviderOptions) {
+	constructor(options: AirhornTwilioOptions) {
 		if (!options.accountSid || !options.authToken) {
 			throw new Error("AirhornTwilio requires accountSid and authToken");
 		}

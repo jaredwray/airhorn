@@ -109,7 +109,7 @@ console.log(provider.capabilities); // ['sms', 'email']
 
 ## Configuration
 
-### TwilioProviderOptions
+### AirhornTwilioOptions
 
 - `accountSid` (required): Your Twilio Account SID
 - `authToken` (required): Your Twilio Auth Token
