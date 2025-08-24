@@ -132,6 +132,123 @@ const bothProvider = new AirhornAws({
 });
 ```
 
+### Push Notifications to Mobile Devices (iOS/Android)
+
+Amazon SNS can send push notifications to mobile devices through platform application endpoints. Here's how to send notifications to Apple (APNs) and Android (FCM/GCM) devices:
+
+```typescript
+import { Airhorn } from 'airhorn';
+import { AirhornAws } from '@airhorn/aws';
+
+const awsProvider = new AirhornAws({
+  region: 'us-east-1',
+  capabilities: [AirhornSendType.SMS], // SNS handles mobile push
+});
+
+const airhorn = new Airhorn({
+  providers: [awsProvider],
+});
+
+// Send to iOS device via APNs
+const iosMessage = {
+  from: 'YourApp', // Sender ID
+  content: JSON.stringify({
+    aps: {
+      alert: {
+        title: 'New Order',
+        body: 'You have a new order #12345',
+      },
+      badge: 1,
+      sound: 'default',
+    },
+    // Custom data
+    orderId: '12345',
+  }),
+  type: AirhornSendType.SMS, // SNS handles push notifications
+};
+
+// Send to Apple device endpoint ARN
+await airhorn.send(
+  'arn:aws:sns:us-east-1:123456789012:endpoint/APNS/YourApp/abc123', // iOS endpoint ARN
+  iosMessage,
+  {
+    MessageStructure: 'json', // Required for platform-specific payloads
+    MessageAttributes: {
+      'AWS.SNS.MOBILE.APNS.PUSH_TYPE': {
+        DataType: 'String',
+        StringValue: 'alert', // or 'background'
+      },
+    },
+  },
+);
+
+// Send to Android device via FCM
+const androidMessage = {
+  from: 'YourApp',
+  content: JSON.stringify({
+    notification: {
+      title: 'New Order',
+      body: 'You have a new order #12345',
+      icon: 'ic_notification',
+      color: '#ff0000',
+    },
+    data: {
+      orderId: '12345',
+      type: 'new_order',
+    },
+  }),
+  type: AirhornSendType.MobilePush,
+};
+
+// Send to Android device endpoint ARN
+await airhorn.send(
+  'arn:aws:sns:us-east-1:123456789012:endpoint/GCM/YourApp/xyz789', // Android endpoint ARN
+  androidMessage,
+  {
+    MessageStructure: 'json',
+    MessageAttributes: {
+      'AWS.SNS.MOBILE.GCM.TTL': {
+        DataType: 'String',
+        StringValue: '86400', // Time to live in seconds
+      },
+    },
+  },
+);
+
+// Send to a topic (broadcasts to all subscribed devices)
+await airhorn.send(
+  'arn:aws:sns:us-east-1:123456789012:YourAppTopic',
+  {
+    from: 'YourApp',
+    content: JSON.stringify({
+      default: 'New announcement available',
+      APNS: JSON.stringify({
+        aps: {
+          alert: 'New announcement available',
+          sound: 'default',
+        },
+      }),
+      GCM: JSON.stringify({
+        notification: {
+          title: 'Announcement',
+          body: 'New announcement available',
+        },
+      }),
+    }),
+    type: AirhornSendType.MobilePush,
+  },
+  {
+    MessageStructure: 'json',
+  },
+);
+```
+
+**Note**: Before sending push notifications, you need to:
+1. Create platform applications in SNS for APNs/FCM
+2. Register device tokens and create platform endpoints
+3. Optionally create SNS topics for broadcasting
+4. Configure proper IAM permissions for SNS platform endpoints
+
 ## Configuration
 
 ### AirhornAwsOptions
@@ -220,12 +337,6 @@ Minimum required IAM permissions:
     }
   ]
 }
-```
-
-## Testing
-
-```bash
-pnpm test
 ```
 
 # How to Contribute 

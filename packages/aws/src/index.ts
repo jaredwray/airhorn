@@ -27,9 +27,10 @@ export class AirhornAws implements AirhornProvider {
 			throw new Error("AirhornAws requires region");
 		}
 
-		// Set capabilities from options or default to both SMS and Email
+		// Set capabilities from options or default to SMS, MobilePush, and Email
 		this.capabilities = options.capabilities || [
 			AirhornSendType.SMS,
+			AirhornSendType.MobilePush,
 			AirhornSendType.Email,
 		];
 
@@ -71,7 +72,10 @@ export class AirhornAws implements AirhornProvider {
 		};
 
 		try {
-			if (message.type === AirhornSendType.SMS) {
+			if (
+				message.type === AirhornSendType.SMS ||
+				message.type === AirhornSendType.MobilePush
+			) {
 				return this.sendSMS(message, options);
 			}
 
@@ -111,24 +115,44 @@ export class AirhornAws implements AirhornProvider {
 			}
 
 			if (!message.from) {
-				throw new Error("From phone number is required for SMS messages");
+				throw new Error(
+					"From identifier is required for SMS/MobilePush messages",
+				);
 			}
 
-			const command = new PublishCommand({
-				PhoneNumber: message.to,
-				Message: message.content,
-				MessageAttributes: {
-					"AWS.SNS.SMS.SenderID": {
-						DataType: "String",
-						StringValue: message.from,
+			// Build command based on message type and destination
+			let command: PublishCommand;
+			if (
+				message.type === AirhornSendType.MobilePush ||
+				message.to.startsWith("arn:")
+			) {
+				// Mobile push to endpoint ARN or topic ARN
+				command = new PublishCommand({
+					TargetArn: message.to,
+					Message: message.content,
+					MessageAttributes: options?.MessageAttributes,
+					MessageStructure: options?.MessageStructure,
+					...options,
+				});
+			} else {
+				// Regular SMS to phone number
+				command = new PublishCommand({
+					PhoneNumber: message.to,
+					Message: message.content,
+					MessageAttributes: {
+						"AWS.SNS.SMS.SenderID": {
+							DataType: "String",
+							StringValue: message.from,
+						},
+						"AWS.SNS.SMS.SMSType": {
+							DataType: "String",
+							StringValue: options?.smsType || "Transactional",
+						},
+						...options?.MessageAttributes,
 					},
-					"AWS.SNS.SMS.SMSType": {
-						DataType: "String",
-						StringValue: options?.smsType || "Transactional",
-					},
-				},
-				...options,
-			});
+					...options,
+				});
+			}
 
 			const response = await this.snsClient.send(command);
 

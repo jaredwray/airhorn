@@ -17,10 +17,11 @@ describe("AirhornAws", () => {
 	});
 
 	describe("constructor", () => {
-		it("should create instance with both SMS and Email capabilities by default", () => {
+		it("should create instance with SMS, MobilePush, and Email capabilities by default", () => {
 			expect(provider).toBeDefined();
 			expect(provider.name).toBe("aws");
 			expect(provider.capabilities).toContain(AirhornSendType.SMS);
+			expect(provider.capabilities).toContain(AirhornSendType.MobilePush);
 			expect(provider.capabilities).toContain(AirhornSendType.Email);
 		});
 
@@ -29,6 +30,9 @@ describe("AirhornAws", () => {
 				region: "us-east-1",
 			});
 			expect(providerWithoutCreds.capabilities).toContain(AirhornSendType.SMS);
+			expect(providerWithoutCreds.capabilities).toContain(
+				AirhornSendType.MobilePush,
+			);
 			expect(providerWithoutCreds.capabilities).toContain(
 				AirhornSendType.Email,
 			);
@@ -91,7 +95,7 @@ describe("AirhornAws", () => {
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
 			expect(result.errors[0].message).toContain(
-				"From phone number is required for SMS messages",
+				"From identifier is required for SMS/MobilePush messages",
 			);
 		});
 
@@ -254,13 +258,120 @@ describe("AirhornAws", () => {
 		});
 	});
 
+	describe("MobilePush sending", () => {
+		const mockPushMessage = {
+			to: "arn:aws:sns:us-east-1:123456789012:endpoint/APNS/MyApp/abc123",
+			from: "MyApp",
+			content: JSON.stringify({
+				aps: {
+					alert: "Test push notification",
+				},
+			}),
+			type: AirhornSendType.MobilePush,
+		};
+
+		it("should send mobile push notification successfully", async () => {
+			mockSnsPublish.mockResolvedValueOnce({
+				MessageId: "push-123",
+				$metadata: { httpStatusCode: 200 },
+			});
+
+			const result = await provider.send(mockPushMessage);
+
+			expect(result.success).toBe(true);
+			expect(result.response).toHaveProperty("messageId", "push-123");
+			expect(result.errors).toHaveLength(0);
+
+			expect(mockSnsPublish).toHaveBeenCalledWith(
+				expect.objectContaining({
+					TargetArn: mockPushMessage.to,
+					Message: mockPushMessage.content,
+				}),
+			);
+		});
+
+		it("should send to topic ARN for broadcasts", async () => {
+			mockSnsPublish.mockResolvedValueOnce({
+				MessageId: "topic-123",
+				$metadata: { httpStatusCode: 200 },
+			});
+
+			const topicMessage = {
+				...mockPushMessage,
+				to: "arn:aws:sns:us-east-1:123456789012:MyTopic",
+			};
+
+			const result = await provider.send(topicMessage, {
+				MessageStructure: "json",
+			});
+
+			expect(result.success).toBe(true);
+			expect(mockSnsPublish).toHaveBeenCalledWith(
+				expect.objectContaining({
+					TargetArn: topicMessage.to,
+					MessageStructure: "json",
+				}),
+			);
+		});
+
+		it("should require from identifier for mobile push", async () => {
+			const messageWithoutFrom = { ...mockPushMessage, from: "" };
+			const result = await provider.send(messageWithoutFrom);
+
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toContain(
+				"From identifier is required for SMS/MobilePush messages",
+			);
+		});
+
+		it("should throw error when MobilePush is not in capabilities", async () => {
+			const emailOnlyProvider = new AirhornAws({
+				...mockOptions,
+				capabilities: [AirhornSendType.Email],
+			});
+
+			const result = await emailOnlyProvider.send(mockPushMessage);
+
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toContain("SNS is not configured");
+		});
+
+		it("should detect ARN-based destinations for SMS type", async () => {
+			mockSnsPublish.mockResolvedValueOnce({
+				MessageId: "arn-sms-123",
+				$metadata: { httpStatusCode: 200 },
+			});
+
+			// Using SMS type but with ARN destination (for backward compatibility)
+			const arnSmsMessage = {
+				to: "arn:aws:sns:us-east-1:123456789012:endpoint/APNS/MyApp/xyz789",
+				from: "MyApp",
+				content: "Test content",
+				type: AirhornSendType.SMS,
+			};
+
+			const result = await provider.send(arnSmsMessage);
+
+			expect(result.success).toBe(true);
+			expect(mockSnsPublish).toHaveBeenCalledWith(
+				expect.objectContaining({
+					TargetArn: arnSmsMessage.to,
+					Message: arnSmsMessage.content,
+				}),
+			);
+		});
+	});
+
 	describe("Unsupported message types", () => {
 		it("should reject unsupported message types", async () => {
 			const unsupportedMessage = {
 				to: "test",
 				from: "test",
 				content: "test",
-				type: AirhornSendType.MobilePush,
+				// biome-ignore lint/suspicious/noExplicitAny: testing unsupported type
+				type: "unsupported" as any,
 			};
 
 			const result = await provider.send(unsupportedMessage);
