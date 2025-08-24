@@ -5,7 +5,8 @@
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
   "license": "MIT",
-  "private": false,
+  "private": true,
+  "type": "module",
   "scripts": {
     "test": "pnpm -r test",
     "test:ci": "pnpm -r test:ci",
@@ -23,18 +24,8 @@
     "@vitest/coverage-v8": "^3.2.4",
     "docula": "^0.13.1",
     "tsup": "^8.5.0",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@firebase/util",
-      "esbuild",
-      "protobufjs",
-      "unrs-resolver"
-    ]
-  },
-  "dependencies": {
-    "axios": "^1.11.0"
   }
 }
