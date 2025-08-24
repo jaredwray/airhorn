@@ -1,0 +1,52 @@
+{
+	"name": "@airhorn/twilio",
+	"version": "1.0.0",
+	"description": "Twilio SMS and SendGrid Email provider for Airhorn notification system",
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+	"scripts": {
+		"lint": "biome check --write --error-on-warnings",
+		"test": "pnpm lint && vitest run --coverage",
+		"build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean",
+		"clean": "rimraf dist coverage"
+	},
+	"keywords": [
+		"airhorn",
+		"twilio",
+		"sendgrid",
+		"sms",
+		"email",
+		"notifications",
+		"messaging"
+	],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"@sendgrid/mail": "^8.1.5",
+		"twilio": "^5.8.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.2",
+		"@types/node": "^24.3.0",
+		"@vitest/coverage-v8": "^3.2.4",
+		"rimraf": "^6.0.1",
+		"tsup": "^8.5.0",
+		"typescript": "^5.9.2",
+		"vitest": "^3.2.4"
+	},
+	"peerDependencies": {
+		"airhorn": "workspace:^"
+	},
+  	"files": [
+		"dist",
+		"LICENSE"
+  	]
+}

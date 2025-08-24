@@ -25,9 +25,6 @@ jobs:
     - name: Install Dependencies
       run: npm install -g pnpm && pnpm install
 
-    - name: Test Services    
-      run: pnpm test:services:start
-
     - name: Build    
       run: pnpm build
 
@@ -40,6 +37,5 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_KEY }}
-        verbose: true
-        files: ./coverage/coverage-final.json
+        files: ./packages/**/coverage/*.lcov
 
