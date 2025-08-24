@@ -167,7 +167,7 @@ describe("AirhornSendOptions is optional", () => {
 
 		expect(result).toBeDefined();
 		expect(result.success).toBe(false);
-		expect(result.errors[0].message).toContain("No providers available");
+		expect(result.errors[0].error.message).toContain("No providers available");
 	});
 
 	test("can call sendSMS without options parameter", async () => {
@@ -185,7 +185,7 @@ describe("AirhornSendOptions is optional", () => {
 
 		expect(result).toBeDefined();
 		expect(result.success).toBe(false);
-		expect(result.errors[0].message).toContain("No providers available");
+		expect(result.errors[0].error.message).toContain("No providers available");
 	});
 
 	test("can call sendMobilePush without options parameter", async () => {
@@ -203,7 +203,7 @@ describe("AirhornSendOptions is optional", () => {
 
 		expect(result).toBeDefined();
 		expect(result.success).toBe(false);
-		expect(result.errors[0].message).toContain("No providers available");
+		expect(result.errors[0].error.message).toContain("No providers available");
 	});
 
 	test("can still call send methods with options parameter", async () => {
@@ -263,7 +263,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Should fail but capture the error
 		expect(result.success).toBe(false);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0].message).toBe("Provider error");
+		expect(result.errors[0].error.message).toBe("Provider error");
 		expect(errorProvider.send).toHaveBeenCalled();
 	});
 
@@ -295,8 +295,8 @@ describe("AirhornSendOptions is optional", () => {
 		// Should fail but capture the error as Error object
 		expect(result.success).toBe(false);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0]).toBeInstanceOf(Error);
-		expect(result.errors[0].message).toBe("String error");
+		expect(result.errors[0].error).toBeInstanceOf(Error);
+		expect(result.errors[0].error.message).toBe("String error");
 	});
 
 	test("should handle error in FailOver strategy when provider throws", async () => {
@@ -337,7 +337,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Should succeed with second provider but have error from first
 		expect(result.success).toBe(true);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0].message).toBe("First provider error");
+		expect(result.errors[0].error.message).toBe("First provider error");
 		expect(errorProvider.send).toHaveBeenCalled();
 		expect(successProvider.send).toHaveBeenCalled();
 	});
@@ -376,10 +376,10 @@ describe("AirhornSendOptions is optional", () => {
 		// Should fail with errors from both providers
 		expect(result.success).toBe(false);
 		expect(result.errors).toHaveLength(2);
-		expect(result.errors[0]).toBeInstanceOf(Error);
-		expect(result.errors[0].message).toBe("String error 1");
-		expect(result.errors[1]).toBeInstanceOf(Error);
-		expect(result.errors[1].message).toBe("[object Object]");
+		expect(result.errors[0].error).toBeInstanceOf(Error);
+		expect(result.errors[0].error.message).toBe("String error 1");
+		expect(result.errors[1].error).toBeInstanceOf(Error);
+		expect(result.errors[1].error.message).toBe("[object Object]");
 	});
 
 	test("should handle error in All strategy when provider throws", async () => {
@@ -420,7 +420,7 @@ describe("AirhornSendOptions is optional", () => {
 		// Should succeed overall (because one provider succeeded) but have error from the failing provider
 		expect(result.success).toBe(true);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0].message).toBe("Provider error in All strategy");
+		expect(result.errors[0].error.message).toBe("Provider error in All strategy");
 		expect(successProvider.send).toHaveBeenCalled();
 		expect(errorProvider.send).toHaveBeenCalled();
 	});
@@ -463,8 +463,8 @@ describe("AirhornSendOptions is optional", () => {
 		// Should succeed overall but have error from the failing provider
 		expect(result.success).toBe(true);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0]).toBeInstanceOf(Error);
-		expect(result.errors[0].message).toBe("String error in All");
+		expect(result.errors[0].error).toBeInstanceOf(Error);
+		expect(result.errors[0].error.message).toBe("String error in All");
 		expect(successProvider.send).toHaveBeenCalled();
 		expect(errorProvider.send).toHaveBeenCalled();
 	});

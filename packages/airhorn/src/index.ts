@@ -50,11 +50,22 @@ export type AirhornSendResult = {
 	/**
 	 * The errors that occurred while sending the message.
 	 */
-	errors: Array<Error>;
+	errors: Array<AirhornSendResultError>;
 	/**
 	 * The time taken to execute the send operation.
 	 */
 	executionTime: number;
+};
+
+export type AirhornSendResultError = {
+	/**
+	 * The provider that failed to send the message.
+	 */
+	provider?: AirhornProvider;
+	/**
+	 * The error that occurred while sending the message.
+	 */
+	error: Error;
 };
 
 export enum AirhornEvent {
@@ -350,7 +361,7 @@ export class Airhorn extends Hookified {
 					} catch (error) {
 						const err =
 							error instanceof Error ? error : new Error(String(error));
-						result.errors.push(err);
+						result.errors.push({ provider, error: err });
 						return { provider, error: err };
 					}
 				});
@@ -375,7 +386,7 @@ export class Airhorn extends Hookified {
 						} catch (error) {
 							const err =
 								error instanceof Error ? error : new Error(String(error));
-							result.errors.push(err);
+							result.errors.push({ provider, error: err });
 						}
 					}
 				}
@@ -392,13 +403,18 @@ export class Airhorn extends Hookified {
 						} else {
 							// Provider failed but didn't throw - collect its errors
 							if (providerResult.errors && providerResult.errors.length > 0) {
-								result.errors.push(...providerResult.errors);
+								result.errors.push(
+									...providerResult.errors.map((error) => ({
+										provider,
+										error,
+									})),
+								);
 							}
 						}
 					} catch (error) {
 						const err =
 							error instanceof Error ? error : new Error(String(error));
-						result.errors.push(err);
+						result.errors.push({ provider, error: err });
 						// Continue to next provider
 					}
 				}
@@ -412,7 +428,7 @@ export class Airhorn extends Hookified {
 			}
 		} catch (error) {
 			const err = error instanceof Error ? error : new Error(String(error));
-			result.errors.push(err);
+			result.errors.push({ error: err });
 			this.handleError(err);
 		}
 

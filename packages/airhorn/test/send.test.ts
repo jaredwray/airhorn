@@ -81,7 +81,7 @@ describe("Airhorn send function", () => {
 
 		expect(result.success).toBe(false);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0].message).toContain("No providers available");
+		expect(result.errors[0].error.message).toContain("No providers available");
 	});
 
 	test("should use All send strategy", async () => {
@@ -208,7 +208,7 @@ describe("Airhorn send function", () => {
 		expect(result.providers).toHaveLength(1);
 		// Since both providers try and first fails, we should have 1 error
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0].message).toContain("Network error");
+		expect(result.errors[0].error.message).toContain("Network error");
 		// Should have tried both providers
 		expect(mockFetch).toHaveBeenCalledTimes(2);
 	});

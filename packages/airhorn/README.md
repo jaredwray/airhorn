@@ -375,7 +375,9 @@ We currently support `twilio`, `aws`, and `gcp` (google cloud) with thier offeri
 | (built in `airhorn`) | ❌  | ❌    | ❌   | ✅      |
 | `@airhorn/twilio`   | ✅  | ✅    | ❌   | ❌      |
 | `@airhorn/aws`      | ✅  | ✅    | ✅   | ❌      |
-| `@airhorn/gcp`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhorn/azure`      | ✅  | ✅    | ✅   | ❌      |
+
+Note: We used to support firebase because of mobile push but it made more sense to focus on `aws` and `azure` because it is more comprehensive.
 
 # Third Party Providers
 
