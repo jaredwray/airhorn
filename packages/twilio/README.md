@@ -1,3 +1,13 @@
+![Airhorn](../../site/logo.svg "Airhorn")
+
+---
+
+[![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml)
+[![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
+[![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
+[![npm](https://img.shields.io/npm/dm/@airhorn/twilio)](https://npmjs.com/package/@airhorn/twilio)
+[![npm](https://img.shields.io/npm/v/@airhorn/twilio)](https://npmjs.com/package/@airhorn/twilio)
+
 # @airhorn/twilio
 
 Twilio SMS and SendGrid Email provider for the Airhorn notification system.
@@ -5,7 +15,7 @@ Twilio SMS and SendGrid Email provider for the Airhorn notification system.
 ## Installation
 
 ```bash
-pnpm add airhorn @airhorn/twilio
+npm install airhorn @airhorn/twilio
 ```
 
 ## Features

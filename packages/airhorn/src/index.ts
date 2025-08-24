@@ -404,15 +404,6 @@ export class Airhorn extends Hookified {
 			} else {
 				this.emit(AirhornEvent.NotificationFailed, result);
 			}
-
-			// Update statistics
-			if (this._statistics.enabled) {
-				if (result.success) {
-					this._statistics.incrementSuccess();
-				} else {
-					this._statistics.incrementFailure();
-				}
-			}
 		} catch (error) {
 			const err = error instanceof Error ? error : new Error(String(error));
 			result.errors.push(err);
@@ -422,13 +413,14 @@ export class Airhorn extends Hookified {
 		result.executionTime = Date.now() - startTime;
 
 		// Submit execution time to statistics
-		if (this._statistics.enabled && result.message) {
-			this._statistics.submitExecutionTime({
+		if (result.message) {
+			this._statistics.submit({
 				to: result.message.to,
 				from: result.message.from,
 				providerType: result.message.type,
 				startTime: new Date(startTime),
 				duration: result.executionTime,
+				success: result.success,
 			});
 		}
 
