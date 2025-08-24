@@ -39,7 +39,6 @@ const message = {
   from: '+1234567890',
   content: 'Hello John!, your order #12345 has been shipped!',
   type: AirhornProviderType.SMS,
-  template: {},
 };
 
 const result = await airhorn.send(
@@ -67,16 +66,16 @@ const airhorn = new Airhorn({
 });
 
 // Send Email
-const emailTemplate = {
+const message = {
   from: 'sender@example.com',
   subject: 'Order Confirmation',
-  content: '<h1>Hello {{name}}</h1><p>Your order #{{orderId}} has been confirmed!</p>',
+  content: '<h1>Hello John</h1><p>Your order #656565 has been confirmed!</p>',
+  type: AirhornProviderType.Email,
 };
 
-const result = await airhorn.sendEmail(
+const result = await airhorn.send(
   'recipient@example.com', // to
-  emailTemplate,
-  { name: 'Jane', orderId: '67890' }, // template data
+  message,
 );
 ```
 
@@ -119,7 +118,7 @@ You can pass additional provider-specific options as the second parameter to the
 ### Twilio SMS Options
 
 ```typescript
-await airhorn.sendSMS(to, template, data, {
+await airhorn.send(to, message, {
   statusCallback: 'https://example.com/callback',
   maxPrice: '0.50',
   validityPeriod: 14400,
@@ -130,7 +129,7 @@ await airhorn.sendSMS(to, template, data, {
 ### SendGrid Email Options
 
 ```typescript
-await airhorn.sendEmail(to, template, data, {
+await airhorn.send(to, message, {
   replyTo: 'reply@example.com',
   categories: ['transactional', 'order-confirmation'],
   trackingSettings: {
@@ -141,12 +140,10 @@ await airhorn.sendEmail(to, template, data, {
 });
 ```
 
-## Testing
+# How to Contribute 
 
-```bash
-pnpm test
-```
+Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository you can refer to the [CONTRIBUTING](../../CONTRIBUTING.md) guide. If you have any questions please feel free to ask by creating an issue and label it `question`.
 
-## License
+# Licensing and Copyright
 
-MIT
+This project is [MIT License © Jared Wray](LICENSE)
