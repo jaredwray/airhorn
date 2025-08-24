@@ -63,7 +63,6 @@ describe("AirhornTwilio", () => {
 			from: "+1234567890",
 			content: "Test SMS message",
 			type: AirhornProviderType.SMS,
-			template: {} as any,
 		};
 
 		it("should send SMS successfully", async () => {
@@ -118,7 +117,6 @@ describe("AirhornTwilio", () => {
 			subject: "Test Email",
 			content: "<p>Test email content</p>",
 			type: AirhornProviderType.Email,
-			template: {} as any,
 		};
 
 		beforeEach(() => {
@@ -231,7 +229,6 @@ describe("AirhornTwilio", () => {
 				from: "test",
 				content: "test",
 				type: AirhornProviderType.MobilePush,
-				template: {} as any,
 			};
 
 			const result = await provider.send(unsupportedMessage);
@@ -256,7 +253,6 @@ describe("AirhornTwilio", () => {
 				from: "+1234567890",
 				content: "Test",
 				type: AirhornProviderType.SMS,
-				template: {} as any,
 			};
 
 			const additionalOptions = {
@@ -294,7 +290,6 @@ describe("AirhornTwilio", () => {
 				subject: "Test",
 				content: "Test content",
 				type: AirhornProviderType.Email,
-				template: {} as any,
 			};
 
 			const additionalOptions = {

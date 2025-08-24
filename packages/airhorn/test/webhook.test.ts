@@ -34,12 +34,7 @@ describe("AirhornWebhookProvider", () => {
 			type: AirhornProviderType.Webhook,
 			content: "Test message content",
 			from: "sender@example.com",
-			subject: "Test Subject",
-			template: {
-				from: "sender@example.com",
-				subject: "Test Subject",
-				content: "Test message content",
-			}
+			subject: "Test Subject"
 		};
 
 		test("should send successful webhook request", async () => {
@@ -216,10 +211,6 @@ describe("AirhornWebhookProvider", () => {
 				from: "test@example.com",
 				type: AirhornProviderType.Webhook,
 				content: "Minimal content",
-				template: {
-					from: "test@example.com",
-					content: "Test Body"
-				}
 			};
 
 			const mockResponse = {
@@ -331,7 +322,6 @@ describe("AirhornWebhookProvider", () => {
 			expect(generatedContent.user.preferences.favoriteVegetables).toEqual(["carrots", "broccoli", "spinach"]);
 			expect(generatedContent.metadata.source).toBe("profile-service");
 			expect(generatedContent.metadata.version).toBe("1.0.0");
-			expect(message.template).toEqual(template);
 
 			// Mock successful webhook response
 			const mockResponse = {

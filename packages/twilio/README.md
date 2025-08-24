@@ -5,7 +5,7 @@ Twilio SMS and SendGrid Email provider for the Airhorn notification system.
 ## Installation
 
 ```bash
-pnpm add @airhorn/twilio
+pnpm add airhorn @airhorn/twilio
 ```
 
 ## Features
@@ -13,8 +13,7 @@ pnpm add @airhorn/twilio
 - SMS sending via Twilio API
 - Email sending via SendGrid API
 - Automatic error handling and retry support
-- Integration with Airhorn's template system
-- Support for additional provider-specific options
+- Integration with Airhorn's notification system
 
 ## Usage
 
@@ -22,10 +21,10 @@ pnpm add @airhorn/twilio
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { TwilioProvider } from '@airhorn/twilio';
+import { AirhornTwilio } from '@airhorn/twilio';
 
 // Create Twilio provider for SMS only
-const twilioProvider = new TwilioProvider({
+const twilioProvider = new AirhornTwilio({
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
 });
@@ -36,15 +35,16 @@ const airhorn = new Airhorn({
 });
 
 // Send SMS
-const smsTemplate = {
+const message = {
   from: '+1234567890',
-  content: 'Hello {{name}}, your order #{{orderId}} has been shipped!',
+  content: 'Hello John!, your order #12345 has been shipped!',
+  type: AirhornProviderType.SMS,
+  template: {},
 };
 
-const result = await airhorn.sendSMS(
+const result = await airhorn.send(
   '+0987654321', // to
-  smsTemplate,
-  { name: 'John', orderId: '12345' }, // template data
+  message,
 );
 ```
 

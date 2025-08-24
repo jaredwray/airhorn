@@ -553,7 +553,6 @@ export class Airhorn extends Hookified {
 				data,
 				template.templateEngine,
 			),
-			template: template,
 		};
 
 		return message;

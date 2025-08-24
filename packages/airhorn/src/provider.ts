@@ -1,5 +1,3 @@
-import type { AirhornTemplate } from "./template.js";
-
 export enum AirhornProviderType {
 	SMS = "sms",
 	Email = "email",
@@ -13,7 +11,6 @@ export type AirhornProviderMessage = {
 	subject?: string;
 	content: string;
 	type: AirhornProviderType;
-	template: AirhornTemplate;
 };
 
 export type AirhornProviderSendResult = {
