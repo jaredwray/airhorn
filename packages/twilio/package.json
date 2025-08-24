@@ -1,7 +1,7 @@
 {
 	"name": "@airhorn/twilio",
 	"version": "1.0.0",
-	"description": "Twilio SMS provider for Airhorn",
+	"description": "Twilio SMS and SendGrid Email provider for Airhorn notification system",
 	"type": "module",
 	"main": "./dist/index.js",
 	"module": "./dist/index.js",
@@ -21,10 +21,19 @@
 		"build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean",
 		"clean": "rimraf dist coverage"
 	},
-	"keywords": ["airhorn", "twilio", "sms", "notifications", "messaging"],
+	"keywords": [
+		"airhorn",
+		"twilio",
+		"sendgrid",
+		"sms",
+		"email",
+		"notifications",
+		"messaging"
+	],
 	"author": "",
 	"license": "MIT",
 	"dependencies": {
+		"@sendgrid/mail": "^8.1.5",
 		"twilio": "^5.8.0"
 	},
 	"devDependencies": {

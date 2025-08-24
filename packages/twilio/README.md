@@ -1,6 +1,6 @@
 # @airhorn/twilio
 
-Twilio SMS provider for the Airhorn notification system.
+Twilio SMS and SendGrid Email provider for the Airhorn notification system.
 
 ## Installation
 
@@ -8,13 +8,23 @@ Twilio SMS provider for the Airhorn notification system.
 pnpm add @airhorn/twilio
 ```
 
+## Features
+
+- SMS sending via Twilio API
+- Email sending via SendGrid API
+- Automatic error handling and retry support
+- Integration with Airhorn's template system
+- Support for additional provider-specific options
+
 ## Usage
 
+### SMS with Twilio
+
 ```typescript
-import { Airhorn } from '@airhorn/airhorn';
+import { Airhorn } from 'airhorn';
 import { TwilioProvider } from '@airhorn/twilio';
 
-// Create Twilio provider
+// Create Twilio provider for SMS only
 const twilioProvider = new TwilioProvider({
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
@@ -27,16 +37,74 @@ const airhorn = new Airhorn({
 });
 
 // Send SMS
-const template = {
+const smsTemplate = {
   from: '+1234567890',
   content: 'Hello {{name}}, your order #{{orderId}} has been shipped!',
 };
 
 const result = await airhorn.sendSMS(
   '+0987654321', // to
-  template,
+  smsTemplate,
   { name: 'John', orderId: '12345' }, // template data
 );
+```
+
+### Email with SendGrid
+
+```typescript
+import { Airhorn } from 'airhorn';
+import { TwilioProvider } from '@airhorn/twilio';
+
+// Create Twilio provider with SendGrid support
+const twilioProvider = new TwilioProvider({
+  accountSid: 'your-account-sid',
+  authToken: 'your-auth-token',
+  fromPhoneNumber: '+1234567890',
+  sendGridApiKey: 'your-sendgrid-api-key', // Enables email support
+  fromEmail: 'noreply@example.com', // Optional default from email
+});
+
+// Create Airhorn instance
+const airhorn = new Airhorn({
+  providers: [twilioProvider],
+});
+
+// Send Email
+const emailTemplate = {
+  from: 'sender@example.com',
+  subject: 'Order Confirmation',
+  content: '<h1>Hello {{name}}</h1><p>Your order #{{orderId}} has been confirmed!</p>',
+};
+
+const result = await airhorn.sendEmail(
+  'recipient@example.com', // to
+  emailTemplate,
+  { name: 'Jane', orderId: '67890' }, // template data
+);
+```
+
+### Both SMS and Email
+
+When configured with both Twilio and SendGrid credentials, the provider supports both SMS and email notifications:
+
+```typescript
+const provider = new TwilioProvider({
+  // Twilio SMS configuration
+  accountSid: 'your-account-sid',
+  authToken: 'your-auth-token',
+  fromPhoneNumber: '+1234567890',
+  
+  // SendGrid Email configuration
+  sendGridApiKey: 'your-sendgrid-api-key',
+  fromEmail: 'noreply@example.com',
+  
+  // Optional Twilio configuration
+  region: 'sydney',
+  edge: 'sydney',
+});
+
+// Provider capabilities will include both 'sms' and 'email'
+console.log(provider.capabilities); // ['sms', 'email']
 ```
 
 ## Configuration
@@ -46,15 +114,39 @@ const result = await airhorn.sendSMS(
 - `accountSid` (required): Your Twilio Account SID
 - `authToken` (required): Your Twilio Auth Token
 - `fromPhoneNumber` (optional): Default from phone number for SMS messages
+- `sendGridApiKey` (optional): Your SendGrid API key (enables email support)
+- `fromEmail` (optional): Default from email address for email messages
 - `region` (optional): Twilio region
 - `edge` (optional): Twilio edge location
 
-## Features
+## Additional Options
 
-- SMS sending via Twilio API
-- Automatic error handling and retry support
-- Integration with Airhorn's template system
-- Support for Twilio's additional message options
+You can pass additional provider-specific options as the second parameter to the send method:
+
+### Twilio SMS Options
+
+```typescript
+await airhorn.sendSMS(to, template, data, {
+  statusCallback: 'https://example.com/callback',
+  maxPrice: '0.50',
+  validityPeriod: 14400,
+  // ... other Twilio message options
+});
+```
+
+### SendGrid Email Options
+
+```typescript
+await airhorn.sendEmail(to, template, data, {
+  replyTo: 'reply@example.com',
+  categories: ['transactional', 'order-confirmation'],
+  trackingSettings: {
+    clickTracking: { enable: true },
+    openTracking: { enable: true },
+  },
+  // ... other SendGrid mail options
+});
+```
 
 ## Testing
 

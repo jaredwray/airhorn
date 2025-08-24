@@ -1,21 +1,11 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: test file
+import { AirhornProviderType } from "airhorn";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { TwilioProvider } from "../src/index.js";
+import { AirhornTwilio } from "../src/index";
+import { mockSgSend, mockSgSetApiKey, mockTwilioCreate } from "./setup";
 
-vi.mock("twilio", () => {
-	const mockCreate = vi.fn();
-	return {
-		Twilio: vi.fn().mockImplementation(() => ({
-			messages: {
-				create: mockCreate,
-			},
-		})),
-		mockCreate,
-	};
-});
-
-describe("TwilioProvider", () => {
-	let provider: TwilioProvider;
+describe("AirhornTwilio", () => {
+	let provider: AirhornTwilio;
 	const mockOptions = {
 		accountSid: "AC1234567890",
 		authToken: "test-auth-token",
@@ -24,56 +14,62 @@ describe("TwilioProvider", () => {
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		provider = new TwilioProvider(mockOptions);
+		provider = new AirhornTwilio(mockOptions);
 	});
 
 	describe("constructor", () => {
-		it("should create instance with valid options", () => {
+		it("should create instance with both SMS and Email capabilities", () => {
 			expect(provider).toBeDefined();
 			expect(provider.name).toBe("twilio");
-			expect(provider.capabilities).toEqual(["sms"]);
+			expect(provider.capabilities).toContain(AirhornProviderType.SMS);
+			expect(provider.capabilities).toContain(AirhornProviderType.Email);
+		});
+
+		it("should configure SendGrid when API key is provided", () => {
+			vi.clearAllMocks();
+			const providerWithEmail = new AirhornTwilio({
+				...mockOptions,
+				sendGridApiKey: "SG.test-api-key",
+				fromEmail: "test@example.com",
+			});
+
+			expect(providerWithEmail.capabilities).toContain(AirhornProviderType.SMS);
+			expect(providerWithEmail.capabilities).toContain(
+				AirhornProviderType.Email,
+			);
+			expect(mockSgSetApiKey).toHaveBeenCalledWith("SG.test-api-key");
 		});
 
 		it("should throw error when accountSid is missing", () => {
 			expect(() => {
-				new TwilioProvider({
+				new AirhornTwilio({
 					accountSid: "",
 					authToken: "token",
 				});
-			}).toThrowError("TwilioProvider requires accountSid and authToken");
+			}).toThrowError("AirhornTwilio requires accountSid and authToken");
 		});
 
 		it("should throw error when authToken is missing", () => {
 			expect(() => {
-				new TwilioProvider({
+				new AirhornTwilio({
 					accountSid: "AC123",
 					authToken: "",
 				});
-			}).toThrowError("TwilioProvider requires accountSid and authToken");
-		});
-
-		it("should accept optional region and edge", () => {
-			const providerWithRegion = new TwilioProvider({
-				...mockOptions,
-				region: "sydney",
-				edge: "sydney",
-			});
-			expect(providerWithRegion).toBeDefined();
+			}).toThrowError("AirhornTwilio requires accountSid and authToken");
 		});
 	});
 
-	describe("send", () => {
+	describe("SMS sending", () => {
 		const mockMessage = {
 			to: "+0987654321",
 			from: "+1234567890",
 			content: "Test SMS message",
-			type: "sms" as any,
+			type: AirhornProviderType.SMS,
 			template: {} as any,
 		};
 
 		it("should send SMS successfully", async () => {
-			const { mockCreate } = (await import("twilio")) as any;
-			mockCreate.mockResolvedValueOnce({
+			mockTwilioCreate.mockResolvedValueOnce({
 				sid: "SM123",
 				status: "sent",
 				dateCreated: new Date(),
@@ -91,16 +87,10 @@ describe("TwilioProvider", () => {
 			expect(result.response).toHaveProperty("sid", "SM123");
 			expect(result.response).toHaveProperty("status", "sent");
 			expect(result.errors).toHaveLength(0);
-			expect(mockCreate).toHaveBeenCalledWith({
-				body: mockMessage.content,
-				from: mockMessage.from,
-				to: mockMessage.to,
-			});
 		});
 
 		it("should use default from number when not in message", async () => {
-			const { mockCreate } = (await import("twilio")) as any;
-			mockCreate.mockResolvedValueOnce({
+			mockTwilioCreate.mockResolvedValueOnce({
 				sid: "SM456",
 				status: "sent",
 				to: mockMessage.to,
@@ -112,88 +102,238 @@ describe("TwilioProvider", () => {
 			const result = await provider.send(messageWithoutFrom);
 
 			expect(result.success).toBe(true);
-			expect(mockCreate).toHaveBeenCalledWith({
+			expect(mockTwilioCreate).toHaveBeenCalledWith({
 				body: mockMessage.content,
 				from: mockOptions.fromPhoneNumber,
 				to: mockMessage.to,
 			});
 		});
 
-		it("should handle send errors", async () => {
-			const { mockCreate } = (await import("twilio")) as any;
+		it("should handle SMS send errors", async () => {
 			const errorMessage = "Invalid phone number";
-			mockCreate.mockRejectedValueOnce(new Error(errorMessage));
+			mockTwilioCreate.mockRejectedValueOnce(new Error(errorMessage));
 
 			const result = await provider.send(mockMessage);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
 			expect(result.errors[0].message).toBe(errorMessage);
-			expect(result.response).toHaveProperty("error", errorMessage);
+		});
+	});
+
+	describe("Email sending", () => {
+		let providerWithEmail: AirhornTwilio;
+		const mockEmailMessage = {
+			to: "recipient@example.com",
+			from: "sender@example.com",
+			subject: "Test Email",
+			content: "<p>Test email content</p>",
+			type: AirhornProviderType.Email,
+			template: {} as any,
+		};
+
+		beforeEach(() => {
+			vi.clearAllMocks();
+			providerWithEmail = new AirhornTwilio({
+				...mockOptions,
+				sendGridApiKey: "SG.test-api-key",
+				fromEmail: "default@example.com",
+			});
 		});
 
-		it("should reject non-SMS message types", async () => {
-			const emailMessage = {
-				...mockMessage,
-				type: "email" as any,
-			};
+		it("should send email successfully via SendGrid", async () => {
+			mockSgSend.mockResolvedValueOnce([
+				{
+					statusCode: 202,
+					headers: {
+						"x-message-id": "msg-123",
+					},
+					body: "",
+				},
+			]);
 
-			const result = await provider.send(emailMessage);
+			const result = await providerWithEmail.send(mockEmailMessage);
 
-			expect(result.success).toBe(false);
-			expect(result.errors).toHaveLength(1);
-			expect(result.errors[0].message).toContain(
-				"TwilioProvider only supports SMS",
+			expect(result.success).toBe(true);
+			expect(result.response).toHaveProperty("accepted", true);
+			expect(result.response).toHaveProperty("messageId", "msg-123");
+			expect(result.response).toHaveProperty("statusCode", 202);
+			expect(result.errors).toHaveLength(0);
+
+			expect(mockSgSend).toHaveBeenCalledWith({
+				to: mockEmailMessage.to,
+				from: mockEmailMessage.from,
+				subject: mockEmailMessage.subject,
+				text: mockEmailMessage.content,
+				html: mockEmailMessage.content,
+			});
+		});
+
+		it("should use default from email when not in message", async () => {
+			mockSgSend.mockResolvedValueOnce([
+				{
+					statusCode: 202,
+					headers: { "x-message-id": "msg-456" },
+					body: "",
+				},
+			]);
+
+			const messageWithoutFrom = { ...mockEmailMessage, from: "" };
+			const result = await providerWithEmail.send(messageWithoutFrom);
+
+			expect(result.success).toBe(true);
+			expect(mockSgSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					from: "default@example.com",
+				}),
 			);
 		});
 
-		it("should require from phone number", async () => {
-			const providerWithoutFrom = new TwilioProvider({
-				accountSid: "AC123",
-				authToken: "token",
+		it("should use default subject when not provided", async () => {
+			mockSgSend.mockResolvedValueOnce([
+				{
+					statusCode: 202,
+					headers: { "x-message-id": "msg-789" },
+					body: "",
+				},
+			]);
+
+			const messageWithoutSubject = { ...mockEmailMessage, subject: undefined };
+			const result = await providerWithEmail.send(messageWithoutSubject);
+
+			expect(result.success).toBe(true);
+			expect(mockSgSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					subject: "Notification",
+				}),
+			);
+		});
+
+		it("should handle email send errors", async () => {
+			const errorMessage = "Invalid API key";
+			mockSgSend.mockRejectedValueOnce(new Error(errorMessage));
+
+			const result = await providerWithEmail.send(mockEmailMessage);
+
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toBe(errorMessage);
+		});
+
+		it("should throw error when trying to send email without SendGrid configured", async () => {
+			const result = await provider.send(mockEmailMessage);
+
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toContain("SendGrid is not configured");
+		});
+
+		it("should require from email for email messages", async () => {
+			const providerWithoutFromEmail = new AirhornTwilio({
+				...mockOptions,
+				sendGridApiKey: "SG.test-api-key",
 			});
 
-			const messageWithoutFrom = { ...mockMessage, from: "" };
-			const result = await providerWithoutFrom.send(messageWithoutFrom);
+			const messageWithoutFrom = { ...mockEmailMessage, from: "" };
+			const result = await providerWithoutFromEmail.send(messageWithoutFrom);
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
 			expect(result.errors[0].message).toContain(
-				"From phone number is required",
+				"From email address is required",
 			);
 		});
+	});
 
-		it("should pass additional options to Twilio", async () => {
-			const { mockCreate } = (await import("twilio")) as any;
-			mockCreate.mockResolvedValueOnce({
+	describe("Unsupported message types", () => {
+		it("should reject unsupported message types", async () => {
+			const unsupportedMessage = {
+				to: "test",
+				from: "test",
+				content: "test",
+				type: AirhornProviderType.MobilePush,
+				template: {} as any,
+			};
+
+			const result = await provider.send(unsupportedMessage);
+
+			expect(result.success).toBe(false);
+			expect(result.errors).toHaveLength(1);
+			expect(result.errors[0].message).toContain(
+				"AirhornTwilio does not support message type",
+			);
+		});
+	});
+
+	describe("Additional options", () => {
+		it("should pass additional options to Twilio SMS", async () => {
+			mockTwilioCreate.mockResolvedValueOnce({
 				sid: "SM789",
 				status: "sent",
 			});
+
+			const message = {
+				to: "+0987654321",
+				from: "+1234567890",
+				content: "Test",
+				type: AirhornProviderType.SMS,
+				template: {} as any,
+			};
 
 			const additionalOptions = {
 				statusCallback: "https://example.com/callback",
 				maxPrice: "0.50",
 			};
 
-			await provider.send(mockMessage, additionalOptions);
+			await provider.send(message, additionalOptions);
 
-			expect(mockCreate).toHaveBeenCalledWith({
-				body: mockMessage.content,
-				from: mockMessage.from,
-				to: mockMessage.to,
+			expect(mockTwilioCreate).toHaveBeenCalledWith({
+				body: message.content,
+				from: message.from,
+				to: message.to,
 				...additionalOptions,
 			});
 		});
 
-		it("should handle non-Error exceptions", async () => {
-			const { mockCreate } = (await import("twilio")) as any;
-			mockCreate.mockRejectedValueOnce("String error");
+		it("should pass additional options to SendGrid email", async () => {
+			mockSgSend.mockResolvedValueOnce([
+				{
+					statusCode: 202,
+					headers: { "x-message-id": "msg-custom" },
+					body: "",
+				},
+			]);
 
-			const result = await provider.send(mockMessage);
+			const providerWithEmail = new AirhornTwilio({
+				...mockOptions,
+				sendGridApiKey: "SG.test-api-key",
+				fromEmail: "test@example.com",
+			});
 
-			expect(result.success).toBe(false);
-			expect(result.errors).toHaveLength(1);
-			expect(result.errors[0].message).toBe("String error");
+			const message = {
+				to: "recipient@example.com",
+				from: "sender@example.com",
+				subject: "Test",
+				content: "Test content",
+				type: AirhornProviderType.Email,
+				template: {} as any,
+			};
+
+			const additionalOptions = {
+				replyTo: "reply@example.com",
+				categories: ["test", "notification"],
+			};
+
+			await providerWithEmail.send(message, additionalOptions);
+
+			expect(mockSgSend).toHaveBeenCalledWith({
+				to: message.to,
+				from: message.from,
+				subject: message.subject,
+				text: message.content,
+				html: message.content,
+				...additionalOptions,
+			});
 		});
 	});
 });
