@@ -15,7 +15,7 @@ AWS SNS and SES provider for Airhorn.
 ## Installation
 
 ```bash
-pnpm add airhorn @airhorn/aws
+npm install airhorn @airhorn/aws
 ```
 
 ## Features
@@ -77,17 +77,23 @@ const airhorn = new Airhorn({
   providers: [awsProvider],
 });
 
+const data = {
+  orderId: '656565',
+  customerName: 'John',
+};
+
 // Send Email
-const message = {
+const template = {
   from: 'sender@example.com', // Must be verified in SES
-  subject: 'Order Confirmation',
-  content: '<h1>Hello John</h1><p>Your order #656565 has been confirmed!</p>',
-  type: AirhornSendType.Email,
+  subject: 'Order <%= orderId %> Confirmation',
+  content: '<h1>Hello <%= customerName %></h1><p>Your order #<%= orderId %> has been confirmed!</p>',
 };
 
 const result = await airhorn.send(
   'recipient@example.com', // to
-  message,
+  template,
+  data,
+  AirhornSendType.Email
 );
 ```
 
@@ -149,14 +155,18 @@ const airhorn = new Airhorn({
   providers: [awsProvider],
 });
 
+const data = {
+  orderId: '12345',
+};
+
 // Send to iOS device via APNs
-const iosMessage = {
+const template = {
   from: 'YourApp', // Sender ID
   content: JSON.stringify({
     aps: {
       alert: {
         title: 'New Order',
-        body: 'You have a new order #12345',
+        body: 'You have a new order #<%= orderId %>',
       },
       badge: 1,
       sound: 'default',
@@ -164,13 +174,13 @@ const iosMessage = {
     // Custom data
     orderId: '12345',
   }),
-  type: AirhornSendType.SMS, // SNS handles push notifications
 };
 
 // Send to Apple device endpoint ARN
 await airhorn.send(
   'arn:aws:sns:us-east-1:123456789012:endpoint/APNS/YourApp/abc123', // iOS endpoint ARN
-  iosMessage,
+  template,
+  AirhornSendType.MobilePush,
   {
     MessageStructure: 'json', // Required for platform-specific payloads
     MessageAttributes: {
@@ -179,66 +189,6 @@ await airhorn.send(
         StringValue: 'alert', // or 'background'
       },
     },
-  },
-);
-
-// Send to Android device via FCM
-const androidMessage = {
-  from: 'YourApp',
-  content: JSON.stringify({
-    notification: {
-      title: 'New Order',
-      body: 'You have a new order #12345',
-      icon: 'ic_notification',
-      color: '#ff0000',
-    },
-    data: {
-      orderId: '12345',
-      type: 'new_order',
-    },
-  }),
-  type: AirhornSendType.MobilePush,
-};
-
-// Send to Android device endpoint ARN
-await airhorn.send(
-  'arn:aws:sns:us-east-1:123456789012:endpoint/GCM/YourApp/xyz789', // Android endpoint ARN
-  androidMessage,
-  {
-    MessageStructure: 'json',
-    MessageAttributes: {
-      'AWS.SNS.MOBILE.GCM.TTL': {
-        DataType: 'String',
-        StringValue: '86400', // Time to live in seconds
-      },
-    },
-  },
-);
-
-// Send to a topic (broadcasts to all subscribed devices)
-await airhorn.send(
-  'arn:aws:sns:us-east-1:123456789012:YourAppTopic',
-  {
-    from: 'YourApp',
-    content: JSON.stringify({
-      default: 'New announcement available',
-      APNS: JSON.stringify({
-        aps: {
-          alert: 'New announcement available',
-          sound: 'default',
-        },
-      }),
-      GCM: JSON.stringify({
-        notification: {
-          title: 'Announcement',
-          body: 'New announcement available',
-        },
-      }),
-    }),
-    type: AirhornSendType.MobilePush,
-  },
-  {
-    MessageStructure: 'json',
   },
 );
 ```

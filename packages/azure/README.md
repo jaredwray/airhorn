@@ -15,7 +15,7 @@ Azure Communication Services and Notification Hubs provider for Airhorn.
 ## Installation
 
 ```bash
-pnpm add airhorn @airhorn/azure
+npm install airhorn @airhorn/azure
 ```
 
 ## Features
@@ -45,16 +45,23 @@ const airhorn = new Airhorn({
   providers: [azureProvider],
 });
 
+const data = {
+  orderId: '12345',
+  customerName: 'John',
+};
+
 // Send SMS
-const message = {
+const template = {
   from: '+1234567890', // Your sender phone number (must be provisioned in Azure)
-  content: 'Hello John!, your order #12345 has been shipped!',
+  content: 'Hello <%= customerName %>!, your order #<%= orderId %> has been shipped!',
   type: AirhornSendType.SMS,
 };
 
 const result = await airhorn.send(
   '+0987654321', // to
-  message,
+  template,
+  data,
+  AirhornSendType.SMS
 );
 ```
 
@@ -74,22 +81,23 @@ const airhorn = new Airhorn({
   providers: [azureProvider],
 });
 
+const data = {
+  orderId: '656565',
+  customerName: 'John',
+};
+
 // Send Email
-const message = {
+const template = {
   from: 'DoNotReply@yourdomain.com', // Must be verified domain in Azure
-  subject: 'Order Confirmation',
-  content: 'Your order #656565 has been confirmed!',
-  type: AirhornSendType.Email,
+  subject: 'Order Confirmation: <%= orderId %>',
+  content: 'Hi <%= customerName %>, your order #<%= orderId %> has been confirmed!',
 };
 
 const result = await airhorn.send(
   'recipient@example.com', // to
-  message,
-  {
-    html: '<h1>Hello John</h1><p>Your order #656565 has been confirmed!</p>',
-    cc: ['manager@example.com'],
-    bcc: ['archive@example.com'],
-  },
+  template,
+  data,
+  AirhornSendType.Email
 );
 ```
 
@@ -108,14 +116,19 @@ const airhorn = new Airhorn({
   providers: [azureProvider],
 });
 
+const data = {
+  orderId: '12345',
+  customerName: 'John',
+};
+
 // Send to iOS device via APNs
-const iosMessage = {
+const template = {
   from: 'YourApp',
   content: JSON.stringify({
     aps: {
       alert: {
         title: 'New Order',
-        body: 'You have a new order #12345',
+        body: 'Hi <%= customerName %>You have a new order #<%= orderId %>',
       },
       badge: 1,
       sound: 'default',
@@ -123,62 +136,17 @@ const iosMessage = {
     // Custom data
     orderId: '12345',
   }),
-  type: AirhornSendType.MobilePush,
 };
 
 // Send using tag expression
 await airhorn.send(
   'user:john-doe', // Tag expression
-  iosMessage,
+  template,
+  data,
+  AirhornSendType.MobilePush,
   {
     platform: 'apple',
     tags: 'user:john-doe && ios',
-  },
-);
-
-// Send to Android device via FCM
-const androidMessage = {
-  from: 'YourApp',
-  content: JSON.stringify({
-    notification: {
-      title: 'New Order',
-      body: 'You have a new order #12345',
-      icon: 'ic_notification',
-      color: '#ff0000',
-    },
-    data: {
-      orderId: '12345',
-      type: 'new_order',
-    },
-  }),
-  type: AirhornSendType.MobilePush,
-};
-
-// Send to Android devices
-await airhorn.send(
-  'user:jane-doe', // Tag expression
-  androidMessage,
-  {
-    platform: 'android',
-    tags: 'user:jane-doe && android',
-  },
-);
-
-// Broadcast to all users with specific tags
-await airhorn.send(
-  'broadcast-tag',
-  {
-    from: 'YourApp',
-    content: JSON.stringify({
-      notification: {
-        title: 'Announcement',
-        body: 'New features available!',
-      },
-    }),
-    type: AirhornSendType.MobilePush,
-  },
-  {
-    tags: 'registered && (ios || android)',
   },
 );
 ```
@@ -236,40 +204,6 @@ await airhorn.send(to, message, {
   // Additional SMS options from Azure Communication Services
   deliveryReportTimeoutInSeconds: 300,
   tag: 'custom-tag',
-});
-```
-
-### Email Options
-
-```typescript
-await airhorn.send(to, message, {
-  cc: ['cc@example.com'],
-  bcc: ['bcc@example.com'],
-  replyTo: 'reply@example.com',
-  html: '<html><body>HTML content</body></html>',
-  attachments: [
-    {
-      name: 'attachment.pdf',
-      contentType: 'application/pdf',
-      contentInBase64: 'base64-encoded-content',
-    },
-  ],
-  headers: {
-    'X-Custom-Header': 'value',
-  },
-});
-```
-
-### Mobile Push Options
-
-```typescript
-await airhorn.send(to, message, {
-  platform: 'apple' | 'android', // Specify target platform
-  tags: 'tag1 && (tag2 || tag3)', // Tag expression for targeting
-  apnsHeaders: {
-    'apns-priority': '10',
-    'apns-expiration': '0',
-  },
 });
 ```
 
