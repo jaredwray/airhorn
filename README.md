@@ -30,9 +30,34 @@ To get started with Airhorn, you can install the package via npm:
 npm install airhorn
 ```
 
+# Add Providers
+
+We currently support multiple providers and you can easily add more by following the `AirhornProvider` interface. Here are the supported providers:
+
+We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is a chart showing what functionality is in each:
+
+| Provider | SMS | Email | Push | Webhook |
+|----------|-----|-------|------|---------|
+| (built in `airhorn`) | ❌  | ❌    | ❌   | ✅      |
+| `@airhorn/twilio`   | ✅  | ✅    | ❌   | ❌      |
+| `@airhorn/aws`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhorn/azure`      | ✅  | ✅    | ✅   | ❌      |
+
+Note: We used to support firebase because of mobile push but it made more sense to focus on `aws` and `azure` because it is more comprehensive.
+
 # How to Contribute 
 
 Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository you can refer to the [CONTRIBUTING](CONTRIBUTING.md) guide. If you have any questions please feel free to ask by creating an issue and label it `question`.
+
+# Publishing Airhorn
+
+To publish `Airhorn` to npm you first want to set the overall version in the `package.json` file. You can do this by updating the `version` field. Once you have done that then call:
+
+```bash
+pnpm version:sync
+```
+
+This will set all the versions in the monorepo to the same version as we deploy based on that. 
 
 # Licensing and Copyright
 
