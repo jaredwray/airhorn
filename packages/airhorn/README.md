@@ -410,7 +410,7 @@ An example of the `markdown` format is located at `./packages/airhorn/test/fixtu
 
 # Core Supported Providers
 
-We currently support `twilio`, `aws`, and `gcp` (google cloud) with thier offerings. Here is a chart showing what functionality is in each:
+We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is a chart showing what functionality is in each:
 
 | Provider | SMS | Email | Push | Webhook |
 |----------|-----|-------|------|---------|

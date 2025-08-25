@@ -28,10 +28,12 @@ jobs:
           FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
         run: pnpm test
 
+      - name: create npmrc
+        run: |
+         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+         echo "always-auth=true" >> ~/.npmrc
+
       - name: Publish
         run: |
-          npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
-          npm publish --ignore-scripts
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+         pnpm publish:packages
 
