@@ -73,18 +73,6 @@ describe("Airhorn", () => {
 		expect(airhorn.retryStrategy).toBe(5);
 	});
 
-	test('should be able to set cache with Cacheable', () => {
-		const airhorn = new Airhorn();
-		airhorn.setCache(new Cacheable({ ttl: 5000 }));
-		expect(airhorn.cache.ttl).toBe(5000);
-	});
-
-	test('should be able to set cache via CacheableOptions', () => {
-		const airhorn = new Airhorn();
-		airhorn.setCache({ ttl: 60 });
-		expect(airhorn.cache.ttl).toBe(60);
-	});
-
 	test('should be able to load a template file', async () => {
 		const airhorn = new Airhorn();
 		const template = await airhorn.loadTemplate('./test/fixtures/full-template.md');

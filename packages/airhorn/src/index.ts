@@ -105,7 +105,7 @@ export type AirhornSendOptions = {
 
 export type AirhornOptions = {
 	/**
-	 * Whether to enable caching.
+	 * Whether to enable caching on template generation via Ecto
 	 * @default true
 	 */
 	cache?: boolean | Cacheable | CacheableOptions;
@@ -153,7 +153,6 @@ export type AirhornOptions = {
 export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
-	private _cache: Cacheable = new Cacheable();
 	private _retryStrategy: AirhornRetryStrategy = 0;
 	private _timeout: number = 100;
 	private _sendStrategy: AirhornSendStrategy = AirhornSendStrategy.RoundRobin;
@@ -161,13 +160,16 @@ export class Airhorn extends Hookified {
 	private _statistics: AirhornStatistics = new AirhornStatistics();
 	private _providers: Array<AirhornProvider> = [];
 	private _roundRobinIndex: number = 0;
+	private _ecto = new Ecto({ cache: true });
 
 	constructor(options?: AirhornOptions) {
 		// biome-ignore format: long format
 		super({ throwHookErrors: options?.throwOnErrors });
 
 		if (options?.cache !== undefined) {
-			this.setCache(options.cache);
+			if (options.cache) {
+				this._ecto.cache = new Cacheable();
+			}
 		}
 
 		if (options?.statistics !== undefined) {
@@ -204,8 +206,8 @@ export class Airhorn extends Hookified {
 	 * Get the cache instance.
 	 * @returns {Cacheable} The cache instance.
 	 */
-	public get cache(): Cacheable {
-		return this._cache;
+	public get cache(): Cacheable | undefined {
+		return this._ecto.cache;
 	}
 
 	/**
@@ -213,7 +215,7 @@ export class Airhorn extends Hookified {
 	 * @param {Cacheable} cache - The cache instance.
 	 */
 	public set cache(cache: Cacheable) {
-		this._cache = cache;
+		this._ecto.cache = cache;
 	}
 
 	/**
@@ -503,20 +505,6 @@ export class Airhorn extends Hookified {
 	}
 
 	/**
-	 * Set the cache. This is a helper to set the cache
-	 * @param {boolean | Cacheable | CacheableOptions} cache - The cache to set.
-	 */
-	public setCache(cache: boolean | Cacheable | CacheableOptions) {
-		if (cache === true) {
-			this._cache = new Cacheable();
-		} else if (cache instanceof Cacheable) {
-			this._cache = cache;
-		} else if (typeof cache === "object") {
-			this._cache = new Cacheable(cache);
-		}
-	}
-
-	/**
 	 * Add providers to the Airhorn instance.
 	 * @param {Array<AirhornProvider>} providers - The providers to add.
 	 */
@@ -549,14 +537,12 @@ export class Airhorn extends Hookified {
 		data: Record<string, any>,
 		providerType: AirhornSendType,
 	): Promise<AirhornProviderMessage> {
-		const ecto = new Ecto();
-
 		const message: AirhornProviderMessage = {
 			to,
 			from: template.from,
 			subject: template.subject,
 			type: providerType,
-			content: await ecto.render(
+			content: await this._ecto.render(
 				template.content,
 				data,
 				template.templateEngine,
