@@ -1,4 +1,7 @@
-![Airhorn](site/logo.svg "Airhorn")
+---
+title: 'Getting Started Guide'
+order: 1
+---
 
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
