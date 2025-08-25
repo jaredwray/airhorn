@@ -55,12 +55,6 @@ describe("Airhorn", () => {
 		expect(airhorn.cache).toBeDefined();
 	});
 
-	test('should be able to set the retryStrategy property', () => {
-		const airhorn = new Airhorn();
-		airhorn.retryStrategy = 5;
-		expect(airhorn.retryStrategy).toBe(5);
-	});
-
 	test('should be able to load a template file', async () => {
 		const airhorn = new Airhorn();
 		const template = await airhorn.loadTemplate('./test/fixtures/full-template.md');
@@ -203,7 +197,7 @@ describe("AirhornSendOptions is optional", () => {
 			"https://example.com/webhook",
 			template,
 			{},
-			{ throwOnErrors: false, timeout: 5000 }
+			{ throwOnErrors: false }
 		);
 
 		expect(result).toBeDefined();
