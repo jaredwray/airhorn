@@ -84,14 +84,6 @@ export type AirhornRetryFunction = (
 
 export type AirhornSendOptions = {
 	/**
-	 * The retry strategy to use when sending messages. This will override the instance retry strategy.
-	 */
-	retryStrategy?: AirhornRetryStrategy;
-	/**
-	 * The timeout to use when sending messages. This will overide the instance timeout.
-	 */
-	timeout?: number;
-	/**
 	 * The send strategy to use when sending messages. This will override the instance send strategy.
 	 * @default AirhornSendStrategy.RoundRobin
 	 */
@@ -124,16 +116,6 @@ export type AirhornOptions = {
 	 */
 	useWebhookProvider?: boolean;
 	/**
-	 * The retry strategy to use when sending messages.
-	 * @default 0
-	 */
-	retryStrategy?: AirhornRetryStrategy;
-	/**
-	 * The timeout to use when sending messages.
-	 * @default 100
-	 */
-	timeout?: number;
-	/**
 	 * The send strategy to use when sending messages.
 	 * @default AirhornSendStrategy.RoundRobin
 	 */
@@ -153,8 +135,6 @@ export type AirhornOptions = {
 export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
-	private _retryStrategy: AirhornRetryStrategy = 0;
-	private _timeout: number = 100;
 	private _sendStrategy: AirhornSendStrategy = AirhornSendStrategy.RoundRobin;
 	private _throwOnErrors: boolean = false;
 	private _statistics: AirhornStatistics = new AirhornStatistics();
@@ -185,14 +165,6 @@ export class Airhorn extends Hookified {
 			this.addProviders(options.providers);
 		}
 
-		if (options?.retryStrategy !== undefined) {
-			this._retryStrategy = options.retryStrategy;
-		}
-
-		if (options?.timeout !== undefined) {
-			this._timeout = options.timeout;
-		}
-
 		if (options?.sendStrategy !== undefined) {
 			this._sendStrategy = options.sendStrategy;
 		}
@@ -216,38 +188,6 @@ export class Airhorn extends Hookified {
 	 */
 	public set cache(cache: Cacheable) {
 		this._ecto.cache = cache;
-	}
-
-	/**
-	 * Get the Retry Strategy.
-	 * @returns {AirhornRetryStrategy} The retry strategy.
-	 */
-	public get retryStrategy(): AirhornRetryStrategy {
-		return this._retryStrategy;
-	}
-
-	/**
-	 * Set the Retry Strategy.
-	 * @param {AirhornRetryStrategy} retryStrategy - The retry strategy.
-	 */
-	public set retryStrategy(retryStrategy: AirhornRetryStrategy) {
-		this._retryStrategy = retryStrategy;
-	}
-
-	/**
-	 * Get the default timeout. This can be overridden individually on send calls with options.
-	 * @returns {number} The timeout.
-	 */
-	public get timeout(): number {
-		return this._timeout;
-	}
-
-	/**
-	 * Set the default timeout. This can be overridden individually on send calls with options.
-	 * @param {number} timeout - The timeout.
-	 */
-	public set timeout(timeout: number) {
-		this._timeout = timeout;
 	}
 
 	/**

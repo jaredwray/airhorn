@@ -35,18 +35,6 @@ describe("Airhorn", () => {
 		expect(airhorn.providers).toHaveLength(0);
 	});
 
-	test('should be able to set the retryStrategy from options', () => {
-		const airhorn = new Airhorn({ retryStrategy: 5 });
-		expect(airhorn.retryStrategy).toBe(5);
-	});
-
-	test('should be able to set the timeout from options', () => {
-		const airhorn = new Airhorn({ timeout: 200 });
-		expect(airhorn.timeout).toBe(200);
-		airhorn.timeout = 300;
-		expect(airhorn.timeout).toBe(300);
-	});
-
 	test('should be able to set the sendStrategy from options', () => {
 		const airhorn = new Airhorn({ sendStrategy: AirhornSendStrategy.RoundRobin });
 		expect(airhorn.sendStrategy).toBe(AirhornSendStrategy.RoundRobin);
