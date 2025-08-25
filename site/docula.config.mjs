@@ -19,7 +19,7 @@ export const onPrepare = async config => {
 	updatedReadme = `---
 title: 'Getting Started Guide'
 order: 1
----` + updatedReadme;
+---\r\n` + updatedReadme;
 	console.log('Writing updated readme to', readmeSitePath);
 	await fs.promises.writeFile(readmeSitePath, updatedReadme);
 
@@ -31,7 +31,7 @@ order: 1
 title: 'Airhorn'
 sidebarTitle: 'Airhorn'
 order: 2
----` + packageReadme;
+---\r\n` + packageReadme;
 	console.log('Writing updated package readme to', packageReadmeSitePath);
 	await fs.promises.writeFile(packageReadmeSitePath, updatedPackageReadme);
 };
