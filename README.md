@@ -1,7 +1,5 @@
 ![Airhorn](site/logo.svg "Airhorn")
 
----
-
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
@@ -14,23 +12,59 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 
 # Features
 
-* GitOps Based Templating System - email, SMS, mobile push, and webhooks all in one place!
-* Email Notifications - easily send email across multiple providers and even load balance or active/passive fail over. 
-* SMS Notifications - SMS that is easy to use via a robust template system. 
-* Mobile Push Notifications - Push to IOS and Android devices.
-* Webhook Notifications - Built right into the system as a native feature.
-* 100% Code Coverage / Tested with Integration Tests
-* Built using [ecto](https://github.org/jaredwray/ecto) for handling multiple templates such as EJS, Handlebars, and more.
+- Supports multiple notification types: SMS, Email, Mobile Push, Webhooks
+- A unified API for all notification types using the `send()` method.
+- Hooks and Emitting built in by default for extendability and observability.
+- Send Strategy (Round Robin, Fail Over, All) Choose the best delivery method for each notification.
+- Built in Webhook support for sending notifications to external services.
+- Built in support for retries and error handling on sends.
+- Advanced caching on template compilation and execution.
+- Load a template from a file for easy GitOps based workflows.
+- Many supported providers such as Twilio (with Sendgrid), AWS, and Google Cloud.
+- Robust (6+ template formats) templating via [ecto](https://github.com/jaredwray/ecto)
+- Easily build your own provider with minimal effort via `AirhornProvider` interface.
+- Statistics tracking for send successes, failures, and execution times (instance only).
+- ESM and Typescript based supporting Nodejs 20+
+- Maintained on a regular basis with updates and improvements.
 
 # Getting Started
 
 To get started with Airhorn, you can install the package via npm:
 
 ```bash
-npm install airhorn
+npm install airhorn @airhorn/twilio
 ```
 
-# Add Providers
+```typescript
+import { Airhorn, AirhornProviderType } from "airhorn";
+import { AirhornTwilio } from "@airhorn/twilio";
+
+const providers = [
+	new AirhornTwilio({
+		accountSid: "your_account_sid",
+		authToken: "your_auth_token"
+	}),
+];
+
+const airhorn = new Airhorn({
+	providers
+});
+
+// this will give you twilio and webhook (built in) support. Now lets create a template and send it!
+const template = {
+	from: "+12223334444",
+	content: "Hey <%= name %> this is a test message from Airhorn",
+	templateEngine: "ejs",
+}
+
+const data = { name: "John" };
+
+await airhorn.send("+1234567890", template, data, AirhornProviderType.SMS);
+```
+
+Check out the documentation and providers to learn more!
+
+# Providers
 
 We currently support multiple providers and you can easily add more by following the `AirhornProvider` interface. Here are the supported providers:
 
