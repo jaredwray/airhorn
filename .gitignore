@@ -116,6 +116,7 @@ firebase-cert.json
 # site
 site/dist
 site/README.md
+site/docs
 
 # AI
 .claude

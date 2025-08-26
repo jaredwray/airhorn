@@ -32,10 +32,39 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 To get started with Airhorn, you can install the package via npm:
 
 ```bash
-npm install airhorn
+npm install airhorn @airhorn/twilio
 ```
 
-# Add Providers
+```typescript
+import { Airhorn, AirhornProviderType } from "airhorn";
+import { AirhornTwilio } from "@airhorn/twilio";
+
+const providers = [
+	new AirhornTwilio({
+		accountSid: "your_account_sid",
+		authToken: "your_auth_token"
+	}),
+];
+
+const airhorn = new Airhorn({
+	providers
+});
+
+// this will give you twilio and webhook (built in) support. Now lets create a template and send it!
+const template = {
+	from: "+12223334444",
+	content: "Hey <%= name %> this is a test message from Airhorn",
+	templateEngine: "ejs",
+}
+
+const data = { name: "John" };
+
+await airhorn.send("+1234567890", template, data, AirhornProviderType.SMS);
+```
+
+Check out the documentation and providers to learn more!
+
+# Providers
 
 We currently support multiple providers and you can easily add more by following the `AirhornProvider` interface. Here are the supported providers:
 
