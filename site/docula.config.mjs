@@ -7,6 +7,7 @@ export const options = {
 	siteTitle: 'Airhorn',
 	siteDescription: 'Cloud Native Notifications Library',
 	siteUrl: 'https://airhorn.org',
+	outputPath: 'site/dist',
 };
 
 export const onPrepare = async config => {
