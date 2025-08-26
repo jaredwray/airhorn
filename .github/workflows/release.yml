@@ -26,7 +26,7 @@ jobs:
       - name: Testing
         env:
           FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
-        run: pnpm test
+        run: pnpm test:ci
 
       - name: create npmrc
         run: |
