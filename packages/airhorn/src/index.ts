@@ -480,7 +480,11 @@ export class Airhorn extends Hookified {
 		const message: AirhornProviderMessage = {
 			to,
 			from: template.from,
-			subject: await this._ecto.render(template.subject || '', data, template.templateEngine),
+			subject: await this._ecto.render(
+				template.subject || "",
+				data,
+				template.templateEngine,
+			),
 			type: providerType,
 			content: await this._ecto.render(
 				template.content,

@@ -1,61 +1,61 @@
 {
-	"name": "@airhorn/aws",
-	"version": "5.0.0",
-	"description": "AWS SNS and SES provider for Airhorn",
-	"type": "module",
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js"
-		}
-	},
-	"scripts": {
-		"lint": "biome check --write --error-on-warnings",
-		"test": "pnpm lint && vitest run --coverage",
-		"test:ci": "biome check --error-on-warnings && vitest run --coverage",
-		"clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
-		"prepare": "pnpm build",
-		"build:publish": "pnpm build && pnpm publish --access public",
-		"build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
-	},
-	"keywords": [
-		"airhorn",
-		"notifications",
-		"aws",
-		"sns",
-		"ses",
-		"sms",
-		"email",
-		"provider"
-	],
-	"homepage": "https://github.com/jaredwray/airhorn/tree/main/packages/aws",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/jaredwray/airhorn.git",
-		"directory": "packages/aws"
-	},
-	"bugs": {
-		"url": "https://github.com/jaredwray/airhorn/issues"
-	},
-	"license": "MIT",
-	"author": "Jared Wray <me@jaredwray.com>",
-	"dependencies": {
-		"@aws-sdk/client-ses": "^3.873.0",
-		"@aws-sdk/client-sns": "^3.873.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.2.2",
-		"@types/node": "^24.3.0",
-		"@vitest/coverage-v8": "^3.2.4",
-		"rimraf": "^6.0.1",
-		"tsup": "^8.5.0",
-		"tsx": "^4.20.5",
-		"typescript": "^5.9.2",
-		"vitest": "^3.2.4"
-	},
-	"peerDependencies": {
-		"airhorn": "workspace:^"
-	}
+  "name": "@airhorn/aws",
+  "version": "5.0.0",
+  "description": "AWS SNS and SES provider for Airhorn",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "lint": "biome check --write --error-on-warnings",
+    "test": "pnpm lint && vitest run --coverage",
+    "test:ci": "biome check --error-on-warnings && vitest run --coverage",
+    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
+    "prepare": "pnpm build",
+    "build:publish": "pnpm build && pnpm publish --access public",
+    "build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
+  },
+  "keywords": [
+    "airhorn",
+    "notifications",
+    "aws",
+    "sns",
+    "ses",
+    "sms",
+    "email",
+    "provider"
+  ],
+  "homepage": "https://github.com/jaredwray/airhorn/tree/main/packages/aws",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredwray/airhorn.git",
+    "directory": "packages/aws"
+  },
+  "bugs": {
+    "url": "https://github.com/jaredwray/airhorn/issues"
+  },
+  "license": "MIT",
+  "author": "Jared Wray <me@jaredwray.com>",
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.873.0",
+    "@aws-sdk/client-sns": "^3.873.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
+    "@types/node": "^24.3.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "airhorn": "workspace:^"
+  }
 }
