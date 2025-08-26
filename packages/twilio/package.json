@@ -13,13 +13,13 @@
     }
   },
   "scripts": {
-		"lint": "biome check --write --error-on-warnings",
-		"test": "pnpm lint && vitest run --coverage",
-		"test:ci": "biome check --error-on-warnings && vitest run --coverage",
-		"clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
-		"prepare": "pnpm build",
-		"build:publish": "pnpm build && pnpm publish --access public",
-		"build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
+    "lint": "biome check --write --error-on-warnings",
+    "test": "pnpm lint && vitest run --coverage",
+    "test:ci": "biome check --error-on-warnings && vitest run --coverage",
+    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
+    "prepare": "pnpm build",
+    "build:publish": "pnpm build && pnpm publish --access public",
+    "build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
   },
   "keywords": [
     "airhorn",
