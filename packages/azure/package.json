@@ -1,5 +1,5 @@
 {
-  "name": "@airhorn/azure",
+  "name": "@airhornjs/azure",
   "version": "5.0.0",
   "description": "Azure provider for Airhorn",
   "license": "MIT",

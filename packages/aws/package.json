@@ -1,5 +1,5 @@
 {
-  "name": "@airhorn/aws",
+  "name": "@airhornjs/aws",
   "version": "5.0.0",
   "description": "AWS SNS and SES provider for Airhorn",
   "type": "module",
