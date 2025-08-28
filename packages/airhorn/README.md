@@ -72,12 +72,12 @@ await airhorn.send("https://mockhttp.org/post", template, data, AirhornProviderT
 Now lets configure the Airhorn instance with your preferred providers such as `Twilio` for SMS and `SendGrid` for Email.
 
 ```bash
-npm install airhorn @airhorn/twilio
+npm install airhorn @airhornjs/twilio
 ```
 
 ```typescript
 import { Airhorn, AirhornProviderType } from "airhorn";
-import { AirhornTwilio } from "@airhorn/twilio";
+import { AirhornTwilio } from "@airhornjs/twilio";
 
 const providers = [
 	new AirhornTwilio({
@@ -168,7 +168,7 @@ Airhorn provides helper methods for common tasks. For example, you can use the `
 
 ```typescript
 import { Airhorn } from "airhorn";
-import { AirhornTwilio } from "@airhorn/twilio";
+import { AirhornTwilio } from "@airhornjs/twilio";
 
 const providers = [
 	new AirhornTwilio({
@@ -413,9 +413,9 @@ We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is 
 | Provider | SMS | Email | Push | Webhook |
 |----------|-----|-------|------|---------|
 | (built in `airhorn`) | ❌  | ❌    | ❌   | ✅      |
-| `@airhorn/twilio`   | ✅  | ✅    | ❌   | ❌      |
-| `@airhorn/aws`      | ✅  | ✅    | ✅   | ❌      |
-| `@airhorn/azure`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhornjs/twilio`   | ✅  | ✅    | ❌   | ❌      |
+| `@airhornjs/aws`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhornjs/azure`      | ✅  | ✅    | ✅   | ❌      |
 
 Note: We used to support firebase because of mobile push but it made more sense to focus on `aws` and `azure` because it is more comprehensive.
 
@@ -448,7 +448,7 @@ const airhorn = new Airhorn({
 });
 ```
 
-Use one of the built in providers as a reference such as `@airhorn/twilio`.
+Use one of the built in providers as a reference such as `@airhornjs/twilio`.
 
 # How to Contribute 
 

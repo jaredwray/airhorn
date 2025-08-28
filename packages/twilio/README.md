@@ -5,17 +5,17 @@
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
-[![npm](https://img.shields.io/npm/dm/@airhorn/twilio)](https://npmjs.com/package/@airhorn/twilio)
-[![npm](https://img.shields.io/npm/v/@airhorn/twilio)](https://npmjs.com/package/@airhorn/twilio)
+[![npm](https://img.shields.io/npm/dm/@airhornjs/twilio)](https://npmjs.com/package/@airhornjs/twilio)
+[![npm](https://img.shields.io/npm/v/@airhornjs/twilio)](https://npmjs.com/package/@airhornjs/twilio)
 
-# @airhorn/twilio
+# @airhornjs/twilio
 
 Twilio SMS and SendGrid Email provider for the Airhorn notification system.
 
 ## Installation
 
 ```bash
-npm install airhorn @airhorn/twilio
+npm install airhorn @airhornjs/twilio
 ```
 
 ## Features
@@ -31,7 +31,7 @@ npm install airhorn @airhorn/twilio
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornTwilio } from '@airhorn/twilio';
+import { AirhornTwilio } from '@airhornjs/twilio';
 
 // Create Twilio provider for SMS only
 const twilioProvider = new AirhornTwilio({
@@ -61,7 +61,7 @@ const result = await airhorn.send(
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { TwilioProvider } from '@airhorn/twilio';
+import { TwilioProvider } from '@airhornjs/twilio';
 
 // Create Twilio provider with SendGrid support
 const twilioProvider = new TwilioProvider({
