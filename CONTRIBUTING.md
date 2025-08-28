@@ -24,27 +24,15 @@ If you need more information on the steps to create a pull request, you can find
 
 To set up your development environment, you'll need the following dependencies:
 * Node.js (latest)
-* Docker
-* Firebase Account (this is for the firebase-cert.json file for `@airhorn/firebase`)
-
-Set up your firebase account and generate the firebase-cert.json file. Then, place the file in the root of the project. This is needed even for testing as mocking the firebase-admin is almost impossible. After that you should run the following commands:
 
 ```bash
-pnpm i && pnpm test:services:start && pnpm test
-```
-
-This will start the services needed for testing and run the tests.
-
-To stop the services, you can run:
-
-```bash
-pnpm test:services:stop
+pnpm i && pnpm test
 ```
 
 If you are using `nvm` you can run the following:
 
 ```bash
-nvm use && pnpm i && pnpm test:services:start && pnpm test
+nvm use && pnpm i && pnpm test
 ```
 This will ensure that you are using the correct version of Node.js and install the dependencies.
 

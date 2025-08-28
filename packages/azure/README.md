@@ -5,17 +5,17 @@
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
-[![npm](https://img.shields.io/npm/dm/@airhorn/azure)](https://npmjs.com/package/@airhorn/azure)
-[![npm](https://img.shields.io/npm/v/@airhorn/azure)](https://npmjs.com/package/@airhorn/azure)
+[![npm](https://img.shields.io/npm/dm/@airhornjs/azure)](https://npmjs.com/package/@airhornjs/azure)
+[![npm](https://img.shields.io/npm/v/@airhornjs/azure)](https://npmjs.com/package/@airhornjs/azure)
 
-# @airhorn/azure
+# @airhornjs/azure
 
 Azure Communication Services and Notification Hubs provider for Airhorn.
 
 ## Installation
 
 ```bash
-npm install airhorn @airhorn/azure
+npm install airhorn @airhornjs/azure
 ```
 
 ## Features
@@ -33,7 +33,7 @@ npm install airhorn @airhorn/azure
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornAzure } from '@airhorn/azure';
+import { AirhornAzure } from '@airhornjs/azure';
 
 // Create Azure provider for SMS
 const azureProvider = new AirhornAzure({
@@ -69,7 +69,7 @@ const result = await airhorn.send(
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornAzure } from '@airhorn/azure';
+import { AirhornAzure } from '@airhornjs/azure';
 
 // Create Azure provider with email support
 const azureProvider = new AirhornAzure({
@@ -105,7 +105,7 @@ const result = await airhorn.send(
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornAzure } from '@airhorn/azure';
+import { AirhornAzure } from '@airhornjs/azure';
 
 const azureProvider = new AirhornAzure({
   notificationHubConnectionString: 'Endpoint=sb://your-namespace.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=your-key',

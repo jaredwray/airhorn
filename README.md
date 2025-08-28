@@ -32,12 +32,12 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 To get started with Airhorn, you can install the package via npm:
 
 ```bash
-npm install airhorn @airhorn/twilio
+npm install airhorn @airhornjs/twilio
 ```
 
 ```typescript
 import { Airhorn, AirhornProviderType } from "airhorn";
-import { AirhornTwilio } from "@airhorn/twilio";
+import { AirhornTwilio } from "@airhornjs/twilio";
 
 const providers = [
 	new AirhornTwilio({
@@ -73,9 +73,9 @@ We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is 
 | Provider | SMS | Email | Push | Webhook |
 |----------|-----|-------|------|---------|
 | (built in `airhorn`) | ❌  | ❌    | ❌   | ✅      |
-| `@airhorn/twilio`   | ✅  | ✅    | ❌   | ❌      |
-| `@airhorn/aws`      | ✅  | ✅    | ✅   | ❌      |
-| `@airhorn/azure`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhornjs/twilio`   | ✅  | ✅    | ❌   | ❌      |
+| `@airhornjs/aws`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhornjs/azure`      | ✅  | ✅    | ✅   | ❌      |
 
 Note: We used to support firebase because of mobile push but it made more sense to focus on `aws` and `azure` because it is more comprehensive.
 

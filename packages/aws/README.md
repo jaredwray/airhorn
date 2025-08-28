@@ -5,17 +5,17 @@
 [![tests](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml/badge.svg)](https://github.com/jaredwray/airhorn/actions/workflows/tests.yml)
 [![codecov](https://codecov.io/gh/jaredwray/airhorn/branch/main/graph/badge.svg?token=4OJEEB67Q5)](https://codecov.io/gh/jaredwray/airhorn)
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
-[![npm](https://img.shields.io/npm/dm/@airhorn/aws)](https://npmjs.com/package/@airhorn/aws)
-[![npm](https://img.shields.io/npm/v/@airhorn/aws)](https://npmjs.com/package/@airhorn/aws)
+[![npm](https://img.shields.io/npm/dm/@airhornjs/aws)](https://npmjs.com/package/@airhornjs/aws)
+[![npm](https://img.shields.io/npm/v/@airhornjs/aws)](https://npmjs.com/package/@airhornjs/aws)
 
-# @airhorn/aws
+# @airhornjs/aws
 
 AWS SNS and SES provider for Airhorn.
 
 ## Installation
 
 ```bash
-npm install airhorn @airhorn/aws
+npm install airhorn @airhornjs/aws
 ```
 
 ## Features
@@ -32,7 +32,7 @@ npm install airhorn @airhorn/aws
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornAws } from '@airhorn/aws';
+import { AirhornAws } from '@airhornjs/aws';
 
 // Create AWS provider for SMS
 const awsProvider = new AirhornAws({
@@ -63,7 +63,7 @@ const result = await airhorn.send(
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornAws } from '@airhorn/aws';
+import { AirhornAws } from '@airhornjs/aws';
 
 // Create AWS provider with SES support
 const awsProvider = new AirhornAws({
@@ -144,7 +144,7 @@ Amazon SNS can send push notifications to mobile devices through platform applic
 
 ```typescript
 import { Airhorn } from 'airhorn';
-import { AirhornAws } from '@airhorn/aws';
+import { AirhornAws } from '@airhornjs/aws';
 
 const awsProvider = new AirhornAws({
   region: 'us-east-1',

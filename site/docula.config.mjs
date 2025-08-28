@@ -56,7 +56,7 @@ async function createPackageFile(packageName, config) {
 	const packageFile = await fs.promises.readFile(packageFilePath, 'utf8');
 	let updatedPackageFile = packageFile.replace('![Airhorn](https://airhorn.org/logo.svg "Airhorn")', '');
 	let newFileText = "---\n";
-	newFileText += `title: '@airhorn/${packageName}'\n`;
+	newFileText += `title: '@airhornjs/${packageName}'\n`;
 	newFileText += "---\n";
 	newFileText += "\n";
 	updatedPackageFile = newFileText + updatedPackageFile;
