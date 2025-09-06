@@ -27,8 +27,6 @@ jobs:
         run: pnpm build
 
       - name: Testing
-        env:
-          FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
         run: pnpm test:ci
 
       - name: create npmrc
@@ -36,7 +34,18 @@ jobs:
          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
          echo "always-auth=true" >> ~/.npmrc
 
-      - name: Publish
+      - name: Publish Airhorn
         run: |
-         pnpm publish:packages
+         pnpm publish:airhorn
+      
+      - name: Publish @airhornjs/aws
+        run: |
+         pnpm publish:aws
 
+      - name: Publish @airhornjs/azure
+        run: |
+         pnpm publish:azure
+
+      - name: Publish @airhornjs/twilio
+        run: |
+         pnpm publish:twilio 
