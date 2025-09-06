@@ -13,8 +13,8 @@
     "website:build": "pnpm docula build",
     "website:serve": "pnpm docula serve",
     "version:sync": "tsx scripts/version-sync.ts",
-    "publish:airhorn": "pnpm recursive --filter 'airhorn' run build:publish",
-    "publish:packages": "pnpm publish:airhorn && pnpm recursive --filter '!airhorn' run build:publish",
+    "publish:airhorn": "pnpm recursive --filter 'airhorn' run publish",
+    "publish:packages": "pnpm publish:airhorn && pnpm recursive --filter '!airhorn' run publish",
     "build": "pnpm -r build",
     "clean": "pnpm -r clean"
   },
