@@ -46,8 +46,8 @@
     "@aws-sdk/client-sns": "^3.873.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
-    "@types/node": "^24.3.0",
+    "@biomejs/biome": "^2.2.3",
+    "@types/node": "^24.3.1",
     "@vitest/coverage-v8": "^3.2.4",
     "rimraf": "^6.0.1",
     "tsup": "^8.5.0",
