@@ -100,7 +100,7 @@ export type AirhornOptions = {
 	 * Whether to enable caching on template generation via Ecto
 	 * @default true
 	 */
-	cache?: boolean | Cacheable | CacheableOptions;
+	cache?: boolean | CacheableOptions;
 	/**
 	 * Whether to collect statistics.
 	 * @default false
@@ -147,8 +147,10 @@ export class Airhorn extends Hookified {
 		super({ throwHookErrors: options?.throwOnErrors });
 
 		if (options?.cache !== undefined) {
-			if (options.cache) {
-				this._ecto.cache = new Cacheable();
+			if (options?.cache === false) {
+				this._ecto = new Ecto({ cache: false });
+			} else {
+				this._ecto.cache = new Cacheable(options?.cache as CacheableOptions);
 			}
 		}
 
