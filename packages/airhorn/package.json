@@ -40,7 +40,7 @@
     "cacheable": "^1.10.4",
     "ecto": "^4.4.1",
     "hookified": "^1.12.0",
-    "writr": "^4.4.6"
+    "writr": "^4.5.0"
   },
   "files": [
     "dist",
