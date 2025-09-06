@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import { Cacheable } from "cacheable";
+import { Cacheable, type CacheableOptions } from "cacheable";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Airhorn, AirhornSendStrategy, AirhornSendType } from "../src/index.js";
 import type { AirhornTemplate } from "../src/template.js";
@@ -10,9 +10,18 @@ describe("Airhorn", () => {
 		expect(Airhorn).toBeDefined();
 	});
 
-	test("should be able to set the cache to true via options", () => {
-		const airhorn = new Airhorn({ cache: true });
+	test("should be able to set the cache to false via options", () => {
+		const airhorn = new Airhorn({ cache: false });
+		expect(airhorn.cache).toBeUndefined();
+	});
+
+	test("should be able to set the cache to CacheableOptions", () => {
+		const options: CacheableOptions = {
+			ttl: 5,
+		};
+		const airhorn = new Airhorn({ cache: options });
 		expect(airhorn.cache).toBeDefined();
+		expect(airhorn.cache?.ttl).toBe(5);
 	});
 
 	test("should be able to enable statistics from options", () => {
