@@ -1,6 +1,6 @@
 {
   "name": "@airhornjs/aws",
-  "version": "5.0.8",
+  "version": "5.0.11",
   "description": "AWS SNS and SES provider for Airhorn",
   "type": "module",
   "main": "./dist/index.js",
@@ -17,7 +17,7 @@
     "test:ci": "biome check --error-on-warnings && vitest run --coverage",
     "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
     "prepublishOnly": "pnpm build",
-    "publish": "pnpm publish --access public --no-git-checks",
+    "build:publish": "pnpm publish --access public --no-git-checks",
     "build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
   },
   "keywords": [

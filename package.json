@@ -1,6 +1,6 @@
 {
   "name": "airhorn-mono",
-  "version": "5.0.8",
+  "version": "5.0.11",
   "description": "Cloud Notification Library",
   "repository": "https://github.com/jaredwray/airhorn.git",
   "author": "Jared Wray <me@jaredwray.com>",
@@ -13,10 +13,10 @@
     "website:build": "pnpm docula build",
     "website:serve": "pnpm docula serve",
     "version:sync": "tsx scripts/version-sync.ts",
-    "publish:airhorn": "pnpm --filter ./packages/airhorn run publish",
-    "publish:aws": "pnpm --filter ./packages/aws' run publish",
-    "publish:azure": "pnpm --filter ./packages/azure' run publish",
-    "publish:twilio": "pnpm --filter ./packages/twilio' run publish",
+    "publish:airhorn": "pnpm --filter 'airhorn' run build:publish",
+    "publish:aws": "pnpm --filter '@airhornjs/aws' run build:publish",
+    "publish:azure": "pnpm --filter '@airhornjs/azure' run build:publish",
+    "publish:twilio": "pnpm --filter '@airhornjs/twilio' run build:publish",
     "build": "pnpm -r build",
     "clean": "pnpm -r clean"
   },
