@@ -34,7 +34,7 @@ jobs:
          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
          echo "always-auth=true" >> ~/.npmrc
 
-      - name: Publish Airhorn
+      - name: Publish airhorn
         run: |
          pnpm publish:airhorn
       
