@@ -1,8 +1,8 @@
-import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
-import { AirhornWebhookProvider } from "../src/webhook.js";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { Airhorn, AirhornSendType } from "../src/index.js";
 import type { AirhornProviderMessage } from "../src/provider.js";
 import type { AirhornTemplate } from "../src/template.js";
-import { Airhorn, AirhornSendType } from "../src/index.js";
+import { AirhornWebhookProvider } from "../src/webhook.js";
 
 describe("AirhornWebhookProvider", () => {
 	let provider: AirhornWebhookProvider;
@@ -33,7 +33,7 @@ describe("AirhornWebhookProvider", () => {
 			type: AirhornSendType.Webhook,
 			content: "Test message content",
 			from: "sender@example.com",
-			subject: "Test Subject"
+			subject: "Test Subject",
 		};
 
 		test("should send successful webhook request", async () => {
@@ -58,16 +58,13 @@ describe("AirhornWebhookProvider", () => {
 				headers: { "content-type": "application/json" },
 			});
 
-			expect(mockFetch).toHaveBeenCalledWith(
-				mockMessage.to,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: expect.any(String),
-				}
-			);
+			expect(mockFetch).toHaveBeenCalledWith(mockMessage.to, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: expect.any(String),
+			});
 
 			const callArgs = mockFetch.mock.calls[0];
 			const body = JSON.parse(callArgs[1].body);
@@ -94,18 +91,15 @@ describe("AirhornWebhookProvider", () => {
 
 			await provider.send(mockMessage, { headers: customHeaders });
 
-			expect(mockFetch).toHaveBeenCalledWith(
-				webhookUrl,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-API-Key": "test-key",
-						"X-Custom-Header": "custom-value",
-					},
-					body: expect.any(String),
-				}
-			);
+			expect(mockFetch).toHaveBeenCalledWith(webhookUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-API-Key": "test-key",
+					"X-Custom-Header": "custom-value",
+				},
+				body: expect.any(String),
+			});
 		});
 
 		test("should handle successful response with status 201", async () => {
@@ -157,7 +151,9 @@ describe("AirhornWebhookProvider", () => {
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
-			expect(result.errors[0].message).toBe("Webhook request failed: Network Error");
+			expect(result.errors[0].message).toBe(
+				"Webhook request failed: Network Error",
+			);
 			expect(result.response).toEqual({ error: "Network Error" });
 		});
 
@@ -170,7 +166,9 @@ describe("AirhornWebhookProvider", () => {
 
 			expect(result.success).toBe(false);
 			expect(result.errors).toHaveLength(1);
-			expect(result.errors[0].message).toBe("Webhook request failed: Something went wrong");
+			expect(result.errors[0].message).toBe(
+				"Webhook request failed: Something went wrong",
+			);
 			expect(result.response).toEqual({ error: "Something went wrong" });
 		});
 
@@ -225,17 +223,14 @@ describe("AirhornWebhookProvider", () => {
 			const result = await provider.send(minimalMessage);
 
 			expect(result.success).toBe(true);
-			expect(mockFetch).toHaveBeenCalledWith(
-				webhookUrl,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: expect.any(String),
-				}
-			);
-			
+			expect(mockFetch).toHaveBeenCalledWith(webhookUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: expect.any(String),
+			});
+
 			const callArgs = mockFetch.mock.calls[0];
 			const body = JSON.parse(callArgs[1].body);
 			expect(body.from).toBe("test@example.com");
@@ -282,9 +277,11 @@ describe("AirhornWebhookProvider", () => {
 		test("should send webhook with template converted to message", async () => {
 			const airhorn = new Airhorn();
 			const webhookUrl = "https://api.example.com/webhooks/notifications";
-			
+
 			// Load template from file
-			const template = await airhorn.loadTemplate("./test/fixtures/webhook-simple.md");
+			const template = await airhorn.loadTemplate(
+				"./test/fixtures/webhook-simple.md",
+			);
 
 			// Verify template loaded correctly
 			expect(template.from).toBe("webhook@notifications.com");
@@ -296,7 +293,7 @@ describe("AirhornWebhookProvider", () => {
 			const templateData = {
 				name: "John Doe",
 				age: 30,
-				vegetables: ["carrots", "broccoli", "spinach"]
+				vegetables: ["carrots", "broccoli", "spinach"],
 			};
 
 			// Generate message from template
@@ -304,7 +301,7 @@ describe("AirhornWebhookProvider", () => {
 				webhookUrl,
 				template,
 				templateData,
-				AirhornSendType.Webhook
+				AirhornSendType.Webhook,
 			);
 
 			// Verify the generated message
@@ -312,13 +309,17 @@ describe("AirhornWebhookProvider", () => {
 			expect(message.from).toBe("webhook@notifications.com");
 			expect(message.subject).toBe("User Profile Update");
 			expect(message.type).toBe(AirhornSendType.Webhook);
-			
+
 			// Parse the JSON content that was generated
 			const generatedContent = JSON.parse(message.content);
 			expect(generatedContent.event).toBe("user.profile.updated");
 			expect(generatedContent.user.name).toBe("John Doe");
 			expect(generatedContent.user.age).toBe(30);
-			expect(generatedContent.user.preferences.favoriteVegetables).toEqual(["carrots", "broccoli", "spinach"]);
+			expect(generatedContent.user.preferences.favoriteVegetables).toEqual([
+				"carrots",
+				"broccoli",
+				"spinach",
+			]);
 			expect(generatedContent.metadata.source).toBe("profile-service");
 			expect(generatedContent.metadata.version).toBe("1.0.0");
 
@@ -327,13 +328,13 @@ describe("AirhornWebhookProvider", () => {
 				ok: true,
 				status: 200,
 				statusText: "OK",
-				json: vi.fn().mockResolvedValue({ 
-					received: true, 
-					message: "Webhook processed successfully" 
+				json: vi.fn().mockResolvedValue({
+					received: true,
+					message: "Webhook processed successfully",
 				}),
-				headers: new Headers({ 
+				headers: new Headers({
 					"content-type": "application/json",
-					"x-webhook-id": "webhook-123"
+					"x-webhook-id": "webhook-123",
 				}),
 			};
 
@@ -343,23 +344,20 @@ describe("AirhornWebhookProvider", () => {
 			const result = await provider.send(message);
 
 			// Verify the webhook was called correctly
-			expect(mockFetch).toHaveBeenCalledWith(
-				webhookUrl,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: expect.any(String),
-				}
-			);
+			expect(mockFetch).toHaveBeenCalledWith(webhookUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: expect.any(String),
+			});
 
 			// Verify the payload sent to webhook
 			const callArgs = mockFetch.mock.calls[mockFetch.mock.calls.length - 1];
 			const body = JSON.parse(callArgs[1].body);
 			expect(body.from).toBe("webhook@notifications.com");
 			expect(body.timestamp).toBeDefined();
-			
+
 			// Verify the webhook payload contains the generated JSON content
 			const payloadContent = JSON.parse(body.content);
 			expect(payloadContent.event).toBe("user.profile.updated");
@@ -376,7 +374,7 @@ describe("AirhornWebhookProvider", () => {
 		test("should send webhook with JSON template content", async () => {
 			const airhorn = new Airhorn();
 			const webhookUrl = "https://api.example.com/webhooks/json";
-			
+
 			// Create a template with JSON content
 			const template: AirhornTemplate = {
 				from: "api@myservice.com",
@@ -385,19 +383,19 @@ describe("AirhornWebhookProvider", () => {
 					user: {
 						name: "<%= name %>",
 						email: "<%= email %>",
-						status: "<%= status %>"
+						status: "<%= status %>",
 					},
-					timestamp: "<%= new Date().toISOString() %>"
+					timestamp: "<%= new Date().toISOString() %>",
 				}),
 				templateEngine: "ejs",
-				requiredFields: ["name", "email", "status"]
+				requiredFields: ["name", "email", "status"],
 			};
 
 			// Data to populate the template
 			const templateData = {
 				name: "Jane Smith",
 				email: "jane@example.com",
-				status: "active"
+				status: "active",
 			};
 
 			// Generate message from template
@@ -405,7 +403,7 @@ describe("AirhornWebhookProvider", () => {
 				webhookUrl,
 				template,
 				templateData,
-				AirhornSendType.Webhook
+				AirhornSendType.Webhook,
 			);
 
 			// Parse the generated JSON content to verify it
@@ -430,24 +428,21 @@ describe("AirhornWebhookProvider", () => {
 			// Send the generated message via webhook with custom headers
 			const customHeaders = {
 				"X-API-Key": "secret-key-123",
-				"X-Webhook-Version": "2.0"
+				"X-Webhook-Version": "2.0",
 			};
-			
+
 			const result = await provider.send(message, { headers: customHeaders });
 
 			// Verify the webhook was called with custom headers
-			expect(mockFetch).toHaveBeenCalledWith(
-				webhookUrl,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						"X-API-Key": "secret-key-123",
-						"X-Webhook-Version": "2.0"
-					},
-					body: expect.any(String),
-				}
-			);
+			expect(mockFetch).toHaveBeenCalledWith(webhookUrl, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-API-Key": "secret-key-123",
+					"X-Webhook-Version": "2.0",
+				},
+				body: expect.any(String),
+			});
 
 			// Verify the result
 			expect(result.success).toBe(true);

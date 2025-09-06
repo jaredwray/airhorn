@@ -1,26 +1,26 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
 import fs from "node:fs";
-import { Airhorn, AirhornSendStrategy, AirhornSendType } from "../src/index.js";
-import { AirhornTemplate } from "../src/template.js";
-import { AirhornWebhookProvider } from "../src/webhook.js";
 import { Cacheable } from "cacheable";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { Airhorn, AirhornSendStrategy, AirhornSendType } from "../src/index.js";
+import type { AirhornTemplate } from "../src/template.js";
+import { AirhornWebhookProvider } from "../src/webhook.js";
 
 describe("Airhorn", () => {
 	test("should be defined", () => {
 		expect(Airhorn).toBeDefined();
 	});
 
-	test('should be able to set the cache to true via options', () => {
+	test("should be able to set the cache to true via options", () => {
 		const airhorn = new Airhorn({ cache: true });
 		expect(airhorn.cache).toBeDefined();
 	});
 
-	test('should be able to enable statistics from options', () => {
+	test("should be able to enable statistics from options", () => {
 		const airhorn = new Airhorn({ statistics: true });
 		expect(airhorn.statistics.enabled).toBe(true);
 	});
 
-	test('should be able to set the providers via options', () => {
+	test("should be able to set the providers via options", () => {
 		const airhorn = new Airhorn({ providers: [new AirhornWebhookProvider()] });
 		// Should have 2 providers: default webhook provider + the one we added
 		expect(airhorn.providers).toHaveLength(2);
@@ -30,57 +30,73 @@ describe("Airhorn", () => {
 		expect(airhorn.providers).toHaveLength(1);
 	});
 
-	test('should be able to disable webhook provider from options', () => {
+	test("should be able to disable webhook provider from options", () => {
 		const airhorn = new Airhorn({ useWebhookProvider: false });
 		expect(airhorn.providers).toHaveLength(0);
 	});
 
-	test('should be able to set the sendStrategy from options', () => {
-		const airhorn = new Airhorn({ sendStrategy: AirhornSendStrategy.RoundRobin });
+	test("should be able to set the sendStrategy from options", () => {
+		const airhorn = new Airhorn({
+			sendStrategy: AirhornSendStrategy.RoundRobin,
+		});
 		expect(airhorn.sendStrategy).toBe(AirhornSendStrategy.RoundRobin);
 		airhorn.sendStrategy = AirhornSendStrategy.All;
 		expect(airhorn.sendStrategy).toBe(AirhornSendStrategy.All);
 	});
 
-	test('should be able to set the throwOnErrors from options', () => {
+	test("should be able to set the throwOnErrors from options", () => {
 		const airhorn = new Airhorn({ throwOnErrors: true });
 		expect(airhorn.throwOnErrors).toBe(true);
 		airhorn.throwOnErrors = false;
 		expect(airhorn.throwOnErrors).toBe(false);
 	});
 
-	test('should be able to set the cache property', () => {
+	test("should be able to set the cache property", () => {
 		const airhorn = new Airhorn();
 		airhorn.cache = new Cacheable();
 		expect(airhorn.cache).toBeDefined();
 	});
 
-	test('should be able to load a template file', async () => {
+	test("should be able to load a template file", async () => {
 		const airhorn = new Airhorn();
-		const template = await airhorn.loadTemplate('./test/fixtures/full-template.md');
+		const template = await airhorn.loadTemplate(
+			"./test/fixtures/full-template.md",
+		);
 		expect(template).toBeDefined();
-		expect(template.content).toContain('<%= new Date().getFullYear() %> Your Company. All rights reserved.');
-		expect(template.subject).toBe('Welcome to Our Service');
-		expect(template.from).toBe('me@you.com');
-		expect(template.requiredFields).toEqual(['firstName', 'lastName', 'loginUrl']);
-		expect(template.templateEngine).toBe('ejs');
+		expect(template.content).toContain(
+			"<%= new Date().getFullYear() %> Your Company. All rights reserved.",
+		);
+		expect(template.subject).toBe("Welcome to Our Service");
+		expect(template.from).toBe("me@you.com");
+		expect(template.requiredFields).toEqual([
+			"firstName",
+			"lastName",
+			"loginUrl",
+		]);
+		expect(template.templateEngine).toBe("ejs");
 	});
 
-	test('should be able to load a template file with missing fields', async () => {
+	test("should be able to load a template file with missing fields", async () => {
 		const airhorn = new Airhorn();
-		const template = await airhorn.loadTemplate('./test/fixtures/simple-template.md');
+		const template = await airhorn.loadTemplate(
+			"./test/fixtures/simple-template.md",
+		);
 		expect(template).toBeDefined();
-		expect(template.content).toContain('<%= new Date().getFullYear() %> Your Company. All rights reserved.');
-		expect(template.subject).toBe('Welcome to Our Service');
-		expect(template.from).toBe('me@you.com');
-		expect(template.requiredFields).toEqual(['firstName']);
+		expect(template.content).toContain(
+			"<%= new Date().getFullYear() %> Your Company. All rights reserved.",
+		);
+		expect(template.subject).toBe("Welcome to Our Service");
+		expect(template.from).toBe("me@you.com");
+		expect(template.requiredFields).toEqual(["firstName"]);
 		expect(template.templateEngine).toBeUndefined();
 	});
 
-	test('should error when template file is missing', async () => {
+	test("should error when template file is missing", async () => {
 		const airhorn = new Airhorn({ throwOnErrors: true });
-		await expect(airhorn.loadTemplate('./test/fixtures/missing-template.md')).rejects.toThrowError(
-			'Template file not found: ./test/fixtures/missing-template.md',
+		await expect(
+			airhorn.loadTemplate("./test/fixtures/missing-template.md"),
+		).rejects.toThrowError(
+			"Template file not found: ./test/fixtures/missing-template.md",
 		);
 	});
 });
@@ -113,7 +129,7 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com/webhook",
 			template,
-			{}
+			{},
 		);
 
 		expect(result).toBeDefined();
@@ -129,11 +145,9 @@ describe("AirhornSendOptions is optional", () => {
 
 		// Since there's no email provider by default, it will fail but that's ok
 		// We're just testing that the function can be called without options
-		const result = await airhorn.sendEmail(
-			"recipient@example.com",
-			template,
-			{ name: "John" }
-		);
+		const result = await airhorn.sendEmail("recipient@example.com", template, {
+			name: "John",
+		});
 
 		expect(result).toBeDefined();
 		expect(result.success).toBe(false);
@@ -147,11 +161,9 @@ describe("AirhornSendOptions is optional", () => {
 			content: "Test SMS content",
 		};
 
-		const result = await airhorn.sendSMS(
-			"+1234567890",
-			template,
-			{ name: "John" }
-		);
+		const result = await airhorn.sendSMS("+1234567890", template, {
+			name: "John",
+		});
 
 		expect(result).toBeDefined();
 		expect(result.success).toBe(false);
@@ -165,11 +177,9 @@ describe("AirhornSendOptions is optional", () => {
 			content: "Test push notification",
 		};
 
-		const result = await airhorn.sendMobilePush(
-			"device-token",
-			template,
-			{ message: "Hello" }
-		);
+		const result = await airhorn.sendMobilePush("device-token", template, {
+			message: "Hello",
+		});
 
 		expect(result).toBeDefined();
 		expect(result.success).toBe(false);
@@ -197,7 +207,7 @@ describe("AirhornSendOptions is optional", () => {
 			"https://example.com/webhook",
 			template,
 			{},
-			{ throwOnErrors: false }
+			{ throwOnErrors: false },
 		);
 
 		expect(result).toBeDefined();
@@ -209,14 +219,14 @@ describe("AirhornSendOptions is optional", () => {
 		const airhorn = new Airhorn();
 		// Set RoundRobin strategy
 		airhorn.sendStrategy = AirhornSendStrategy.RoundRobin;
-		
+
 		// Create a custom provider that throws an error
 		const errorProvider = {
 			name: "ErrorProvider",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue(new Error("Provider error"))
+			send: vi.fn().mockRejectedValue(new Error("Provider error")),
 		};
-		
+
 		airhorn.providers = [errorProvider];
 
 		const template: AirhornTemplate = {
@@ -227,7 +237,7 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should fail but capture the error
@@ -241,14 +251,14 @@ describe("AirhornSendOptions is optional", () => {
 		const airhorn = new Airhorn();
 		// Set RoundRobin strategy
 		airhorn.sendStrategy = AirhornSendStrategy.RoundRobin;
-		
+
 		// Create a custom provider that throws a non-Error object
 		const errorProvider = {
 			name: "ErrorProvider",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue("String error")
+			send: vi.fn().mockRejectedValue("String error"),
 		};
-		
+
 		airhorn.providers = [errorProvider];
 
 		const template: AirhornTemplate = {
@@ -259,7 +269,7 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should fail but capture the error as Error object
@@ -273,24 +283,24 @@ describe("AirhornSendOptions is optional", () => {
 		const airhorn = new Airhorn();
 		// FailOver is the default strategy
 		airhorn.sendStrategy = AirhornSendStrategy.FailOver;
-		
+
 		// Create providers where first throws, second succeeds
 		const errorProvider = {
 			name: "ErrorProvider",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue(new Error("First provider error"))
+			send: vi.fn().mockRejectedValue(new Error("First provider error")),
 		};
-		
+
 		const successProvider = {
 			name: "SuccessProvider",
 			capabilities: [AirhornSendType.Webhook],
 			send: vi.fn().mockResolvedValue({
 				success: true,
 				response: { data: "success" },
-				errors: []
-			})
+				errors: [],
+			}),
 		};
-		
+
 		airhorn.providers = [errorProvider, successProvider];
 
 		const template: AirhornTemplate = {
@@ -301,7 +311,7 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should succeed with second provider but have error from first
@@ -316,20 +326,20 @@ describe("AirhornSendOptions is optional", () => {
 		const airhorn = new Airhorn();
 		// FailOver is the default strategy
 		airhorn.sendStrategy = AirhornSendStrategy.FailOver;
-		
+
 		// Create providers where both throw non-Error objects
 		const errorProvider1 = {
 			name: "ErrorProvider1",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue("String error 1")
+			send: vi.fn().mockRejectedValue("String error 1"),
 		};
-		
+
 		const errorProvider2 = {
 			name: "ErrorProvider2",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue({ message: "Object error" })
+			send: vi.fn().mockRejectedValue({ message: "Object error" }),
 		};
-		
+
 		airhorn.providers = [errorProvider1, errorProvider2];
 
 		const template: AirhornTemplate = {
@@ -340,7 +350,7 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should fail with errors from both providers
@@ -356,7 +366,7 @@ describe("AirhornSendOptions is optional", () => {
 		const airhorn = new Airhorn();
 		// Set All strategy
 		airhorn.sendStrategy = AirhornSendStrategy.All;
-		
+
 		// Create multiple providers, one throws an error
 		const successProvider = {
 			name: "SuccessProvider",
@@ -364,16 +374,18 @@ describe("AirhornSendOptions is optional", () => {
 			send: vi.fn().mockResolvedValue({
 				success: true,
 				response: { data: "success" },
-				errors: []
-			})
+				errors: [],
+			}),
 		};
-		
+
 		const errorProvider = {
 			name: "ErrorProvider",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue(new Error("Provider error in All strategy"))
+			send: vi
+				.fn()
+				.mockRejectedValue(new Error("Provider error in All strategy")),
 		};
-		
+
 		airhorn.providers = [successProvider, errorProvider];
 
 		const template: AirhornTemplate = {
@@ -384,13 +396,15 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should succeed overall (because one provider succeeded) but have error from the failing provider
 		expect(result.success).toBe(true);
 		expect(result.errors).toHaveLength(1);
-		expect(result.errors[0].error.message).toBe("Provider error in All strategy");
+		expect(result.errors[0].error.message).toBe(
+			"Provider error in All strategy",
+		);
 		expect(successProvider.send).toHaveBeenCalled();
 		expect(errorProvider.send).toHaveBeenCalled();
 	});
@@ -399,7 +413,7 @@ describe("AirhornSendOptions is optional", () => {
 		const airhorn = new Airhorn();
 		// Set All strategy
 		airhorn.sendStrategy = AirhornSendStrategy.All;
-		
+
 		// Create multiple providers, one throws a non-Error object
 		const successProvider = {
 			name: "SuccessProvider",
@@ -407,16 +421,16 @@ describe("AirhornSendOptions is optional", () => {
 			send: vi.fn().mockResolvedValue({
 				success: true,
 				response: { data: "success" },
-				errors: []
-			})
+				errors: [],
+			}),
 		};
-		
+
 		const errorProvider = {
 			name: "ErrorProvider",
 			capabilities: [AirhornSendType.Webhook],
-			send: vi.fn().mockRejectedValue("String error in All")
+			send: vi.fn().mockRejectedValue("String error in All"),
 		};
-		
+
 		airhorn.providers = [successProvider, errorProvider];
 
 		const template: AirhornTemplate = {
@@ -427,7 +441,7 @@ describe("AirhornSendOptions is optional", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should succeed overall but have error from the failing provider
@@ -482,6 +496,8 @@ Test content`;
 		const template = await airhorn.loadTemplate(templatePath);
 
 		// When requiredFields is an object (not string or array), it should be wrapped in array
-		expect(template.requiredFields).toEqual([{ field1: "value1", field2: "value2" }]);
+		expect(template.requiredFields).toEqual([
+			{ field1: "value1", field2: "value2" },
+		]);
 	});
 });

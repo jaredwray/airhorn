@@ -1,7 +1,8 @@
-import { describe, test, expect, vi, beforeEach } from "vitest";
+// biome-ignore-all lint/suspicious/noExplicitAny: test file
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { Airhorn, AirhornEvent, AirhornSendStrategy } from "../src/index.js";
-import { AirhornWebhookProvider } from "../src/webhook.js";
 import type { AirhornTemplate } from "../src/template.js";
+import { AirhornWebhookProvider } from "../src/webhook.js";
 
 describe("Airhorn send function", () => {
 	let airhorn: Airhorn;
@@ -15,8 +16,8 @@ describe("Airhorn send function", () => {
 
 	test("should send webhook using provider from _providers", async () => {
 		const webhookUrl = "https://api.example.com/webhook";
-		
-		// Mock successful webhook response  
+
+		// Mock successful webhook response
 		const mockResponse = {
 			ok: true,
 			status: 200,
@@ -35,11 +36,9 @@ describe("Airhorn send function", () => {
 		};
 
 		// Send webhook
-		const result = await airhorn.sendWebhook(
-			webhookUrl,
-			template,
-			{ name: "John" }
-		);
+		const result = await airhorn.sendWebhook(webhookUrl, template, {
+			name: "John",
+		});
 
 		// Verify the result
 		expect(result.success).toBe(true);
@@ -49,7 +48,7 @@ describe("Airhorn send function", () => {
 		expect(result.message?.content).toBe("Hello John!");
 		expect(result.providers).toHaveLength(1);
 		expect(result.providers[0]).toBeInstanceOf(AirhornWebhookProvider);
-		
+
 		// Verify fetch was called
 		expect(mockFetch).toHaveBeenCalledWith(
 			webhookUrl,
@@ -59,14 +58,14 @@ describe("Airhorn send function", () => {
 					"Content-Type": "application/json",
 				}),
 				body: expect.any(String),
-			})
+			}),
 		);
 	});
 
 	test("should handle no providers available", async () => {
 		// Remove all providers
 		airhorn.providers = [];
-		
+
 		const template: AirhornTemplate = {
 			from: "test@example.com",
 			content: "Test content",
@@ -76,7 +75,7 @@ describe("Airhorn send function", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		expect(result.success).toBe(false);
@@ -89,7 +88,7 @@ describe("Airhorn send function", () => {
 		const provider1 = new AirhornWebhookProvider();
 		const provider2 = new AirhornWebhookProvider();
 		airhorn.providers = [provider1, provider2];
-		
+
 		// Mock successful responses for both
 		const mockResponse = {
 			ok: true,
@@ -110,9 +109,9 @@ describe("Airhorn send function", () => {
 			"https://example.com",
 			template,
 			{},
-			{ 
-				sendStrategy: AirhornSendStrategy.All
-			}
+			{
+				sendStrategy: AirhornSendStrategy.All,
+			},
 		);
 
 		expect(result.success).toBe(true);
@@ -127,7 +126,7 @@ describe("Airhorn send function", () => {
 		const provider2 = new AirhornWebhookProvider();
 		airhorn.providers = [provider1, provider2];
 		airhorn.sendStrategy = AirhornSendStrategy.RoundRobin;
-		
+
 		// Mock successful response
 		const mockResponse = {
 			ok: true,
@@ -147,7 +146,7 @@ describe("Airhorn send function", () => {
 		const result1 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 		expect(result1.success).toBe(true);
 		expect(result1.providers).toHaveLength(1);
@@ -156,7 +155,7 @@ describe("Airhorn send function", () => {
 		const result2 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 		expect(result2.success).toBe(true);
 		expect(result2.providers).toHaveLength(1);
@@ -165,7 +164,7 @@ describe("Airhorn send function", () => {
 		const result3 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 		expect(result3.success).toBe(true);
 		expect(result3.providers).toHaveLength(1);
@@ -180,7 +179,7 @@ describe("Airhorn send function", () => {
 		const provider2 = new AirhornWebhookProvider();
 		airhorn.providers = [provider1, provider2]; // This replaces all providers
 		airhorn.sendStrategy = AirhornSendStrategy.FailOver;
-		
+
 		// First call fails, second succeeds
 		mockFetch
 			.mockRejectedValueOnce(new Error("Network error"))
@@ -200,7 +199,7 @@ describe("Airhorn send function", () => {
 		const result = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Should succeed with second provider
@@ -215,7 +214,7 @@ describe("Airhorn send function", () => {
 
 	test("should update statistics when enabled", async () => {
 		airhorn.statistics.enabled = true;
-		
+
 		// Mock successful response
 		const mockResponse = {
 			ok: true,
@@ -240,35 +239,43 @@ describe("Airhorn send function", () => {
 		const result1 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Stats should be updated
 		expect(airhorn.statistics.totalSendSuccesses).toBe(1);
 		expect(airhorn.statistics.totalSendFailures).toBe(0);
 		expect(airhorn.statistics.executionTimes).toHaveLength(1);
-		expect(airhorn.statistics.executionTimes[0].duration).toBe(result1.executionTime);
+		expect(airhorn.statistics.executionTimes[0].duration).toBe(
+			result1.executionTime,
+		);
 		expect(airhorn.statistics.executionTimes[0].to).toBe("https://example.com");
 		expect(airhorn.statistics.totalExecutionTime).toBe(result1.executionTime);
 
 		// Send failed message
 		mockFetch.mockRejectedValueOnce(new Error("Network error"));
 		airhorn.providers = [new AirhornWebhookProvider()]; // Reset providers
-		
+
 		const result2 = await airhorn.sendWebhook(
 			"https://example.com",
 			template,
-			{}
+			{},
 		);
 
 		// Stats should be updated
 		expect(airhorn.statistics.totalSendSuccesses).toBe(1);
 		expect(airhorn.statistics.totalSendFailures).toBe(1);
 		expect(airhorn.statistics.executionTimes).toHaveLength(2);
-		expect(airhorn.statistics.executionTimes[1].duration).toBe(result2.executionTime);
+		expect(airhorn.statistics.executionTimes[1].duration).toBe(
+			result2.executionTime,
+		);
 		expect(airhorn.statistics.executionTimes[1].to).toBe("https://example.com");
-		expect(airhorn.statistics.totalExecutionTime).toBe(result1.executionTime + result2.executionTime);
-		expect(airhorn.statistics.averageExecutionTime).toBe((result1.executionTime + result2.executionTime) / 2);
+		expect(airhorn.statistics.totalExecutionTime).toBe(
+			result1.executionTime + result2.executionTime,
+		);
+		expect(airhorn.statistics.averageExecutionTime).toBe(
+			(result1.executionTime + result2.executionTime) / 2,
+		);
 	});
 
 	test("should emit events on send", async () => {
@@ -282,7 +289,7 @@ describe("Airhorn send function", () => {
 		airhorn.on(AirhornEvent.SendFailure, (result) => {
 			failedEvents.push(result);
 		});
-		
+
 		// Mock successful response
 		const mockResponse = {
 			ok: true,
@@ -299,11 +306,7 @@ describe("Airhorn send function", () => {
 		};
 
 		// Send successful message
-		await airhorn.sendWebhook(
-			"https://example.com",
-			template,
-			{}
-		);
+		await airhorn.sendWebhook("https://example.com", template, {});
 
 		expect(sentEvents).toHaveLength(1);
 		expect(failedEvents).toHaveLength(0);
@@ -312,12 +315,8 @@ describe("Airhorn send function", () => {
 		// Send failed message
 		mockFetch.mockRejectedValueOnce(new Error("Network error"));
 		airhorn.providers = [new AirhornWebhookProvider()]; // Reset providers
-		
-		await airhorn.sendWebhook(
-			"https://example.com",
-			template,
-			{}
-		);
+
+		await airhorn.sendWebhook("https://example.com", template, {});
 
 		expect(sentEvents).toHaveLength(1);
 		expect(failedEvents).toHaveLength(1);
