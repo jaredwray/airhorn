@@ -1,6 +1,6 @@
 {
   "name": "@airhornjs/azure",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Azure provider for Airhorn",
   "license": "MIT",
   "author": "Jared Wray <me@jaredwray.com>",

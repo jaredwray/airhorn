@@ -36,5 +36,13 @@ nvm use && pnpm i && pnpm test
 ```
 This will ensure that you are using the correct version of Node.js and install the dependencies.
 
+# Publishing Airhorn
+
+To publish `Airhorn` to npm you first want to set the overall version in the `package.json` file. You can do this by updating the `version` field. Once you have done that then call:
+
+```bash
+pnpm version:sync
+```
+
 # Code of Conduct
 Please refer to our [Code of Conduct](CODE_OF_CONDUCT.md) readme for how to contribute to this open source project and work within the community. 

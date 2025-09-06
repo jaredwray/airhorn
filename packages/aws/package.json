@@ -1,6 +1,6 @@
 {
   "name": "@airhornjs/aws",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "AWS SNS and SES provider for Airhorn",
   "type": "module",
   "main": "./dist/index.js",
