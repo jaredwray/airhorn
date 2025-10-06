@@ -37,8 +37,8 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "cacheable": "^1.10.4",
-    "ecto": "^4.4.1",
+    "cacheable": "^2.0.3",
+    "ecto": "^4.6.0",
     "hookified": "^1.12.0",
     "writr": "^4.5.0"
   },
