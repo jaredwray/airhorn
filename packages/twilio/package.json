@@ -34,7 +34,7 @@
   "license": "MIT",
   "dependencies": {
     "@sendgrid/mail": "^8.1.5",
-    "twilio": "^5.9.0"
+    "twilio": "^5.10.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.3",
