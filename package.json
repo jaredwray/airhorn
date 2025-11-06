@@ -21,8 +21,8 @@
     "clean": "pnpm -r clean"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.5",
-    "@types/node": "^24.6.2",
+    "@biomejs/biome": "^2.3.4",
+    "@types/node": "^24.10.0",
     "@vitest/coverage-v8": "^4.0.7",
     "docula": "^0.31.0",
     "tsup": "^8.5.0",
