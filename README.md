@@ -83,8 +83,6 @@ Note: We used to support firebase because of mobile push but it made more sense 
 
 Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository you can refer to the [CONTRIBUTING](CONTRIBUTING.md) guide. If you have any questions please feel free to ask by creating an issue and label it `question`.
 
-This will set all the versions in the monorepo to the same version as we deploy based on that. 
-
 # Licensing and Copyright
 
 This project is [MIT License © Jared Wray](LICENSE)
