@@ -24,9 +24,9 @@
     "build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
   },
   "dependencies": {
-    "@azure/communication-email": "^1.0.0",
+    "@azure/communication-email": "^1.1.0",
     "@azure/communication-sms": "^1.1.0",
-    "@azure/notification-hubs": "^2.0.0"
+    "@azure/notification-hubs": "^2.0.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.4",
