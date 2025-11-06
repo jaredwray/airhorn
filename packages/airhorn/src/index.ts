@@ -76,6 +76,11 @@ export enum AirhornEvent {
 	SendFailure = "send.failure",
 }
 
+export enum AirhornHook {
+	BeforeSend = "before:Send",
+	AfterSend = "after:Send",
+}
+
 export type AirhornRetryFunction = (
 	message: AirhornProviderMessage,
 	failedProvider: AirhornProvider,
@@ -289,6 +294,9 @@ export class Airhorn extends Hookified {
 
 			result.message = message;
 
+			// Call BeforeSend hook - allows modification of message and options
+			await this.hook(AirhornHook.BeforeSend, { message, options });
+
 			// Determine send strategy
 			const sendStrategy = options?.sendStrategy || this._sendStrategy;
 
@@ -370,6 +378,9 @@ export class Airhorn extends Hookified {
 			} else {
 				this.emit(AirhornEvent.SendFailure, result);
 			}
+
+			// Call AfterSend hook - allows post-processing of result
+			await this.hook(AirhornHook.AfterSend, { result });
 		} catch (error) {
 			const err = error instanceof Error ? error : new Error(String(error));
 			result.errors.push({ error: err });
