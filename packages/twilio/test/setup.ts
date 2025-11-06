@@ -6,11 +6,13 @@ const mockSgSend = vi.fn();
 const mockSgSetApiKey = vi.fn();
 
 // Mock Twilio constructor
-const TwilioMock = vi.fn().mockImplementation(() => ({
-	messages: {
-		create: mockTwilioCreate,
-	},
-}));
+const TwilioMock = vi.fn(function Twilio() {
+	return {
+		messages: {
+			create: mockTwilioCreate,
+		},
+	};
+});
 
 // Mock SendGrid
 const sgMail = {
