@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "cacheable": "^2.3.1",
-    "ecto": "^4.7.0",
+    "ecto": "^4.8.0",
     "hookified": "^1.14.0",
-    "writr": "^5.0.0"
+    "writr": "^5.0.2"
   },
   "files": [
     "dist",
