@@ -1,6 +1,6 @@
 {
   "name": "@airhornjs/twilio",
-  "version": "5.1.2",
+  "version": "5.2.0",
   "description": "Twilio SMS and SendGrid Email provider for Airhorn notification system",
   "type": "module",
   "main": "./dist/index.js",
