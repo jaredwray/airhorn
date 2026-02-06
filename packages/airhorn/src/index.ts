@@ -444,6 +444,75 @@ export class Airhorn extends Hookified {
 		return this.send(to, template, data, AirhornSendType.MobilePush, options);
 	}
 
+	/**
+	 * Send a notification to all providers simultaneously.
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	public async sendAll(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options?: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
+		return this.send(to, template, data, type, {
+			...options,
+			sendStrategy: AirhornSendStrategy.All,
+		});
+	}
+
+	/**
+	 * Send a notification using fail-over strategy (tries providers in order until one succeeds).
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	public async sendFailOver(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options?: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
+		return this.send(to, template, data, type, {
+			...options,
+			sendStrategy: AirhornSendStrategy.FailOver,
+		});
+	}
+
+	/**
+	 * Send a notification using round-robin strategy (cycles through providers).
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	public async sendRoundRobin(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options?: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
+		return this.send(to, template, data, type, {
+			...options,
+			sendStrategy: AirhornSendStrategy.RoundRobin,
+		});
+	}
+
 	public getProvidersByType(type: AirhornSendType): Array<AirhornProvider> {
 		const providers: Array<AirhornProvider> = [];
 
