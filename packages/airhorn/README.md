@@ -192,6 +192,33 @@ const data = { name: "John" };
 await airhorn.sendSMS("+1234567890", template, data);
 ```
 
+All helper methods accept an optional `AirhornSendOptions` parameter to override the send strategy per call:
+
+```typescript
+import { Airhorn, AirhornSendStrategy } from "airhorn";
+import { AirhornTwilio } from "@airhornjs/twilio";
+
+const airhorn = new Airhorn({
+	providers: [
+		new AirhornTwilio({ accountSid: "sid_1", authToken: "token_1" }),
+		new AirhornTwilio({ accountSid: "sid_2", authToken: "token_2" }),
+	]
+});
+
+const template = {
+	from: "+12223334444",
+	content: "Hey <%= name %> this is a test message from Airhorn",
+	templateEngine: "ejs",
+}
+
+const data = { name: "John" };
+
+// Send SMS using fail-over strategy
+await airhorn.sendSMS("+1234567890", template, data, {
+	sendStrategy: AirhornSendStrategy.FailOver
+});
+```
+
 Here are the following helper methods available:
 
 - `sendSMS`: Sends an SMS message.
