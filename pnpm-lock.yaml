@@ -20,6 +20,9 @@ importers:
       docula:
         specifier: ^0.40.0
         version: 0.40.0
+      rimraf:
+        specifier: ^6.1.2
+        version: 6.1.2
       tsup:
         specifier: ^8.5.1
         version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
@@ -47,28 +50,6 @@ importers:
       writr:
         specifier: ^5.0.2
         version: 5.0.3
-    devDependencies:
-      '@biomejs/biome':
-        specifier: ^2.3.11
-        version: 2.3.14
-      '@types/node':
-        specifier: ^25.0.3
-        version: 25.2.0
-      '@vitest/coverage-v8':
-        specifier: ^4.0.16
-        version: 4.0.18(vitest@4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0))
-      rimraf:
-        specifier: ^6.1.2
-        version: 6.1.2
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^4.0.16
-        version: 4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0)
 
   packages/aws:
     dependencies:
@@ -81,31 +62,6 @@ importers:
       airhorn:
         specifier: workspace:^
         version: link:../airhorn
-    devDependencies:
-      '@biomejs/biome':
-        specifier: ^2.3.11
-        version: 2.3.14
-      '@types/node':
-        specifier: ^25.0.3
-        version: 25.2.0
-      '@vitest/coverage-v8':
-        specifier: ^4.0.16
-        version: 4.0.18(vitest@4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0))
-      rimraf:
-        specifier: ^6.1.2
-        version: 6.1.2
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^4.0.16
-        version: 4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0)
 
   packages/azure:
     dependencies:
@@ -121,28 +77,6 @@ importers:
       airhorn:
         specifier: workspace:*
         version: link:../airhorn
-    devDependencies:
-      '@biomejs/biome':
-        specifier: ^2.3.11
-        version: 2.3.14
-      '@types/node':
-        specifier: ^25.0.3
-        version: 25.2.0
-      '@vitest/coverage-v8':
-        specifier: ^4.0.16
-        version: 4.0.18(vitest@4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0))
-      rimraf:
-        specifier: ^6.1.2
-        version: 6.1.2
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^4.0.16
-        version: 4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0)
 
   packages/twilio:
     dependencies:
@@ -155,28 +89,6 @@ importers:
       twilio:
         specifier: ^5.11.1
         version: 5.12.0
-    devDependencies:
-      '@biomejs/biome':
-        specifier: ^2.3.11
-        version: 2.3.14
-      '@types/node':
-        specifier: ^25.0.3
-        version: 25.2.0
-      '@vitest/coverage-v8':
-        specifier: ^4.0.16
-        version: 4.0.18(vitest@4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0))
-      rimraf:
-        specifier: ^6.1.2
-        version: 6.1.2
-      tsup:
-        specifier: ^8.5.1
-        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(tsx@4.21.0)(typescript@5.9.3)
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
-      vitest:
-        specifier: ^4.0.16
-        version: 4.0.18(@types/node@25.2.0)(jiti@2.6.1)(terser@5.36.0)(tsx@4.21.0)
 
 packages:
 
