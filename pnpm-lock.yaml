@@ -39,8 +39,8 @@ importers:
         specifier: ^2.3.1
         version: 2.3.2
       ecto:
-        specifier: 4.7.1
-        version: 4.7.1
+        specifier: ^4.8.2
+        version: 4.8.2
       hookified:
         specifier: ^1.14.0
         version: 1.15.1
@@ -1552,16 +1552,11 @@ packages:
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
 
-  ecto@4.7.1:
-    resolution: {integrity: sha512-ahhDalK4QbdGSOUN9WE+UcNdkOkelCqUxw6PYZM3OU8ehT+J6koabDwf0UAQZqO9OhLNQUf7qQtpaeJYuJhoUQ==}
-
   ecto@4.8.1:
     resolution: {integrity: sha512-Y+Rxaz3VQqSD1LPrd5DHxGkLAuykUdiYPNkpD4qh3v1ZO7yXiaP5hjKWJ5Ejmrey9WH8350xv3wQ/jmUYXMCeg==}
 
-  ejs@3.1.10:
-    resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
-    engines: {node: '>=0.10.0'}
-    hasBin: true
+  ecto@4.8.2:
+    resolution: {integrity: sha512-P+ScA1qDom3bGhO5DXJo+Fv7t/4Buzz9TkyFeiABuwo3mi1D+74B+eJcNJLWhAG8kbT1F0+qLjUDoowaH6Gh4g==}
 
   ejs@4.0.1:
     resolution: {integrity: sha512-krvQtxc0btwSm/nvnt1UpnaFDFVJpJ0fdckmALpCgShsr/iGYHTnJiUliZTgmzq/UxTX33TtOQVKaNigMQp/6Q==}
@@ -4710,22 +4705,6 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  ecto@4.7.1:
-    dependencies:
-      '@jaredwray/fumanchu': 4.5.1
-      cacheable: 2.3.2
-      ejs: 3.1.10
-      ent: 2.2.2
-      hookified: 1.15.1
-      liquidjs: 10.24.0
-      nunjucks: 3.2.4
-      pug: 3.0.3
-      writr: 5.0.3
-    transitivePeerDependencies:
-      - '@types/react'
-      - chokidar
-      - supports-color
-
   ecto@4.8.1:
     dependencies:
       '@jaredwray/fumanchu': 4.5.1
@@ -4742,9 +4721,21 @@ snapshots:
       - chokidar
       - supports-color
 
-  ejs@3.1.10:
+  ecto@4.8.2:
     dependencies:
-      jake: 10.9.2
+      '@jaredwray/fumanchu': 4.5.1
+      cacheable: 2.3.2
+      ejs: 4.0.1
+      ent: 2.2.2
+      hookified: 1.15.1
+      liquidjs: 10.24.0
+      nunjucks: 3.2.4
+      pug: 3.0.3
+      writr: 5.0.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - chokidar
+      - supports-color
 
   ejs@4.0.1:
     dependencies:
