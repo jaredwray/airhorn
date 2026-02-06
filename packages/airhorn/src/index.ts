@@ -255,11 +255,11 @@ export class Airhorn extends Hookified {
 	}
 
 	/**
-	 * Send a notification
+	 * Send a notification using the configured send strategy.
 	 * @param to
 	 * @param template
 	 * @param data
-	 * @param {AirhornProviderType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
 	 * @param {AirhornSendOptions} options - The send options.
 	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
 	 */
@@ -271,139 +271,28 @@ export class Airhorn extends Hookified {
 		type: AirhornSendType,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		const startTime = Date.now();
-		const result: AirhornSendResult = {
-			success: false,
-			response: null,
-			providers: [],
-			retries: 0,
-			executionTime: 0,
-			errors: [],
-		};
-
-		try {
-			// Get providers that support this type
-			const providers = this.getProvidersByType(type);
-
-			if (providers.length === 0) {
-				throw new Error(`No providers available for type: ${type}`);
+		const sendStrategy = options?.sendStrategy ?? this._sendStrategy;
+		switch (sendStrategy) {
+			case AirhornSendStrategy.All: {
+				return this.sendAll(to, template, data, type, options);
 			}
-
-			// Generate the message from template
-			const message = await this.generateMessage(to, template, data, type);
-
-			result.message = message;
-
-			// Call BeforeSend hook - allows modification of message and options
-			await this.hook(AirhornHook.BeforeSend, { message, options });
-
-			// Determine send strategy
-			const sendStrategy = options?.sendStrategy || this._sendStrategy;
-
-			// Send based on strategy
-			if (sendStrategy === AirhornSendStrategy.All) {
-				// Send to all providers
-				const sendPromises = providers.map(async (provider) => {
-					try {
-						const providerResult = await provider.send(message, options);
-						if (providerResult.success) {
-							result.success = true;
-						}
-						return { provider, result: providerResult };
-					} catch (error) {
-						const err =
-							error instanceof Error ? error : new Error(String(error));
-						result.errors.push({ provider, error: err });
-						return { provider, error: err };
-					}
-				});
-
-				const results = await Promise.all(sendPromises);
-				result.providers = providers;
-				result.response = results;
-			} else if (sendStrategy === AirhornSendStrategy.RoundRobin) {
-				// Round-robin through providers
-				if (providers.length > 0) {
-					const providerIndex = this._roundRobinIndex % providers.length;
-					const provider = providers[providerIndex];
-					if (provider) {
-						this._roundRobinIndex =
-							(this._roundRobinIndex + 1) % providers.length;
-
-						try {
-							const providerResult = await provider.send(message, options);
-							result.success = providerResult.success;
-							result.response = providerResult;
-							result.providers = [provider];
-						} catch (error) {
-							const err =
-								error instanceof Error ? error : new Error(String(error));
-							result.errors.push({ provider, error: err });
-						}
-					}
-				}
-			} else {
-				// FailOver strategy (default)
-				for (const provider of providers) {
-					try {
-						const providerResult = await provider.send(message, options);
-						if (providerResult.success) {
-							result.success = true;
-							result.response = providerResult;
-							result.providers = [provider];
-							break;
-						} else {
-							// Provider failed but didn't throw - collect its errors
-							if (providerResult.errors && providerResult.errors.length > 0) {
-								result.errors.push(
-									...providerResult.errors.map((error) => ({
-										provider,
-										error,
-									})),
-								);
-							}
-						}
-					} catch (error) {
-						const err =
-							error instanceof Error ? error : new Error(String(error));
-						result.errors.push({ provider, error: err });
-						// Continue to next provider
-					}
-				}
+			case AirhornSendStrategy.FailOver: {
+				return this.sendFailOver(to, template, data, type, options);
 			}
-
-			// Emit events
-			if (result.success) {
-				this.emit(AirhornEvent.SendSuccess, result);
-			} else {
-				this.emit(AirhornEvent.SendFailure, result);
+			default: {
+				return this.sendRoundRobin(to, template, data, type, options);
 			}
-
-			// Call AfterSend hook - allows post-processing of result
-			await this.hook(AirhornHook.AfterSend, { result });
-		} catch (error) {
-			const err = error instanceof Error ? error : new Error(String(error));
-			result.errors.push({ error: err });
-			this.handleError(err);
 		}
-
-		result.executionTime = Date.now() - startTime;
-
-		// Submit execution time to statistics
-		if (result.message) {
-			this._statistics.submit({
-				to: result.message.to,
-				from: result.message.from,
-				providerType: result.message.type,
-				startTime: new Date(startTime),
-				duration: result.executionTime,
-				success: result.success,
-			});
-		}
-
-		return result;
 	}
 
+	/**
+	 * Send an SMS message.
+	 * @param {string} to - The recipient phone number.
+	 * @param {AirhornTemplate} template - The template to use.
+	 * @param {Record<string, any>} data - The data to populate the template.
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
 	public async sendSMS(
 		to: string,
 		template: AirhornTemplate,
@@ -414,6 +303,14 @@ export class Airhorn extends Hookified {
 		return this.send(to, template, data, AirhornSendType.SMS, options);
 	}
 
+	/**
+	 * Send an email message.
+	 * @param {string} to - The recipient email address.
+	 * @param {AirhornTemplate} template - The template to use.
+	 * @param {Record<string, any>} data - The data to populate the template.
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
 	public async sendEmail(
 		to: string,
 		template: AirhornTemplate,
@@ -424,6 +321,14 @@ export class Airhorn extends Hookified {
 		return this.send(to, template, data, AirhornSendType.Email, options);
 	}
 
+	/**
+	 * Send a webhook notification.
+	 * @param {string} to - The webhook URL.
+	 * @param {AirhornTemplate} template - The template to use.
+	 * @param {Record<string, any>} data - The data to populate the template.
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
 	public async sendWebhook(
 		to: string,
 		template: AirhornTemplate,
@@ -434,6 +339,14 @@ export class Airhorn extends Hookified {
 		return this.send(to, template, data, AirhornSendType.Webhook, options);
 	}
 
+	/**
+	 * Send a mobile push notification.
+	 * @param {string} to - The device token or push endpoint.
+	 * @param {AirhornTemplate} template - The template to use.
+	 * @param {Record<string, any>} data - The data to populate the template.
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
 	public async sendMobilePush(
 		to: string,
 		template: AirhornTemplate,
@@ -442,6 +355,196 @@ export class Airhorn extends Hookified {
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
 		return this.send(to, template, data, AirhornSendType.MobilePush, options);
+	}
+
+	/**
+	 * Send a notification to all providers simultaneously.
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	public async sendAll(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options?: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
+		const result: AirhornSendResult = {
+			success: false,
+			response: null,
+			providers: [],
+			retries: 0,
+			executionTime: 0,
+			errors: [],
+		};
+
+		return this.executeStrategy(
+			to,
+			template,
+			data,
+			type,
+			options,
+			result,
+			async (providers, message) => {
+				const sendPromises = providers.map(async (provider) => {
+					try {
+						const providerResult = await this.executeSend(
+							provider,
+							message,
+							options,
+						);
+						return { provider, result: providerResult };
+					} catch (error) {
+						const err =
+							error instanceof Error ? error : new Error(String(error));
+						result.errors.push({ provider, error: err });
+						return { provider, error: err };
+					}
+				});
+
+				const results = await Promise.all(sendPromises);
+				result.success = results.some(
+					(r) => "result" in r && r.result?.success,
+				);
+				result.providers = providers;
+				result.response = results;
+			},
+		);
+	}
+
+	/**
+	 * Send a notification using fail-over strategy (tries providers in order until one succeeds).
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	public async sendFailOver(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options?: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
+		const result: AirhornSendResult = {
+			success: false,
+			response: null,
+			providers: [],
+			retries: 0,
+			executionTime: 0,
+			errors: [],
+		};
+
+		return this.executeStrategy(
+			to,
+			template,
+			data,
+			type,
+			options,
+			result,
+			async (providers, message) => {
+				for (const provider of providers) {
+					try {
+						const providerResult = await this.executeSend(
+							provider,
+							message,
+							options,
+						);
+						if (providerResult.success) {
+							result.success = true;
+							result.response = providerResult;
+							result.providers = [provider];
+							break;
+						}
+
+						if (providerResult.errors && providerResult.errors.length > 0) {
+							result.errors.push(
+								...providerResult.errors.map((error) => ({
+									provider,
+									error,
+								})),
+							);
+						} else {
+							result.errors.push({
+								provider,
+								error: new Error(`Provider ${provider.name} failed to send`),
+							});
+						}
+					} catch (error) {
+						const err =
+							error instanceof Error ? error : new Error(String(error));
+						result.errors.push({ provider, error: err });
+					}
+				}
+			},
+		);
+	}
+
+	/**
+	 * Send a notification using round-robin strategy (cycles through providers).
+	 * @param to
+	 * @param template
+	 * @param data
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	public async sendRoundRobin(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options?: AirhornSendOptions,
+	): Promise<AirhornSendResult> {
+		const result: AirhornSendResult = {
+			success: false,
+			response: null,
+			providers: [],
+			retries: 0,
+			executionTime: 0,
+			errors: [],
+		};
+
+		return this.executeStrategy(
+			to,
+			template,
+			data,
+			type,
+			options,
+			result,
+			async (providers, message) => {
+				const providerIndex = this._roundRobinIndex % providers.length;
+				const provider = providers[providerIndex];
+				if (provider) {
+					this._roundRobinIndex =
+						(this._roundRobinIndex + 1) % providers.length;
+
+					try {
+						const providerResult = await this.executeSend(
+							provider,
+							message,
+							options,
+						);
+						result.success = providerResult.success;
+						result.response = providerResult;
+						result.providers = [provider];
+					} catch (error) {
+						const err =
+							error instanceof Error ? error : new Error(String(error));
+						result.errors.push({ provider, error: err });
+					}
+				}
+			},
+		);
 	}
 
 	public getProvidersByType(type: AirhornSendType): Array<AirhornProvider> {
@@ -551,6 +654,91 @@ export class Airhorn extends Hookified {
 		}
 
 		return template;
+	}
+
+	/**
+	 * Execute the shared send pipeline: resolves providers, generates a message, runs hooks, invokes the
+	 * strategy-specific logic, emits events, and records statistics.
+	 * @param {string} to - The recipient.
+	 * @param {AirhornTemplate} template - The template to use.
+	 * @param {Record<string, any>} data - The data to populate the template.
+	 * @param {AirhornSendType} type - The type of notification.
+	 * @param {AirhornSendOptions | undefined} options - The send options.
+	 * @param {AirhornSendResult} result - The result object to populate.
+	 * @param {Function} strategyFn - The strategy-specific logic to execute.
+	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
+	 */
+	private async executeStrategy(
+		to: string,
+		template: AirhornTemplate,
+		// biome-ignore lint/suspicious/noExplicitAny: object
+		data: Record<string, any>,
+		type: AirhornSendType,
+		options: AirhornSendOptions | undefined,
+		result: AirhornSendResult,
+		strategyFn: (
+			providers: Array<AirhornProvider>,
+			message: AirhornProviderMessage,
+		) => Promise<void>,
+	): Promise<AirhornSendResult> {
+		const startTime = Date.now();
+
+		try {
+			const providers = this.getProvidersByType(type);
+
+			if (providers.length === 0) {
+				throw new Error(`No providers available for type: ${type}`);
+			}
+
+			const message = await this.generateMessage(to, template, data, type);
+			result.message = message;
+
+			await this.hook(AirhornHook.BeforeSend, { message, options });
+
+			await strategyFn(providers, message);
+
+			if (result.success) {
+				this.emit(AirhornEvent.SendSuccess, result);
+			} else {
+				this.emit(AirhornEvent.SendFailure, result);
+			}
+
+			await this.hook(AirhornHook.AfterSend, { result });
+		} catch (error) {
+			const err = error instanceof Error ? error : new Error(String(error));
+			result.errors.push({ error: err });
+			this.handleError(err);
+		}
+
+		result.executionTime = Date.now() - startTime;
+
+		if (result.message) {
+			this._statistics.submit({
+				to: result.message.to,
+				from: result.message.from,
+				providerType: result.message.type,
+				startTime: new Date(startTime),
+				duration: result.executionTime,
+				success: result.success,
+			});
+		}
+
+		return result;
+	}
+
+	/**
+	 * Execute a send to a single provider.
+	 * @param {AirhornProvider} provider - The provider to send with.
+	 * @param {AirhornProviderMessage} message - The message to send.
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornProviderSendResult>} - The result of the send operation.
+	 */
+	private async executeSend(
+		provider: AirhornProvider,
+		message: AirhornProviderMessage,
+		options?: AirhornSendOptions,
+	): Promise<AirhornProviderSendResult> {
+		return provider.send(message, options);
 	}
 
 	/**
