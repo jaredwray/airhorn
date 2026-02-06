@@ -1,4 +1,6 @@
 minimumReleaseAge: 2880
+minimumReleaseAgeExclude:
+  - ecto
 packages:
   - packages/*
 onlyBuiltDependencies:
