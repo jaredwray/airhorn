@@ -255,11 +255,11 @@ export class Airhorn extends Hookified {
 	}
 
 	/**
-	 * Send a notification
+	 * Send a notification using the configured send strategy.
 	 * @param to
 	 * @param template
 	 * @param data
-	 * @param {AirhornProviderType} type - The type of notification to send SMS, Email, Webhook, MobilePush
+	 * @param {AirhornSendType} type - The type of notification to send SMS, Email, Webhook, MobilePush
 	 * @param {AirhornSendOptions} options - The send options.
 	 * @returns {Promise<AirhornSendResult>} - The result of the send operation.
 	 */
@@ -271,137 +271,18 @@ export class Airhorn extends Hookified {
 		type: AirhornSendType,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		const startTime = Date.now();
-		const result: AirhornSendResult = {
-			success: false,
-			response: null,
-			providers: [],
-			retries: 0,
-			executionTime: 0,
-			errors: [],
-		};
-
-		try {
-			// Get providers that support this type
-			const providers = this.getProvidersByType(type);
-
-			if (providers.length === 0) {
-				throw new Error(`No providers available for type: ${type}`);
+		const sendStrategy = options?.sendStrategy ?? this._sendStrategy;
+		switch (sendStrategy) {
+			case AirhornSendStrategy.All: {
+				return this.sendAll(to, template, data, type, options);
 			}
-
-			// Generate the message from template
-			const message = await this.generateMessage(to, template, data, type);
-
-			result.message = message;
-
-			// Call BeforeSend hook - allows modification of message and options
-			await this.hook(AirhornHook.BeforeSend, { message, options });
-
-			// Determine send strategy
-			const sendStrategy = options?.sendStrategy || this._sendStrategy;
-
-			// Send based on strategy
-			if (sendStrategy === AirhornSendStrategy.All) {
-				// Send to all providers
-				const sendPromises = providers.map(async (provider) => {
-					try {
-						const providerResult = await provider.send(message, options);
-						if (providerResult.success) {
-							result.success = true;
-						}
-						return { provider, result: providerResult };
-					} catch (error) {
-						const err =
-							error instanceof Error ? error : new Error(String(error));
-						result.errors.push({ provider, error: err });
-						return { provider, error: err };
-					}
-				});
-
-				const results = await Promise.all(sendPromises);
-				result.providers = providers;
-				result.response = results;
-			} else if (sendStrategy === AirhornSendStrategy.RoundRobin) {
-				// Round-robin through providers
-				if (providers.length > 0) {
-					const providerIndex = this._roundRobinIndex % providers.length;
-					const provider = providers[providerIndex];
-					if (provider) {
-						this._roundRobinIndex =
-							(this._roundRobinIndex + 1) % providers.length;
-
-						try {
-							const providerResult = await provider.send(message, options);
-							result.success = providerResult.success;
-							result.response = providerResult;
-							result.providers = [provider];
-						} catch (error) {
-							const err =
-								error instanceof Error ? error : new Error(String(error));
-							result.errors.push({ provider, error: err });
-						}
-					}
-				}
-			} else {
-				// FailOver strategy (default)
-				for (const provider of providers) {
-					try {
-						const providerResult = await provider.send(message, options);
-						if (providerResult.success) {
-							result.success = true;
-							result.response = providerResult;
-							result.providers = [provider];
-							break;
-						} else {
-							// Provider failed but didn't throw - collect its errors
-							if (providerResult.errors && providerResult.errors.length > 0) {
-								result.errors.push(
-									...providerResult.errors.map((error) => ({
-										provider,
-										error,
-									})),
-								);
-							}
-						}
-					} catch (error) {
-						const err =
-							error instanceof Error ? error : new Error(String(error));
-						result.errors.push({ provider, error: err });
-						// Continue to next provider
-					}
-				}
+			case AirhornSendStrategy.FailOver: {
+				return this.sendFailOver(to, template, data, type, options);
 			}
-
-			// Emit events
-			if (result.success) {
-				this.emit(AirhornEvent.SendSuccess, result);
-			} else {
-				this.emit(AirhornEvent.SendFailure, result);
+			default: {
+				return this.sendRoundRobin(to, template, data, type, options);
 			}
-
-			// Call AfterSend hook - allows post-processing of result
-			await this.hook(AirhornHook.AfterSend, { result });
-		} catch (error) {
-			const err = error instanceof Error ? error : new Error(String(error));
-			result.errors.push({ error: err });
-			this.handleError(err);
 		}
-
-		result.executionTime = Date.now() - startTime;
-
-		// Submit execution time to statistics
-		if (result.message) {
-			this._statistics.submit({
-				to: result.message.to,
-				from: result.message.from,
-				providerType: result.message.type,
-				startTime: new Date(startTime),
-				duration: result.executionTime,
-				success: result.success,
-			});
-		}
-
-		return result;
 	}
 
 	public async sendSMS(
@@ -461,10 +342,77 @@ export class Airhorn extends Hookified {
 		type: AirhornSendType,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(to, template, data, type, {
-			...options,
-			sendStrategy: AirhornSendStrategy.All,
-		});
+		const startTime = Date.now();
+		const result: AirhornSendResult = {
+			success: false,
+			response: null,
+			providers: [],
+			retries: 0,
+			executionTime: 0,
+			errors: [],
+		};
+
+		try {
+			const providers = this.getProvidersByType(type);
+
+			if (providers.length === 0) {
+				throw new Error(`No providers available for type: ${type}`);
+			}
+
+			const message = await this.generateMessage(to, template, data, type);
+			result.message = message;
+
+			await this.hook(AirhornHook.BeforeSend, { message, options });
+
+			const sendPromises = providers.map(async (provider) => {
+				try {
+					const providerResult = await this.executeSend(
+						provider,
+						message,
+						options,
+					);
+					if (providerResult.success) {
+						result.success = true;
+					}
+					return { provider, result: providerResult };
+				} catch (error) {
+					const err = error instanceof Error ? error : new Error(String(error));
+					result.errors.push({ provider, error: err });
+					return { provider, error: err };
+				}
+			});
+
+			const results = await Promise.all(sendPromises);
+			result.providers = providers;
+			result.response = results;
+
+			if (result.success) {
+				this.emit(AirhornEvent.SendSuccess, result);
+			} else {
+				this.emit(AirhornEvent.SendFailure, result);
+			}
+
+			await this.hook(AirhornHook.AfterSend, { result });
+		} catch (error) {
+			const err = error instanceof Error ? error : new Error(String(error));
+			result.errors.push({ error: err });
+			this.handleError(err);
+		}
+
+		result.executionTime = Date.now() - startTime;
+
+		if (result.message) {
+			this._statistics.submit({
+				to: result.message.to,
+				from: result.message.from,
+				providerType: result.message.type,
+				startTime: new Date(startTime),
+				duration: result.executionTime,
+				success: result.success,
+			});
+		}
+
+		return result;
 	}
 
 	/**
@@ -484,10 +432,84 @@ export class Airhorn extends Hookified {
 		type: AirhornSendType,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(to, template, data, type, {
-			...options,
-			sendStrategy: AirhornSendStrategy.FailOver,
-		});
+		const startTime = Date.now();
+		const result: AirhornSendResult = {
+			success: false,
+			response: null,
+			providers: [],
+			retries: 0,
+			executionTime: 0,
+			errors: [],
+		};
+
+		try {
+			const providers = this.getProvidersByType(type);
+
+			if (providers.length === 0) {
+				throw new Error(`No providers available for type: ${type}`);
+			}
+
+			const message = await this.generateMessage(to, template, data, type);
+			result.message = message;
+
+			await this.hook(AirhornHook.BeforeSend, { message, options });
+
+			for (const provider of providers) {
+				try {
+					const providerResult = await this.executeSend(
+						provider,
+						message,
+						options,
+					);
+					if (providerResult.success) {
+						result.success = true;
+						result.response = providerResult;
+						result.providers = [provider];
+						break;
+					} else if (
+						providerResult.errors &&
+						providerResult.errors.length > 0
+					) {
+						result.errors.push(
+							...providerResult.errors.map((error) => ({
+								provider,
+								error,
+							})),
+						);
+					}
+				} catch (error) {
+					const err = error instanceof Error ? error : new Error(String(error));
+					result.errors.push({ provider, error: err });
+				}
+			}
+
+			if (result.success) {
+				this.emit(AirhornEvent.SendSuccess, result);
+			} else {
+				this.emit(AirhornEvent.SendFailure, result);
+			}
+
+			await this.hook(AirhornHook.AfterSend, { result });
+		} catch (error) {
+			const err = error instanceof Error ? error : new Error(String(error));
+			result.errors.push({ error: err });
+			this.handleError(err);
+		}
+
+		result.executionTime = Date.now() - startTime;
+
+		if (result.message) {
+			this._statistics.submit({
+				to: result.message.to,
+				from: result.message.from,
+				providerType: result.message.type,
+				startTime: new Date(startTime),
+				duration: result.executionTime,
+				success: result.success,
+			});
+		}
+
+		return result;
 	}
 
 	/**
@@ -507,10 +529,79 @@ export class Airhorn extends Hookified {
 		type: AirhornSendType,
 		options?: AirhornSendOptions,
 	): Promise<AirhornSendResult> {
-		return this.send(to, template, data, type, {
-			...options,
-			sendStrategy: AirhornSendStrategy.RoundRobin,
-		});
+		const startTime = Date.now();
+		const result: AirhornSendResult = {
+			success: false,
+			response: null,
+			providers: [],
+			retries: 0,
+			executionTime: 0,
+			errors: [],
+		};
+
+		try {
+			const providers = this.getProvidersByType(type);
+
+			if (providers.length === 0) {
+				throw new Error(`No providers available for type: ${type}`);
+			}
+
+			const message = await this.generateMessage(to, template, data, type);
+			result.message = message;
+
+			await this.hook(AirhornHook.BeforeSend, { message, options });
+
+			if (providers.length > 0) {
+				const providerIndex = this._roundRobinIndex % providers.length;
+				const provider = providers[providerIndex];
+				if (provider) {
+					this._roundRobinIndex =
+						(this._roundRobinIndex + 1) % providers.length;
+
+					try {
+						const providerResult = await this.executeSend(
+							provider,
+							message,
+							options,
+						);
+						result.success = providerResult.success;
+						result.response = providerResult;
+						result.providers = [provider];
+					} catch (error) {
+						const err =
+							error instanceof Error ? error : new Error(String(error));
+						result.errors.push({ provider, error: err });
+					}
+				}
+			}
+
+			if (result.success) {
+				this.emit(AirhornEvent.SendSuccess, result);
+			} else {
+				this.emit(AirhornEvent.SendFailure, result);
+			}
+
+			await this.hook(AirhornHook.AfterSend, { result });
+		} catch (error) {
+			const err = error instanceof Error ? error : new Error(String(error));
+			result.errors.push({ error: err });
+			this.handleError(err);
+		}
+
+		result.executionTime = Date.now() - startTime;
+
+		if (result.message) {
+			this._statistics.submit({
+				to: result.message.to,
+				from: result.message.from,
+				providerType: result.message.type,
+				startTime: new Date(startTime),
+				duration: result.executionTime,
+				success: result.success,
+			});
+		}
+
+		return result;
 	}
 
 	public getProvidersByType(type: AirhornSendType): Array<AirhornProvider> {
@@ -620,6 +711,21 @@ export class Airhorn extends Hookified {
 		}
 
 		return template;
+	}
+
+	/**
+	 * Execute a send to a single provider.
+	 * @param {AirhornProvider} provider - The provider to send with.
+	 * @param {AirhornProviderMessage} message - The message to send.
+	 * @param {AirhornSendOptions} options - The send options.
+	 * @returns {Promise<AirhornProviderSendResult>} - The result of the send operation.
+	 */
+	private async executeSend(
+		provider: AirhornProvider,
+		message: AirhornProviderMessage,
+		options?: AirhornSendOptions,
+	): Promise<AirhornProviderSendResult> {
+		return provider.send(message, options);
 	}
 
 	/**

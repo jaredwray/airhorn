@@ -198,6 +198,9 @@ Here are the following helper methods available:
 - `sendEmail`: Sends an email message.
 - `sendMobilePush`: Sends a mobile push notification.
 - `sendWebhook`: Sends a webhook notification.
+- `sendAll`: Sends to all providers simultaneously.
+- `sendFailOver`: Tries providers in order until one succeeds.
+- `sendRoundRobin`: Cycles through providers round-robin.
 
 # Airhorn Send Response
 
@@ -239,13 +242,13 @@ export type AirhornSendResult = {
 
 # Send Strategies
 
-Airhorn supports multiple send strategies to control how notifications are delivered. You can choose from the following strategies:
+Airhorn supports multiple send strategies to control how notifications are delivered. The `send()` method dispatches to the appropriate strategy method based on the configured `sendStrategy` (default: `RoundRobin`). You can also call each strategy method directly.
 
-- **Round Robin**: Distributes notifications evenly across all available providers.
-- **Fail Over**: Tries each provider in order until one succeeds.
-- **All**: Sends the notification to all providers simultaneously.
+- **Round Robin** (`sendRoundRobin`): Cycles through providers, selecting the next one on each call. _(Default)_
+- **Fail Over** (`sendFailOver`): Tries each provider in order until one succeeds.
+- **All** (`sendAll`): Sends the notification to all providers simultaneously.
 
-You can configure the send strategy when creating the Airhorn instance:
+You can configure the default send strategy when creating the Airhorn instance:
 
 ```typescript
 import { Airhorn, AirhornSendStrategy } from "airhorn";
@@ -253,6 +256,68 @@ import { Airhorn, AirhornSendStrategy } from "airhorn";
 const airhorn = new Airhorn({
 	sendStrategy: AirhornSendStrategy.RoundRobin
 });
+```
+
+Or call a strategy method directly:
+
+## `sendAll`
+
+Sends a notification to all providers simultaneously. Succeeds if at least one provider succeeds.
+
+```typescript
+import { Airhorn, AirhornSendType } from "airhorn";
+
+const airhorn = new Airhorn();
+
+const template = {
+	from: "https://mywebhookdomain.com",
+	content: "Hey <%= name %> this is a notification from Airhorn",
+	templateEngine: "ejs",
+}
+
+const data = { name: "John" };
+
+const result = await airhorn.sendAll("https://mockhttp.org/post", template, data, AirhornSendType.Webhook);
+```
+
+## `sendFailOver`
+
+Tries each provider in order until one succeeds. If the first provider fails, it moves to the next.
+
+```typescript
+import { Airhorn, AirhornSendType } from "airhorn";
+
+const airhorn = new Airhorn();
+
+const template = {
+	from: "https://mywebhookdomain.com",
+	content: "Hey <%= name %> this is a notification from Airhorn",
+	templateEngine: "ejs",
+}
+
+const data = { name: "John" };
+
+const result = await airhorn.sendFailOver("https://mockhttp.org/post", template, data, AirhornSendType.Webhook);
+```
+
+## `sendRoundRobin`
+
+Cycles through providers, selecting the next one on each call. This is the default strategy.
+
+```typescript
+import { Airhorn, AirhornSendType } from "airhorn";
+
+const airhorn = new Airhorn();
+
+const template = {
+	from: "https://mywebhookdomain.com",
+	content: "Hey <%= name %> this is a notification from Airhorn",
+	templateEngine: "ejs",
+}
+
+const data = { name: "John" };
+
+const result = await airhorn.sendRoundRobin("https://mockhttp.org/post", template, data, AirhornSendType.Webhook);
 ```
 
 # Airhorn API
@@ -266,7 +331,10 @@ Here are all the properties and methods available and a brief description of eac
 - `.throwOnErrors`: Gets the throw on errors flag.
 - `.statistics`: Access the statistics instance. go to [Statistics](#statistics) to learn more.
 - `.providers`: Gets the list of configured providers.
-- `send()`: Sends a message using the configured providers.
+- `send()`: Dispatches to the appropriate strategy method based on the configured `sendStrategy`.
+- `sendAll()`: Sends to all providers simultaneously.
+- `sendFailOver()`: Tries providers in order until one succeeds.
+- `sendRoundRobin()`: Cycles through providers round-robin.
 - `sendSMS()`: Sends an SMS message.
 - `sendEmail()`: Sends an email message.
 - `sendMobilePush()`: Sends a mobile push notification.

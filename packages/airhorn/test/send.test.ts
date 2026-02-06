@@ -314,6 +314,30 @@ describe("Airhorn send function", () => {
 		expect(mockFetch).toHaveBeenCalledTimes(2);
 	});
 
+	test("sendAll should handle all providers failing", async () => {
+		const provider1 = new AirhornWebhookProvider();
+		const provider2 = new AirhornWebhookProvider();
+		airhorn.providers = [provider1, provider2];
+
+		mockFetch.mockRejectedValue(new Error("Network error"));
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendAll(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+		);
+
+		expect(result.success).toBe(false);
+		expect(result.providers).toHaveLength(2);
+		expect(mockFetch).toHaveBeenCalledTimes(2);
+	});
+
 	test("sendFailOver should try next provider on failure", async () => {
 		const provider1 = new AirhornWebhookProvider();
 		const provider2 = new AirhornWebhookProvider();
@@ -395,6 +419,66 @@ describe("Airhorn send function", () => {
 		expect(result3.providers).toHaveLength(1);
 
 		expect(mockFetch).toHaveBeenCalledTimes(3);
+	});
+
+	test("sendAll should handle no providers available", async () => {
+		airhorn.providers = [];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendAll(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+		);
+
+		expect(result.success).toBe(false);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].error.message).toContain("No providers available");
+	});
+
+	test("sendFailOver should handle no providers available", async () => {
+		airhorn.providers = [];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendFailOver(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+		);
+
+		expect(result.success).toBe(false);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].error.message).toContain("No providers available");
+	});
+
+	test("sendRoundRobin should handle no providers available", async () => {
+		airhorn.providers = [];
+
+		const template: AirhornTemplate = {
+			from: "test@example.com",
+			content: "Test content",
+		};
+
+		const result = await airhorn.sendRoundRobin(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+		);
+
+		expect(result.success).toBe(false);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].error.message).toContain("No providers available");
 	});
 
 	test("should emit events on send", async () => {
