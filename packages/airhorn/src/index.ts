@@ -148,7 +148,7 @@ export class Airhorn extends Hookified {
 
 	constructor(options?: AirhornOptions) {
 		// biome-ignore format: long format
-		super({ throwOnHookError: options?.throwOnErrors, throwOnEmptyListeners: false, throwOnEmitError: options?.throwOnErrors ?? false });
+		super({ throwOnHookError: options?.throwOnErrors ?? false, throwOnEmptyListeners: false, throwOnEmitError: options?.throwOnErrors ?? false });
 
 		if (options?.cache !== undefined) {
 			if (options?.cache === false) {

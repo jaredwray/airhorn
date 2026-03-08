@@ -485,7 +485,7 @@ airhorn.onHook({
 	},
 });
 
-// IHook object with id for lifecycle management OnHookOptions for positioning
+// IHook object with an id and OnHookOptions for positioning
 airhorn.onHook(
 	{
 		id: 'hook-after-send-1',
