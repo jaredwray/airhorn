@@ -35,8 +35,10 @@
 - [Airhorn API](#airhorn-api)
 - [Using Webhooks](#using-webhooks)
 - [Statistics](#statistics)
+- [Hooks](#hooks)
 - [Emitting Events](#emitting-events)
 - [Load Template Helper](#load-template-helper)
+- [Migration to v6](#migration-to-v6)
 - [Core Supported Providers](#core-supported-providers)
 - [Third Party Providers](#third-party-providers)
 - [Creating a Provider](#creating-a-provider)
@@ -155,7 +157,8 @@ export type AirhornOptions = {
 	 */
 	sendStrategy?: AirhornSendStrategy;
 	/**
-	 * Whether to throw an error if sending fails. By default we use emitting for errors
+	 * Whether to throw an error if sending fails. By default we use emitting for errors.
+	 * Delegates to hookified's `throwOnEmitError` and `throwOnHookError`.
 	 * @default false
 	 */
 	throwOnErrors?: boolean;
@@ -355,7 +358,7 @@ Here are all the properties and methods available and a brief description of eac
 - `.retryStrategy`: Gets the retry strategy.
 - `.timeout`: Gets the timeout for sending messages.
 - `.sendStrategy`: Gets the send strategy.
-- `.throwOnErrors`: Gets the throw on errors flag.
+- `.throwOnErrors`: Gets/sets the throw on errors flag. Delegates to hookified's `throwOnEmitError` and `throwOnHookError`.
 - `.statistics`: Access the statistics instance. go to [Statistics](#statistics) to learn more.
 - `.providers`: Gets the list of configured providers.
 - `send()`: Dispatches to the appropriate strategy method based on the configured `sendStrategy`.
@@ -458,6 +461,111 @@ const airhorn = new Airhorn();
 airhorn.statistics.reset();
 ```
 
+# Hooks
+
+Airhorn extends [Hookified](https://hookified.org) and provides two built-in hooks for intercepting the send pipeline:
+
+- `before:Send` (`AirhornHook.BeforeSend`) — Called before a message is sent. Receives `{ message, options }`.
+- `after:Send` (`AirhornHook.AfterSend`) — Called after a message is sent. Receives `{ result }`.
+
+## Registering Hooks with `onHook`
+
+You can register hooks using the `onHook` method. It supports both a simple `(event, handler)` signature and the `IHook` object format:
+
+```typescript
+import { Airhorn, AirhornHook } from "airhorn";
+import type { IHook } from "hookified";
+
+const airhorn = new Airhorn();
+
+airhorn.onHook({
+	event: AirhornHook.BeforeSend,
+	handler: async ({ message, options }) => {
+		message.content = `[PREFIX] ${message.content}`;
+	},
+});
+
+// IHook object with id for lifecycle management OnHookOptions for positioning
+airhorn.onHook(
+	{
+		id: 'hook-after-send-1',
+		event: AirhornHook.AfterSend,
+		handler: async ({ result }) => {
+			console.log("Send result:", result.success);
+		},
+	},
+	{ position: "Top" },
+);
+```
+
+## Modifying Messages with BeforeSend
+
+The `BeforeSend` hook receives the message object by reference, so you can modify it before it is sent:
+
+```typescript
+import { Airhorn, AirhornHook, AirhornSendType } from "airhorn";
+
+const airhorn = new Airhorn();
+
+airhorn.onHook(AirhornHook.BeforeSend, async ({ message }) => {
+	// Redirect the message
+	message.to = "https://new-endpoint.example.com/webhook";
+	// Modify content
+	message.content = `[MODIFIED] ${message.content}`;
+});
+
+const template = {
+	from: "sender@example.com",
+	content: "Hello <%= name %>!",
+	templateEngine: "ejs",
+};
+
+await airhorn.send("https://original.example.com/webhook", template, { name: "World" }, AirhornSendType.Webhook);
+```
+
+## Inspecting Results with AfterSend
+
+The `AfterSend` hook is called after the send completes (even on failure):
+
+```typescript
+import { Airhorn, AirhornHook } from "airhorn";
+
+const airhorn = new Airhorn();
+
+airhorn.onHook(AirhornHook.AfterSend, async ({ result }) => {
+	if (result.success) {
+		console.log("Message sent successfully");
+	} else {
+		console.error("Send failed with errors:", result.errors);
+	}
+});
+```
+
+## Managing Hooks by ID
+
+Using `IHook` objects with an `id` allows you to look up or remove hooks later:
+
+```typescript
+import { Airhorn, AirhornHook } from "airhorn";
+
+const airhorn = new Airhorn();
+
+// Register with an id
+airhorn.onHook({
+	id: "logging-hook",
+	event: AirhornHook.BeforeSend,
+	handler: async ({ message }) => {
+		console.log("Sending:", message);
+	},
+});
+
+// Look up by id
+const hook = airhorn.getHook("logging-hook");
+
+// Remove by id
+airhorn.removeHookById("logging-hook");
+```
+
 # Emitting Events
 
 Airhorn provides event emitting by default with the following events:
@@ -545,7 +653,83 @@ const airhorn = new Airhorn({
 
 Use one of the built in providers as a reference such as `@airhornjs/twilio`.
 
-# How to Contribute 
+# Migration to v6
+
+Airhorn v6 upgrades to [Hookified v2](https://hookified.org), which introduces breaking changes to the hooks API. If you were using hooks in v5, you will need to update your code.
+
+## Breaking Changes
+
+### `addHook` renamed to `onHook`
+
+The `addHook` method has been renamed to `onHook`. The `onHook` method also now supports `IHook` objects and `OnHookOptions` for hook positioning and ID management:
+
+```typescript
+// v5
+airhorn.addHook("before:Send", async (data) => {});
+
+// v6 — simple signature (drop-in replacement)
+airhorn.onHook("before:Send", async (data) => {});
+
+// v6 — IHook object (recommended)
+airhorn.onHook({
+	id: "my-hook",
+	event: "before:Send",
+	handler: async (data) => {},
+});
+```
+
+### `removeHook` now accepts `IHook` objects
+
+The `removeHook` method signature has changed to accept `IHook` objects and now returns the removed hook:
+
+```typescript
+// v5
+airhorn.removeHook("before:Send", handler);
+
+// v6
+const removed = airhorn.removeHook({ event: "before:Send", handler });
+```
+
+You can also remove hooks by ID:
+
+```typescript
+airhorn.removeHookById("my-hook");
+```
+
+### `getHooks` returns `IHook[]` instead of functions
+
+If you were calling `getHooks()`, it now returns `IHook[]` objects instead of raw handler functions:
+
+```typescript
+// v5 — returns Function[]
+const hooks = airhorn.getHooks("before:Send");
+
+// v6 — returns IHook[] with { id, event, handler }
+const hooks = airhorn.getHooks("before:Send");
+hooks.forEach((hook) => console.log(hook.handler));
+```
+
+### `throwOnErrors` now delegates to hookified
+
+The `throwOnErrors` option still works the same way from a user perspective, but internally it now delegates to hookified's `throwOnEmitError` and `throwOnHookError` properties. The private `handleError` method has been removed — error throwing is handled by hookified automatically when `throwOnErrors` is set to `true`.
+
+### Hookified constructor option renames
+
+These are handled internally by Airhorn, but if you were extending the class:
+
+| v5 | v6 |
+|----|----|
+| `throwHookErrors` | `throwOnHookError` |
+| `logger` | `eventLogger` |
+
+## Migration Checklist
+
+- [ ] Replace all `addHook()` calls with `onHook()`
+- [ ] Update `removeHook()` calls to use `IHook` objects
+- [ ] Update code that reads `getHooks()` results to handle `IHook[]`
+- [ ] If extending Airhorn, rename `throwHookErrors` to `throwOnHookError` in `super()` calls
+
+# How to Contribute
 
 Now that you've set up your workspace, you're ready to contribute changes to the `airhorn` repository you can refer to the [CONTRIBUTING](../../CONTRIBUTING.md) guide. If you have any questions please feel free to ask by creating an issue and label it `question`.
 
