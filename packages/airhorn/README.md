@@ -550,7 +550,7 @@ Airhorn extends [Hookified](https://hookified.org) and provides two built-in hoo
 
 ## Registering Hooks with `onHook`
 
-You can register hooks using the `onHook` method with `IHook` objects:
+You can register hooks using the `onHook` method. It supports both a simple `(event, handler)` signature and the `IHook` object format (recommended):
 
 ```typescript
 import { Airhorn, AirhornHook } from "airhorn";
