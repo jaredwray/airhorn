@@ -14,7 +14,7 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 
 - Supports multiple notification types: SMS, Email, Mobile Push, Webhooks
 - A unified API for all notification types using the `send()` method.
-- Powerful **Hooks system** (`BeforeSend`, `AfterSend`) for intercepting and modifying messages with full parameter access.
+- Powerful **Hooks system** via [Hookified](https://hookified.org) (`BeforeSend`, `AfterSend`) for intercepting and modifying messages using `onHook` with `IHook` objects.
 - Event Emitting built in by default for extendability and observability.
 - Send Strategy (Round Robin, Fail Over, All) Choose the best delivery method for each notification.
 - Built in Webhook support for sending notifications to external services.
@@ -65,102 +65,14 @@ await airhorn.send("+1234567890", template, data, AirhornProviderType.SMS);
 
 Check out the documentation and providers to learn more!
 
-# Hooks
+# Packages
 
-Airhorn provides a powerful hook system that allows you to intercept and modify notifications before and after they are sent. This enables custom validation, logging, transformation, and post-processing of messages.
-
-## Available Hooks
-
-- **BeforeSend**: Called after template rendering but before the message is sent to providers
-- **AfterSend**: Called after the message has been sent and providers have responded
-
-## BeforeSend Hook
-
-The `BeforeSend` hook receives the rendered message and options, allowing you to modify them before sending:
-
-```typescript
-import { Airhorn, AirhornHook } from "airhorn";
-
-const airhorn = new Airhorn();
-
-// Add a hook to modify message content before sending
-airhorn.addHook(AirhornHook.BeforeSend, ({ message, options }) => {
-	// Add a prefix to all messages
-	message.content = `[IMPORTANT] ${message.content}`;
-
-	// Modify the recipient
-	if (message.to.includes("test")) {
-		message.to = "override@example.com";
-	}
-
-	// Log the outgoing message
-	console.log("Sending message:", message);
-});
-```
-
-## AfterSend Hook
-
-The `AfterSend` hook receives the complete result object after sending, allowing you to post-process or enrich the result:
-
-```typescript
-// Add a hook to track results after sending
-airhorn.addHook(AirhornHook.AfterSend, ({ result }) => {
-	// Add custom metadata
-	result.metadata = {
-		processedAt: new Date(),
-		environment: process.env.NODE_ENV
-	};
-
-	// Send to analytics
-	if (result.success) {
-		analytics.track("notification_sent", {
-			type: result.message?.type,
-			provider: result.providers[0]?.name
-		});
-	}
-
-	// Log failures
-	if (!result.success) {
-		logger.error("Notification failed", result.errors);
-	}
-});
-```
-
-## Multiple Hooks
-
-You can register multiple hooks of the same type, and they will execute in the order they were registered:
-
-```typescript
-// First hook: validation
-airhorn.addHook(AirhornHook.BeforeSend, ({ message }) => {
-	if (!message.content || message.content.length === 0) {
-		throw new Error("Message content cannot be empty");
-	}
-});
-
-// Second hook: sanitization
-airhorn.addHook(AirhornHook.BeforeSend, ({ message }) => {
-	message.content = sanitizeHtml(message.content);
-});
-
-// Third hook: logging
-airhorn.addHook(AirhornHook.BeforeSend, ({ message }) => {
-	logger.info("Sending notification", { to: message.to, type: message.type });
-});
-```
-
-## Hook Error Handling
-
-By default, hook errors are caught and handled gracefully. You can configure Airhorn to throw hook errors by setting `throwOnErrors`:
-
-```typescript
-const airhorn = new Airhorn({ throwOnErrors: true });
-
-airhorn.addHook(AirhornHook.BeforeSend, ({ message }) => {
-	// This error will now throw and stop execution
-	throw new Error("Validation failed");
-});
-```
+| Package | Description | Documentation |
+|---------|-------------|---------------|
+| [`airhorn`](packages/airhorn) | Core library with unified send API and webhook support | [README](packages/airhorn/README.md) |
+| [`@airhornjs/twilio`](packages/twilio) | Twilio provider for SMS and Email (SendGrid) | [README](packages/twilio/README.md) |
+| [`@airhornjs/aws`](packages/aws) | AWS provider for SMS (SNS), Email (SES), and Push (SNS) | [README](packages/aws/README.md) |
+| [`@airhornjs/azure`](packages/azure) | Azure provider for SMS, Email, and Push | [README](packages/azure/README.md) |
 
 # Providers
 

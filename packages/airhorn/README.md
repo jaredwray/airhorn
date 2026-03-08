@@ -33,6 +33,27 @@
 - [Airhorn Send Response](#airhorn-send-response)
 - [Send Strategies](#send-strategies)
 - [Airhorn API](#airhorn-api)
+  - [Constructor](#constructor)
+  - [Properties](#properties)
+    - [.cache](#cache)
+    - [.sendStrategy](#sendstrategy)
+    - [.throwOnErrors](#throwonerrors)
+    - [.statistics](#statistics-1)
+    - [.providers](#providers)
+  - [Methods](#methods)
+    - [.send()](#send)
+    - [.sendAll()](#sendall)
+    - [.sendFailOver()](#sendfailover)
+    - [.sendRoundRobin()](#sendroundrobin)
+    - [.sendSMS()](#sendsms)
+    - [.sendEmail()](#sendemail)
+    - [.sendMobilePush()](#sendmobilepush)
+    - [.sendWebhook()](#sendwebhook)
+    - [.loadTemplate()](#loadtemplate)
+    - [.addProvider()](#addprovider)
+    - [.addProviders()](#addproviders)
+    - [.getProvidersByType()](#getprovidersbytype)
+    - [.generateMessage()](#generatemessage)
 - [Using Webhooks](#using-webhooks)
 - [Statistics](#statistics)
 - [Hooks](#hooks)
@@ -352,28 +373,87 @@ const result = await airhorn.sendRoundRobin("https://mockhttp.org/post", templat
 
 # Airhorn API
 
-Here are all the properties and methods available and a brief description of each:
+## Constructor
 
-- `.cache`: Gets the cache instance which is based on `cacheable`.
-- `.retryStrategy`: Gets the retry strategy.
-- `.timeout`: Gets the timeout for sending messages.
-- `.sendStrategy`: Gets the send strategy.
-- `.throwOnErrors`: Gets/sets the throw on errors flag. Delegates to hookified's `throwOnEmitError` and `throwOnHookError`.
-- `.statistics`: Access the statistics instance. go to [Statistics](#statistics) to learn more.
-- `.providers`: Gets the list of configured providers.
-- `send()`: Dispatches to the appropriate strategy method based on the configured `sendStrategy`.
-- `sendAll()`: Sends to all providers simultaneously.
-- `sendFailOver()`: Tries providers in order until one succeeds.
-- `sendRoundRobin()`: Cycles through providers round-robin.
-- `sendSMS()`: Sends an SMS message.
-- `sendEmail()`: Sends an email message.
-- `sendMobilePush()`: Sends a mobile push notification.
-- `sendWebhook()`: Sends a webhook notification.
-- `loadTemplate()`: Helper method that loads a template from the file system. Go to [Load Template Helper](#load-template-helper) to learn more.
-- `getProvidersByType()`: Gets the list of providers by type. _(Used Internally)_
-- `setCache()`: Sets the cache instance. _(Used Internally)_
-- `addProviders()`: Adds new providers to the Airhorn instance. _(Used Internally)_
-- `generateMessage()`: Generates a message from a template and data. _(Used Internally)_
+### `new Airhorn(options?: AirhornOptions)`
+
+Creates a new Airhorn instance. See [Airhorn Options](#airhorn-options) for available configuration options.
+
+## Properties
+
+### `.cache`
+
+Gets/sets the cache instance which is based on `cacheable`.
+
+### `.sendStrategy`
+
+Gets/sets the send strategy (`RoundRobin`, `FailOver`, or `All`).
+
+### `.throwOnErrors`
+
+Gets/sets the throw on errors flag. Delegates to hookified's `throwOnEmitError` and `throwOnHookError`.
+
+### `.statistics`
+
+Access the statistics instance. See [Statistics](#statistics) to learn more.
+
+### `.providers`
+
+Gets/sets the list of configured providers.
+
+## Methods
+
+### `.send()`
+
+Dispatches to the appropriate strategy method based on the configured `sendStrategy`.
+
+### `.sendAll()`
+
+Sends to all providers simultaneously. Succeeds if at least one provider succeeds.
+
+### `.sendFailOver()`
+
+Tries providers in order until one succeeds.
+
+### `.sendRoundRobin()`
+
+Cycles through providers round-robin. This is the default strategy.
+
+### `.sendSMS()`
+
+Sends an SMS message using the configured SMS providers.
+
+### `.sendEmail()`
+
+Sends an email message using the configured email providers.
+
+### `.sendMobilePush()`
+
+Sends a mobile push notification using the configured push providers.
+
+### `.sendWebhook()`
+
+Sends a webhook notification using the built-in webhook provider.
+
+### `.loadTemplate()`
+
+Loads a template from the file system. See [Load Template Helper](#load-template-helper) to learn more.
+
+### `.addProvider()`
+
+Adds a single provider to the Airhorn instance.
+
+### `.addProviders()`
+
+Adds multiple providers to the Airhorn instance.
+
+### `.getProvidersByType()`
+
+Gets the list of providers filtered by type (SMS, Email, Push, Webhook).
+
+### `.generateMessage()`
+
+Generates a message from a template and data using the configured template engine.
 
 # Using Webhooks
 
@@ -470,7 +550,7 @@ Airhorn extends [Hookified](https://hookified.org) and provides two built-in hoo
 
 ## Registering Hooks with `onHook`
 
-You can register hooks using the `onHook` method. It supports both a simple `(event, handler)` signature and the `IHook` object format:
+You can register hooks using the `onHook` method with `IHook` objects:
 
 ```typescript
 import { Airhorn, AirhornHook } from "airhorn";
