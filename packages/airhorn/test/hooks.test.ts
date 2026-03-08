@@ -44,7 +44,7 @@ describe("Airhorn Hooks", () => {
 
 			// Add BeforeSend hook
 			const beforeSendSpy = vi.fn();
-			airhorn.addHook(AirhornHook.BeforeSend, beforeSendSpy);
+			airhorn.onHook(AirhornHook.BeforeSend, beforeSendSpy);
 
 			// Send webhook
 			await airhorn.send(
@@ -90,7 +90,7 @@ describe("Airhorn Hooks", () => {
 			};
 
 			// Add BeforeSend hook that modifies message
-			airhorn.addHook(
+			airhorn.onHook(
 				AirhornHook.BeforeSend,
 				({ message }: { message: AirhornProviderMessage }) => {
 					message.content = `[MODIFIED] ${message.content}`;
@@ -137,7 +137,7 @@ describe("Airhorn Hooks", () => {
 			};
 
 			// Add BeforeSend hook that modifies recipient
-			airhorn.addHook(
+			airhorn.onHook(
 				AirhornHook.BeforeSend,
 				({ message }: { message: AirhornProviderMessage }) => {
 					message.to = newUrl;
@@ -192,9 +192,9 @@ describe("Airhorn Hooks", () => {
 				},
 			);
 
-			airhorn.addHook(AirhornHook.BeforeSend, hook1);
-			airhorn.addHook(AirhornHook.BeforeSend, hook2);
-			airhorn.addHook(AirhornHook.BeforeSend, hook3);
+			airhorn.onHook(AirhornHook.BeforeSend, hook1);
+			airhorn.onHook(AirhornHook.BeforeSend, hook2);
+			airhorn.onHook(AirhornHook.BeforeSend, hook3);
 
 			// Send webhook
 			await airhorn.send(webhookUrl, template, {}, AirhornSendType.Webhook);
@@ -236,7 +236,7 @@ describe("Airhorn Hooks", () => {
 
 			// Add BeforeSend hook
 			const beforeSendSpy = vi.fn();
-			airhorn.addHook(AirhornHook.BeforeSend, beforeSendSpy);
+			airhorn.onHook(AirhornHook.BeforeSend, beforeSendSpy);
 
 			const options = {
 				sendStrategy: AirhornSendStrategy.FailOver,
@@ -287,7 +287,7 @@ describe("Airhorn Hooks", () => {
 
 			// Add AfterSend hook
 			const afterSendSpy = vi.fn();
-			airhorn.addHook(AirhornHook.AfterSend, afterSendSpy);
+			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			// Send webhook
 			await airhorn.send(
@@ -333,7 +333,7 @@ describe("Airhorn Hooks", () => {
 			};
 
 			// Add AfterSend hook that adds metadata
-			airhorn.addHook(AirhornHook.AfterSend, ({ result }: any) => {
+			airhorn.onHook(AirhornHook.AfterSend, ({ result }: any) => {
 				result.metadata = { processed: true, timestamp: Date.now() };
 			});
 
@@ -375,9 +375,9 @@ describe("Airhorn Hooks", () => {
 			const hook2 = vi.fn();
 			const hook3 = vi.fn();
 
-			airhorn.addHook(AirhornHook.AfterSend, hook1);
-			airhorn.addHook(AirhornHook.AfterSend, hook2);
-			airhorn.addHook(AirhornHook.AfterSend, hook3);
+			airhorn.onHook(AirhornHook.AfterSend, hook1);
+			airhorn.onHook(AirhornHook.AfterSend, hook2);
+			airhorn.onHook(AirhornHook.AfterSend, hook3);
 
 			// Send webhook
 			await airhorn.send(webhookUrl, template, {}, AirhornSendType.Webhook);
@@ -410,7 +410,7 @@ describe("Airhorn Hooks", () => {
 
 			// Add AfterSend hook
 			const afterSendSpy = vi.fn();
-			airhorn.addHook(AirhornHook.AfterSend, afterSendSpy);
+			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			// Send webhook (should fail)
 			await airhorn.send(webhookUrl, template, {}, AirhornSendType.Webhook);
@@ -450,8 +450,8 @@ describe("Airhorn Hooks", () => {
 			const beforeSendSpy = vi.fn();
 			const afterSendSpy = vi.fn();
 
-			airhorn.addHook(AirhornHook.BeforeSend, beforeSendSpy);
-			airhorn.addHook(AirhornHook.AfterSend, afterSendSpy);
+			airhorn.onHook(AirhornHook.BeforeSend, beforeSendSpy);
+			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			// Send webhook
 			await airhorn.send(webhookUrl, template, {}, AirhornSendType.Webhook);
@@ -483,7 +483,7 @@ describe("Airhorn Hooks", () => {
 
 			const modifiedContent = "Modified by BeforeSend";
 
-			airhorn.addHook(
+			airhorn.onHook(
 				AirhornHook.BeforeSend,
 				({ message }: { message: AirhornProviderMessage }) => {
 					message.content = modifiedContent;
@@ -491,7 +491,7 @@ describe("Airhorn Hooks", () => {
 			);
 
 			const afterSendSpy = vi.fn();
-			airhorn.addHook(AirhornHook.AfterSend, afterSendSpy);
+			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			// Send webhook
 			await airhorn.send(webhookUrl, template, {}, AirhornSendType.Webhook);
@@ -531,7 +531,7 @@ describe("Airhorn Hooks", () => {
 			};
 
 			// Add BeforeSend hook that throws
-			airhornNoThrow.addHook(AirhornHook.BeforeSend, () => {
+			airhornNoThrow.onHook(AirhornHook.BeforeSend, () => {
 				throw new Error("Hook error");
 			});
 
@@ -554,7 +554,7 @@ describe("Airhorn Hooks", () => {
 			};
 
 			// Add BeforeSend hook that throws
-			airhornThrow.addHook(AirhornHook.BeforeSend, () => {
+			airhornThrow.onHook(AirhornHook.BeforeSend, () => {
 				throw new Error("Hook error");
 			});
 
@@ -600,8 +600,8 @@ describe("Airhorn Hooks", () => {
 			const beforeSendSpy = vi.fn();
 			const afterSendSpy = vi.fn();
 
-			airhorn.addHook(AirhornHook.BeforeSend, beforeSendSpy);
-			airhorn.addHook(AirhornHook.AfterSend, afterSendSpy);
+			airhorn.onHook(AirhornHook.BeforeSend, beforeSendSpy);
+			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			await airhorn.send(webhookUrl1, template, {}, AirhornSendType.Webhook, {
 				sendStrategy: AirhornSendStrategy.FailOver,
@@ -630,8 +630,8 @@ describe("Airhorn Hooks", () => {
 			const beforeSendSpy = vi.fn();
 			const afterSendSpy = vi.fn();
 
-			airhorn.addHook(AirhornHook.BeforeSend, beforeSendSpy);
-			airhorn.addHook(AirhornHook.AfterSend, afterSendSpy);
+			airhorn.onHook(AirhornHook.BeforeSend, beforeSendSpy);
+			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			// Use convenience method
 			await airhorn.sendWebhook(webhookUrl, "test@example.com", "Hello");

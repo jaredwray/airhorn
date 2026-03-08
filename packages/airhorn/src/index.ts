@@ -141,7 +141,6 @@ export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
 	private _sendStrategy: AirhornSendStrategy = AirhornSendStrategy.RoundRobin;
-	private _throwOnErrors: boolean = false;
 	private _statistics: AirhornStatistics = new AirhornStatistics();
 	private _providers: Array<AirhornProvider> = [];
 	private _roundRobinIndex: number = 0;
@@ -149,7 +148,7 @@ export class Airhorn extends Hookified {
 
 	constructor(options?: AirhornOptions) {
 		// biome-ignore format: long format
-		super({ throwHookErrors: options?.throwOnErrors });
+		super({ throwOnHookError: options?.throwOnErrors ?? false, throwOnEmptyListeners: false, throwOnEmitError: options?.throwOnErrors ?? false });
 
 		if (options?.cache !== undefined) {
 			if (options?.cache === false) {
@@ -174,10 +173,6 @@ export class Airhorn extends Hookified {
 
 		if (options?.sendStrategy !== undefined) {
 			this._sendStrategy = options.sendStrategy;
-		}
-
-		if (options?.throwOnErrors !== undefined) {
-			this._throwOnErrors = options.throwOnErrors;
 		}
 	}
 
@@ -218,7 +213,7 @@ export class Airhorn extends Hookified {
 	 * @returns {boolean} The throw on errors flag.
 	 */
 	public get throwOnErrors(): boolean {
-		return this._throwOnErrors;
+		return this.throwOnEmitError;
 	}
 
 	/**
@@ -226,7 +221,8 @@ export class Airhorn extends Hookified {
 	 * @param {boolean} throwOnErrors - The throw on errors flag.
 	 */
 	public set throwOnErrors(throwOnErrors: boolean) {
-		this._throwOnErrors = throwOnErrors;
+		this.throwOnEmitError = throwOnErrors;
+		this.throwOnHookError = throwOnErrors;
 	}
 
 	/**
@@ -650,7 +646,7 @@ export class Airhorn extends Hookified {
 				templateEngine: writr.frontMatter.templateEngine,
 			};
 		} catch (error) {
-			this.handleError(error as Error);
+			this.emit(AirhornEvent.Error, error as Error);
 		}
 
 		return template;
@@ -707,7 +703,7 @@ export class Airhorn extends Hookified {
 		} catch (error) {
 			const err = error instanceof Error ? error : new Error(String(error));
 			result.errors.push({ error: err });
-			this.handleError(err);
+			this.emit(AirhornEvent.Error, err);
 		}
 
 		result.executionTime = Date.now() - startTime;
@@ -739,17 +735,6 @@ export class Airhorn extends Hookified {
 		options?: AirhornSendOptions,
 	): Promise<AirhornProviderSendResult> {
 		return provider.send(message, options);
-	}
-
-	/**
-	 * Handle Errors
-	 * @param {Error} error
-	 */
-	private handleError(error: Error): void {
-		this.emit(AirhornEvent.Error, error);
-		if (this._throwOnErrors) {
-			throw error;
-		}
 	}
 }
 
