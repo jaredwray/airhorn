@@ -1,6 +1,6 @@
 minimumReleaseAge: 2880
 minimumReleaseAgeExclude:
-  - ecto
+  - hookified
 packages:
   - packages/*
 onlyBuiltDependencies:
