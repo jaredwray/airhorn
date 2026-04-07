@@ -1,30 +1,32 @@
 :root {
-  --font-family: 'Open Sans', sans-serif;
+  --bg: #121212;
+  --fg: #ffffff;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --border-hover: rgba(240, 195, 35, 0.5);
+  --surface: #262626;
+  --surface-hover: rgba(255, 255, 255, 0.1);
+  --muted: #c5cdd3;
+  --muted-fg: rgba(255, 255, 255, 0.65);
+  --code-bg: rgba(255, 255, 255, 0.075);
+  --pre-bg: rgba(255, 255, 255, 0.05);
+  --link: #f0c323;
+  --scrollbar: rgba(240, 195, 35, 0.35);
+  --header-height: 81px;
+}
 
-  --color-primary:  #f0c323;
-  --color-secondary: #373232;
-  --color-secondary-dark: #373232;
-  --color-text: #373232;
-
-  --background: #ffffff;
-  --home-background: #ffffff;
-  --header-background: #ffffff;
-
-  --sidebar-background: #ffffff;
-  --sidebar-text: #322d3c;
-  --sidebar-text-active: #7d7887;
-
-  --border: rgba(238,238,245,1);
-
-  --background-search-highlight: var(--color-secondary-dark);
-  --color-search-highlight: #ffffff;
-  --search-input-background: var(--header-background);
-
-  --code: rgba(238,238,245,1);
-
-  --pagefind-ui-text: var(--color-text) !important;
-  --pagefind-ui-font: var(--font-family) !important;
-  --pagefind-ui-background: var(--background) !important;
-  --pagefind-ui-border: var(--border) !important;
-  --pagefind-ui-scale: .9 !important;
+[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #373232;
+  --border: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --border-hover: rgba(240, 195, 35, 0.6);
+  --surface: #faf8f2;
+  --surface-hover: rgba(240, 195, 35, 0.12);
+  --muted: #6b7280;
+  --muted-fg: rgba(0, 0, 0, 0.5);
+  --code-bg: rgba(0, 0, 0, 0.05);
+  --pre-bg: rgba(0, 0, 0, 0.03);
+  --link: #b8901a;
+  --scrollbar: rgba(0, 0, 0, 0.2);
 }
