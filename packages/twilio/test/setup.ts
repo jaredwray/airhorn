@@ -33,4 +33,4 @@ vi.mock("@sendgrid/mail", () => ({
 }));
 
 // Export for tests to use
-export { mockTwilioCreate, mockSgSend, mockSgSetApiKey };
+export { mockSgSend, mockSgSetApiKey, mockTwilioCreate };
