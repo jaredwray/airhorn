@@ -34,7 +34,7 @@
   "license": "MIT",
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
-    "twilio": "^5.12.2"
+    "twilio": "^5.13.1"
   },
   "peerDependencies": {
     "airhorn": "workspace:^"
