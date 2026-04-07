@@ -45,8 +45,8 @@ importers:
         specifier: ^4.8.3
         version: 4.8.3
       hookified:
-        specifier: ^1.14.0
-        version: 1.15.1
+        specifier: ^2.1.1
+        version: 2.1.1
       writr:
         specifier: ^6.1.1
         version: 6.1.1
