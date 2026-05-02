@@ -45,8 +45,8 @@ importers:
         specifier: ^4.8.3
         version: 4.8.3
       hookified:
-        specifier: ^2.1.1
-        version: 2.1.1
+        specifier: ^2.2.0
+        version: 2.2.0
       writr:
         specifier: ^6.1.1
         version: 6.1.1
@@ -1972,8 +1972,8 @@ packages:
   hookified@1.15.1:
     resolution: {integrity: sha512-MvG/clsADq1GPM2KGo2nyfaWVyn9naPiXrqIe4jYjXNZQt238kWyOGrsyc/DmRAQ+Re6yeo6yX/yoNCG5KAEVg==}
 
-  hookified@2.1.1:
-    resolution: {integrity: sha512-AHb76R16GB5EsPBE2J7Ko5kiEyXwviB9P5SMrAKcuAu4vJPZttViAbj9+tZeaQE5zjDme+1vcHP78Yj/WoAveA==}
+  hookified@2.2.0:
+    resolution: {integrity: sha512-p/LgFzRN5FeoD3DLS6bkUapeye6E4SI6yJs6KetENd18S+FBthqYq2amJUWpt5z0EQwwHemidjY5OqJGEKm5uA==}
 
   html-dom-parser@5.1.8:
     resolution: {integrity: sha512-MCIUng//mF2qTtGHXJWr6OLfHWmg3Pm8ezpfiltF83tizPWY17JxT4dRLE8lykJ5bChJELoY3onQKPbufJHxYA==}
@@ -5415,7 +5415,7 @@ snapshots:
 
   hookified@1.15.1: {}
 
-  hookified@2.1.1: {}
+  hookified@2.2.0: {}
 
   html-dom-parser@5.1.8:
     dependencies:
@@ -6371,7 +6371,7 @@ snapshots:
 
   qified@0.9.1:
     dependencies:
-      hookified: 2.1.1
+      hookified: 2.2.0
 
   qs@6.15.0:
     dependencies:
@@ -7053,7 +7053,7 @@ snapshots:
       ai: 6.0.146(zod@4.3.6)
       cacheable: 2.3.4
       hashery: 1.5.1
-      hookified: 2.1.1
+      hookified: 2.2.0
       html-react-parser: 5.2.17(react@19.2.4)
       js-yaml: 4.1.1
       react: 19.2.4
