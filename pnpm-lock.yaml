@@ -87,8 +87,8 @@ importers:
         specifier: workspace:^
         version: link:../airhorn
       twilio:
-        specifier: ^5.13.1
-        version: 5.13.1
+        specifier: ^6.0.0
+        version: 6.0.0
 
 packages:
 
@@ -2983,9 +2983,9 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  twilio@5.13.1:
-    resolution: {integrity: sha512-sT+PkhptF4Mf7t8eXFFvPQx4w5VHnBIPXbltGPMFRe+R2GxfRdMuFbuNA/cEm0aQR6LFQOn33+fhClg+TjRVqQ==}
-    engines: {node: '>=14.0'}
+  twilio@6.0.0:
+    resolution: {integrity: sha512-MAie5DJ3KLpcKlDaYtNzsKMQXcCi+YHWKvZjuSpm27vJAO/l8PanJA0LkkJ03sbh+Kwe5NeL0Q2+y6IjNUYeUA==}
+    engines: {node: '>=20.0.0'}
 
   type-fest@4.41.0:
     resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
@@ -6829,7 +6829,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  twilio@5.13.1:
+  twilio@6.0.0:
     dependencies:
       axios: 1.14.0
       dayjs: 1.11.20
