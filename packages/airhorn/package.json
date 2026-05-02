@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "cacheable": "^2.3.4",
-    "ecto": "^4.8.3",
+    "ecto": "^4.8.4",
     "hookified": "^2.1.1",
     "writr": "^6.1.1"
   },

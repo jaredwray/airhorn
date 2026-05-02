@@ -627,6 +627,13 @@ describe("Airhorn Hooks", () => {
 			};
 			mockFetch.mockResolvedValueOnce(mockResponse);
 
+			const template: AirhornTemplate = {
+				from: "test@example.com",
+				subject: "Test Subject",
+				content: "Hello World!",
+				templateEngine: "ejs",
+			};
+
 			const beforeSendSpy = vi.fn();
 			const afterSendSpy = vi.fn();
 
@@ -634,7 +641,7 @@ describe("Airhorn Hooks", () => {
 			airhorn.onHook(AirhornHook.AfterSend, afterSendSpy);
 
 			// Use convenience method
-			await airhorn.sendWebhook(webhookUrl, "test@example.com", "Hello");
+			await airhorn.sendWebhook(webhookUrl, template, {});
 
 			// Verify hooks were called
 			expect(beforeSendSpy).toHaveBeenCalledTimes(1);
