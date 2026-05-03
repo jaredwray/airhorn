@@ -54,11 +54,11 @@ importers:
   packages/aws:
     dependencies:
       '@aws-sdk/client-ses':
-        specifier: ^3.1039.0
-        version: 3.1039.0
+        specifier: ^3.1040.0
+        version: 3.1040.0
       '@aws-sdk/client-sns':
-        specifier: ^3.1039.0
-        version: 3.1039.0
+        specifier: ^3.1040.0
+        version: 3.1040.0
       airhorn:
         specifier: workspace:^
         version: link:../airhorn
@@ -155,12 +155,12 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-ses@3.1039.0':
-    resolution: {integrity: sha512-WftoMXAuKzyVUAWQt8i9HzsR59Pd6VvgBAjEk+V0RIj2QeGQ7Bm/kgDmhyS8o3WSqH82YsRa9K5G6WamejySGA==}
+  '@aws-sdk/client-ses@3.1040.0':
+    resolution: {integrity: sha512-eqSzLsDpofGIaxGE8oTExaj2onrvuOYYo+5Qb6HKyb5iKvAI5XQl1z1+saakATgM6TiTEf7e/gNgGO+VA07+bQ==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/client-sns@3.1039.0':
-    resolution: {integrity: sha512-fNWuHMxBdfs3nzXmFbqozrRyLN7MN7Vi4JI9TWatS183iV4055DX7LL1QAZdzMCHhHgUEYZlywScW/9E8m5Owg==}
+  '@aws-sdk/client-sns@3.1040.0':
+    resolution: {integrity: sha512-wo2cbApKoYtzBAfY3p2nvRWGQGdZGsyu18MvxrYCuG2IpYGsdNhDmApt9ErD7c0URzyfSFYZ3PlaPAs/YMrIog==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.974.7':
@@ -3275,7 +3275,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-ses@3.1039.0':
+  '@aws-sdk/client-ses@3.1040.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
@@ -3320,7 +3320,7 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sns@3.1039.0':
+  '@aws-sdk/client-sns@3.1040.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
