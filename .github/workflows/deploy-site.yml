@@ -17,18 +17,20 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    # Test
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 24
 
-    - name: Install Dependencies  
-      run: npm install -g pnpm && pnpm install
+    - name: Install Dependencies
+      run: pnpm install --frozen-lockfile
 
-    - name: Build Website
+    - name: Build
       run: pnpm build
-    
+
     - name: Build Website
       run: pnpm website:build
 
