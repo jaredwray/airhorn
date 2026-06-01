@@ -27,8 +27,8 @@
     "build": "rimraf ./dist && tsup src/index.ts --format esm --dts --clean"
   },
   "dependencies": {
-    "cacheable": "^2.3.4",
-    "ecto": "^4.8.4",
+    "cacheable": "^2.3.5",
+    "ecto": "^4.8.7",
     "hookified": "^2.2.0",
     "writr": "^6.1.2"
   },
