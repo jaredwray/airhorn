@@ -5,8 +5,14 @@ on:
   release:
     types: [released]
 
-env:
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+# Packages are published with npm Trusted Publishing (OIDC) — no NPM_TOKEN.
+# This requires a trusted publisher (this repository + this workflow file) to be
+# configured for each package on npmjs.com. The `id-token: write` permission lets
+# the job mint the short-lived OIDC token used for authentication and to sign the
+# provenance attestations.
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   setup-build-release:
@@ -22,6 +28,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
@@ -31,11 +38,6 @@ jobs:
 
       - name: Testing
         run: pnpm test:ci
-
-      - name: create npmrc
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          echo "always-auth=true" >> ~/.npmrc
 
       - name: Publish airhorn
         run: pnpm publish:airhorn
