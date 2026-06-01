@@ -26,7 +26,7 @@
   "dependencies": {
     "@azure/communication-email": "^1.1.0",
     "@azure/communication-sms": "1.2.0-beta.4",
-    "@azure/notification-hubs": "^2.0.2"
+    "@azure/notification-hubs": "^2.1.0"
   },
   "peerDependencies": {
     "airhorn": "workspace:*"
