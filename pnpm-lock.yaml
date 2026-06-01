@@ -39,11 +39,11 @@ importers:
   packages/airhorn:
     dependencies:
       cacheable:
-        specifier: ^2.3.4
-        version: 2.3.4
+        specifier: ^2.3.5
+        version: 2.3.5
       ecto:
-        specifier: ^4.8.4
-        version: 4.8.4
+        specifier: ^4.8.7
+        version: 4.8.7
       hookified:
         specifier: ^2.2.0
         version: 2.2.0
@@ -402,9 +402,6 @@ packages:
 
   '@cacheable/net@2.0.7':
     resolution: {integrity: sha512-yItascYmXnV324/43u+t8/DaljXV0dxfwC/4BfXm38SiKWBONgBehNa6FskfRL4HnogmeUrWKiU+J6CXGZ4eLw==}
-
-  '@cacheable/utils@2.4.0':
-    resolution: {integrity: sha512-PeMMsqjVq+bF0WBsxFBxr/WozBJiZKY0rUojuaCoIaKnEl3Ju1wfEwS+SV1DU/cSe8fqHIPiYJFif8T3MVt4cQ==}
 
   '@cacheable/utils@2.4.1':
     resolution: {integrity: sha512-eiFgzCbIneyMlLOmNG4g9xzF7Hv3Mga4LjxjcSC/ues6VYq2+gUbQI8JqNuw/ZM8tJIeIaBGpswAsqV2V7ApgA==}
@@ -1477,9 +1474,6 @@ packages:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
-  cacheable@2.3.4:
-    resolution: {integrity: sha512-djgxybDbw9fL/ZWMI3+CE8ZilNxcwFkVtDc1gJ+IlOSSWkSMPQabhV/XCHTQ6pwwN6aivXPZ43omTooZiX06Ew==}
-
   cacheable@2.3.5:
     resolution: {integrity: sha512-EQfaKe09tl615iNvq/TBRWTFf1AKJNXYQSsMx0Z3EI0nA+pVsVPS8wJhnRlkbdacKPh1d0qVIhwTc2zsQNFEEg==}
 
@@ -1672,9 +1666,6 @@ packages:
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
-
-  ecto@4.8.4:
-    resolution: {integrity: sha512-0tmQI6DU+f74F5JS1cHJma6yleQFBallCBk+J7YPmH33W1mDPsI5/zuJ6twbrGNYIharoG/yAUjOT/D3Zj1XOQ==}
 
   ecto@4.8.7:
     resolution: {integrity: sha512-T3rANwJQsLIEXGRES/6FLPrbIGmVlLMj7aFoxyzPhVOT8yTPFnlWrJrx9x2XYU3DIq9no2ku/ij6v6vMN8aVaQ==}
@@ -2130,11 +2121,6 @@ packages:
 
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
-
-  liquidjs@10.25.7:
-    resolution: {integrity: sha512-rPCjJLiD4eDhQjvv964AeXFC+HbeYBbZrd7Z82Q6hqv1lX7G+5w4SJcKLn9CAAAwHI4aS3dTdo083UB79K3pDA==}
-    engines: {node: '>=16'}
-    hasBin: true
 
   liquidjs@10.27.0:
     resolution: {integrity: sha512-tw/OA59K7aIBlMKIrKlumr37fiZUheShVHXY8cVctWisgY1p9mc5hreOvlreoS0wTiwlWk14Ya7305c2a/Cg5w==}
@@ -2592,10 +2578,6 @@ packages:
 
   qified@0.10.1:
     resolution: {integrity: sha512-+Owyggi9IxT1ePKGafcI87ubSmxol6smwJ+RAHDQlx9+9cPwFWDiKFFCPuWhr9ignlGpZ9vDQLw67N4dcTVFEA==}
-    engines: {node: '>=20'}
-
-  qified@0.9.1:
-    resolution: {integrity: sha512-n7mar4T0xQ+39dE2vGTAlbxUEpndwPANH0kDef1/MYsB8Bba9wshkybIRx74qgcvKQPEWErf9AqAdYjhzY2Ilg==}
     engines: {node: '>=20'}
 
   qs@6.15.0:
@@ -3628,22 +3610,17 @@ snapshots:
 
   '@cacheable/memory@2.0.8':
     dependencies:
-      '@cacheable/utils': 2.4.0
+      '@cacheable/utils': 2.4.1
       '@keyv/bigmap': 1.3.1(keyv@5.6.0)
       hookified: 1.15.1
       keyv: 5.6.0
 
   '@cacheable/net@2.0.7':
     dependencies:
-      cacheable: 2.3.4
+      cacheable: 2.3.5
       hookified: 1.15.1
       http-cache-semantics: 4.2.0
       undici: 7.24.7
-
-  '@cacheable/utils@2.4.0':
-    dependencies:
-      hashery: 1.5.1
-      keyv: 5.6.0
 
   '@cacheable/utils@2.4.1':
     dependencies:
@@ -4402,14 +4379,6 @@ snapshots:
 
   cac@6.7.14: {}
 
-  cacheable@2.3.4:
-    dependencies:
-      '@cacheable/memory': 2.0.8
-      '@cacheable/utils': 2.4.1
-      hookified: 1.15.1
-      keyv: 5.6.0
-      qified: 0.9.1
-
   cacheable@2.3.5:
     dependencies:
       '@cacheable/memory': 2.0.8
@@ -4590,22 +4559,6 @@ snapshots:
   ecdsa-sig-formatter@1.0.11:
     dependencies:
       safe-buffer: 5.2.1
-
-  ecto@4.8.4:
-    dependencies:
-      '@jaredwray/fumanchu': 4.7.0
-      cacheable: 2.3.4
-      ejs: 5.0.2
-      ent: 2.2.2
-      hookified: 2.2.0
-      liquidjs: 10.25.7
-      nunjucks: 3.2.4
-      pug: 3.0.4
-      writr: 6.1.2
-    transitivePeerDependencies:
-      - '@types/react'
-      - chokidar
-      - supports-color
 
   ecto@4.8.7:
     dependencies:
@@ -5197,10 +5150,6 @@ snapshots:
   linkify-it@5.0.0:
     dependencies:
       uc.micro: 2.1.0
-
-  liquidjs@10.25.7:
-    dependencies:
-      commander: 10.0.1
 
   liquidjs@10.27.0:
     dependencies:
@@ -5957,10 +5906,6 @@ snapshots:
     dependencies:
       hookified: 2.2.0
 
-  qified@0.9.1:
-    dependencies:
-      hookified: 2.2.0
-
   qs@6.15.0:
     dependencies:
       side-channel: 1.1.0
@@ -6572,7 +6517,7 @@ snapshots:
   writr@6.1.2:
     dependencies:
       ai: 6.0.170(zod@4.3.6)
-      cacheable: 2.3.4
+      cacheable: 2.3.5
       hashery: 2.0.0
       hookified: 2.2.0
       html-react-parser: 6.0.1(react@19.2.4)
