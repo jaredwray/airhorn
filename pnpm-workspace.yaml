@@ -3,6 +3,5 @@ minimumReleaseAgeExclude:
   - hookified
 packages:
   - packages/*
-onlyBuiltDependencies:
-  - '@biomejs/biome'
-  - esbuild
+allowBuilds:
+  esbuild: true

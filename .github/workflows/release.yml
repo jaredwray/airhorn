@@ -15,15 +15,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
       - name: Install Dependencies
-        run: npm install -g pnpm && pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Build    
+      - name: Build
         run: pnpm build
 
       - name: Testing
@@ -31,21 +34,17 @@ jobs:
 
       - name: create npmrc
         run: |
-         echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-         echo "always-auth=true" >> ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
 
       - name: Publish airhorn
-        run: |
-         pnpm publish:airhorn
-      
+        run: pnpm publish:airhorn
+
       - name: Publish @airhornjs/aws
-        run: |
-         pnpm publish:aws
+        run: pnpm publish:aws
 
       - name: Publish @airhornjs/azure
-        run: |
-         pnpm publish:azure
+        run: pnpm publish:azure
 
       - name: Publish @airhornjs/twilio
-        run: |
-         pnpm publish:twilio 
+        run: pnpm publish:twilio

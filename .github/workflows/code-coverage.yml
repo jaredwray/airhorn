@@ -17,25 +17,27 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+
     - name: Use Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 24
 
     - name: Install Dependencies
-      run: npm install -g pnpm && pnpm install
+      run: pnpm install --frozen-lockfile
 
-    - name: Build    
+    - name: Build
       run: pnpm build
 
     - name: Testing
       env:
         FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
       run: pnpm test
-      
+
     - name: Code Coverage
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_KEY }}
         files: ./packages/**/coverage/*.lcov
-

@@ -25,7 +25,7 @@ Airhorn makes it easy to send SMS, SMTP, Webhooks, and mobile push notifications
 - Robust (6+ template formats) templating via [ecto](https://github.com/jaredwray/ecto)
 - Easily build your own provider with minimal effort via `AirhornProvider` interface.
 - Statistics tracking for send successes, failures, and execution times (instance only).
-- ESM and Typescript based supporting Nodejs 20+
+- ESM and Typescript based supporting Nodejs 22+
 - Maintained on a regular basis with updates and improvements.
 
 # Getting Started

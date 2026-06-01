@@ -33,7 +33,7 @@ pnpm test             # Runs: biome lint + vitest with coverage
 1. Make your changes in `src/` and `test/` within the relevant package
 2. Run `pnpm test` from the repo root to lint, test, and check coverage across all packages
 3. Target **100% code coverage** — every new or changed line must be tested
-4. All tests must pass on Node.js 20, 22, and 24
+4. All tests must pass on Node.js 22, 24, and 26
 
 ## Testing
 
