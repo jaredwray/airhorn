@@ -59,6 +59,7 @@
 - [Hooks](#hooks)
 - [Emitting Events](#emitting-events)
 - [Load Template Helper](#load-template-helper)
+- [Migration to v7](#migration-to-v7)
 - [Migration to v6](#migration-to-v6)
 - [Core Supported Providers](#core-supported-providers)
 - [Third Party Providers](#third-party-providers)
@@ -732,6 +733,45 @@ const airhorn = new Airhorn({
 ```
 
 Use one of the built in providers as a reference such as `@airhornjs/twilio`.
+
+# Migration to v7
+
+Airhorn v7 raises the minimum Node.js version to **`>=22.18.0`** and upgrades to [Hookified v3](https://hookified.org). Hookified v3 contains **no API changes** — the hooks API is identical to v6 — so for most users the only required change is updating the Node.js runtime.
+
+## Breaking Changes
+
+### Node.js >=22.18.0 required
+
+The minimum supported Node.js version is now **22.18.0** (previously `>=20`). Node.js 20 reached end-of-life in April 2026, and [Hookified v3](https://hookified.org) — which `Airhorn` extends — requires `>=22.18.0`.
+
+```jsonc
+// package.json (airhorn)
+"engines": {
+	"node": ">=22.18.0"
+}
+```
+
+**Migration:** Upgrade your runtime to Node.js 22 LTS (>= 22.18.0) or Node.js 24+. No code changes are required.
+
+### Hookified upgraded to v3 (no API changes)
+
+`Airhorn` extends [Hookified](https://hookified.org), which was upgraded from v2 to v3. Hookified v3's only breaking change is the Node.js requirement above — `onHook`, `removeHook`, `removeHookById`, `getHooks`, and `throwOnErrors` all behave exactly as they did in v6:
+
+```typescript
+// Unchanged from v6 — still works in v7
+airhorn.onHook({
+	id: "my-hook",
+	event: "before:Send",
+	handler: async (data) => {},
+});
+```
+
+If you already migrated your hooks from v5 to v6, upgrading from v6 to v7 requires no hooks-related code changes.
+
+## Migration Checklist
+
+- [ ] Upgrade your runtime to Node.js >= 22.18.0 (Node 22 LTS or Node 24+)
+- [ ] No code changes required — the hooks API is unchanged from v6
 
 # Migration to v6
 
