@@ -13,7 +13,11 @@
   "engines": {
     "node": ">=22.18.0"
   },
-  "repository": "https://github.com/jaredwray/airhorn.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredwray/airhorn.git",
+    "directory": "packages/airhorn"
+  },
   "author": "Jared Wray <me@jaredwray.com>",
   "license": "MIT",
   "private": false,
@@ -23,7 +27,7 @@
     "test:ci": "biome check --error-on-warnings && vitest run --coverage",
     "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
     "prepublishOnly": "pnpm build",
-    "build:publish": "pnpm publish --access public --no-git-checks",
+    "build:publish": "pnpm publish --access public --no-git-checks --provenance",
     "build": "tsdown"
   },
   "dependencies": {
