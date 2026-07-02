@@ -1,0 +1,51 @@
+{
+  "name": "@airhornjs/pingram",
+  "version": "7.0.0",
+  "description": "Pingram provider for Airhorn",
+  "license": "MIT",
+  "author": "Jared Wray <me@jaredwray.com>",
+  "homepage": "https://github.com/jaredwray/airhorn/tree/main/packages/pingram#readme",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "lint": "biome check --write --error-on-warnings",
+    "test": "pnpm lint && vitest run --coverage",
+    "test:ci": "biome check --error-on-warnings && vitest run --coverage",
+    "clean": "rimraf ./dist ./coverage ./node_modules ./package-lock.json ./pnpm-lock.yaml",
+    "prepublishOnly": "pnpm build",
+    "build:publish": "pnpm publish --access public --no-git-checks --provenance",
+    "build": "tsdown"
+  },
+  "dependencies": {
+    "pingram": "^1.0.14"
+  },
+  "peerDependencies": {
+    "airhorn": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jaredwray/airhorn.git",
+    "directory": "packages/pingram"
+  },
+  "keywords": [
+    "airhorn",
+    "notifications",
+    "pingram",
+    "notificationapi",
+    "sms",
+    "email",
+    "push",
+    "mobile"
+  ],
+  "files": [
+    "dist",
+    "LICENSE"
+  ]
+}

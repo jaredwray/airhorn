@@ -73,12 +73,13 @@ Check out the documentation and providers to learn more!
 | [`@airhornjs/twilio`](packages/twilio) | Twilio provider for SMS and Email (SendGrid) | [README](packages/twilio/README.md) |
 | [`@airhornjs/aws`](packages/aws) | AWS provider for SMS (SNS), Email (SES), and Push (SNS) | [README](packages/aws/README.md) |
 | [`@airhornjs/azure`](packages/azure) | Azure provider for SMS, Email, and Push | [README](packages/azure/README.md) |
+| [`@airhornjs/pingram`](packages/pingram) | Pingram provider for SMS, Email, and Push | [README](packages/pingram/README.md) |
 
 # Providers
 
 We currently support multiple providers and you can easily add more by following the `AirhornProvider` interface. Here are the supported providers:
 
-We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is a chart showing what functionality is in each:
+We currently support `twilio`, `aws`, `azure`, and `pingram` with thier offerings. Here is a chart showing what functionality is in each:
 
 | Provider | SMS | Email | Push | Webhook |
 |----------|-----|-------|------|---------|
@@ -86,6 +87,7 @@ We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is 
 | `@airhornjs/twilio`   | ✅  | ✅    | ❌   | ❌      |
 | `@airhornjs/aws`      | ✅  | ✅    | ✅   | ❌      |
 | `@airhornjs/azure`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhornjs/pingram`      | ✅  | ✅    | ✅   | ❌      |
 
 Note: We used to support firebase because of mobile push but it made more sense to focus on `aws` and `azure` because it is more comprehensive.
 

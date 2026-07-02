@@ -692,7 +692,7 @@ An example of the `markdown` format is located at `./packages/airhorn/test/fixtu
 
 # Core Supported Providers
 
-We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is a chart showing what functionality is in each:
+We currently support `twilio`, `aws`, `azure`, and `pingram` with thier offerings. Here is a chart showing what functionality is in each:
 
 | Provider | SMS | Email | Push | Webhook |
 |----------|-----|-------|------|---------|
@@ -700,6 +700,7 @@ We currently support `twilio`, `aws`, and `azure` with thier offerings. Here is 
 | `@airhornjs/twilio`   | ✅  | ✅    | ❌   | ❌      |
 | `@airhornjs/aws`      | ✅  | ✅    | ✅   | ❌      |
 | `@airhornjs/azure`      | ✅  | ✅    | ✅   | ❌      |
+| `@airhornjs/pingram`      | ✅  | ✅    | ✅   | ❌      |
 
 Note: We used to support firebase because of mobile push but it made more sense to focus on `aws` and `azure` because it is more comprehensive.
 

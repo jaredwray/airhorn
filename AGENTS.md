@@ -2,7 +2,7 @@
 
 ## Overview
 
-Airhorn is a cloud-native notifications library providing a unified API for SMS, Email, Mobile Push, and Webhook delivery. This is a pnpm monorepo with four packages under `packages/`.
+Airhorn is a cloud-native notifications library providing a unified API for SMS, Email, Mobile Push, and Webhook delivery. This is a pnpm monorepo with five packages under `packages/`.
 
 ## Packages
 
@@ -10,6 +10,7 @@ Airhorn is a cloud-native notifications library providing a unified API for SMS,
 - `packages/twilio` — Twilio provider (`@airhornjs/twilio`)
 - `packages/aws` — AWS provider (`@airhornjs/aws`)
 - `packages/azure` — Azure provider (`@airhornjs/azure`)
+- `packages/pingram` — Pingram provider (`@airhornjs/pingram`)
 
 ## Commands
 

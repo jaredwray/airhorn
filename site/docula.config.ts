@@ -58,7 +58,7 @@ export const onPrepare = async (
 	});
 
 	// Sub-packages
-	for (const name of ["aws", "azure", "twilio"] as const) {
+	for (const name of ["aws", "azure", "pingram", "twilio"] as const) {
 		await writeDocFromReadme({
 			source: path.join(process.cwd(), `packages/${name}/README.md`),
 			dest: path.join(config.sitePath, `docs/${name}.md`),
