@@ -42,8 +42,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0
       ecto:
-        specifier: ^4.8.7
-        version: 4.8.7
+        specifier: ^5.0.0
+        version: 5.0.0
       hookified:
         specifier: ^3.0.1
         version: 3.0.1
@@ -1505,8 +1505,17 @@ packages:
   ecto@4.8.7:
     resolution: {integrity: sha512-T3rANwJQsLIEXGRES/6FLPrbIGmVlLMj7aFoxyzPhVOT8yTPFnlWrJrx9x2XYU3DIq9no2ku/ij6v6vMN8aVaQ==}
 
+  ecto@5.0.0:
+    resolution: {integrity: sha512-uuoTfhPqp+ADz4vsBHrHq6zPq45G5ce7+0WOFrtwOwIUREX6AtsziVzCU4yJbVCA3oveKMlDrVt9j/JNSSiFVA==}
+    engines: {node: '>=22.18.0'}
+
   ejs@5.0.2:
     resolution: {integrity: sha512-IpbUaI/CAW86l3f+T8zN0iggSc0LmMZLcIW5eRVStLVNCoTXkE0YlncbbH50fp8Cl6zHIky0sW2uUbhBqGw0Jw==}
+    engines: {node: '>=0.12.18'}
+    hasBin: true
+
+  ejs@6.0.1:
+    resolution: {integrity: sha512-UaaM14yby8U3k02ihS1Bmj5Kz2d7CCQM1scxpgs4Mhkq8F1wR2gl3+Ts4h5Ne4Mnt7M9m4Dw7jsuMr3+xO4vZA==}
     engines: {node: '>=0.12.18'}
     hasBin: true
 
@@ -4326,7 +4335,24 @@ snapshots:
       - chokidar
       - supports-color
 
+  ecto@5.0.0:
+    dependencies:
+      '@jaredwray/fumanchu': 4.7.0
+      cacheable: 2.5.0
+      ejs: 6.0.1
+      hookified: 3.0.1
+      liquidjs: 10.27.0
+      nunjucks: 3.2.4
+      pug: 3.0.4
+      writr: 6.1.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - chokidar
+      - supports-color
+
   ejs@5.0.2: {}
+
+  ejs@6.0.1: {}
 
   emoji-regex@10.6.0: {}
 
