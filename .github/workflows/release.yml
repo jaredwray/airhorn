@@ -5,19 +5,53 @@ on:
   release:
     types: [released]
 
-# Packages are published with npm Trusted Publishing (OIDC) — no NPM_TOKEN.
-# This requires a trusted publisher (this repository + this workflow file) to be
-# configured for each package on npmjs.com. The `id-token: write` permission lets
-# the job mint the short-lived OIDC token used for authentication and to sign the
-# provenance attestations.
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  setup-build-release:
+  setup-test-build:
 
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Testing
+        run: pnpm test:ci
+
+  setup-release:
+
+    needs: setup-test-build
+
+    runs-on: ubuntu-latest
+
+    # Packages are published with npm Trusted Publishing (OIDC) — no NPM_TOKEN.
+    # This requires a trusted publisher (this repository + this workflow file) to be
+    # configured for each package on npmjs.com. The `id-token: write` permission lets
+    # the job mint the short-lived OIDC token used for authentication and to sign the
+    # provenance attestations.
+    permissions:
+      contents: read
+      id-token: write
+
+    # A named environment records this publish as a tracked deployment, so the run
+    # shows a progress bar and the deployment history on the repo's Environments tab.
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/airhorn
 
     steps:
       - uses: actions/checkout@v6
@@ -35,9 +69,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Testing
-        run: pnpm test:ci
 
       - name: Publish airhorn
         run: pnpm publish:airhorn
