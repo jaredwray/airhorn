@@ -166,16 +166,29 @@ const allProvider = new AirhornPingram({
 - `baseUrl` (optional): Custom base URL for the Pingram API (overrides `region`)
 - `notificationType` (optional): The Pingram notification type identifier used for sends (defaults to `airhorn`). Pingram creates the notification type automatically if it does not exist
 - `capabilities` (optional): Array of `AirhornSendType` values to specify which services to enable (defaults to SMS, Email, and MobilePush)
+- `sendDefaults` (optional): Typed Pingram request defaults merged into every send request (e.g. `templateId`, `parameters`, or channel content defaults like `email.senderName` and `sms.from`). Message-derived values take precedence
 
-## Additional Options
+## Send Defaults
 
-Any additional send options are merged into the Pingram send request, so you can use Pingram features like merge tag parameters, scheduling, and template overrides:
+Pingram-specific request fields are configured on the provider through `sendDefaults`, keeping the `airhorn.send()` surface generic. The defaults are fully typed against the Pingram SDK and merged into every send request beneath the message values, so the message always wins:
 
 ```typescript
-await airhorn.send(to, template, data, AirhornSendType.Email, {
-  parameters: { firstName: 'John' }, // Pingram template merge tags
-  schedule: '2026-12-25T00:00:00Z',  // Schedule delivery
-  templateId: 'my_template',         // Use a specific Pingram template
+const pingramProvider = new AirhornPingram({
+  apiKey: 'pingram_sk_your_api_key',
+  sendDefaults: {
+    templateId: 'my_template',          // Use a specific Pingram template
+    parameters: { plan: 'pro' },        // Pingram template merge tags
+    sms: { from: '+15550001111' },      // Default SMS sender number
+    email: { senderName: 'Acme Corp' }, // Default email sender name
+  },
+});
+```
+
+For one-off, per-message Pingram options (for example a scheduled delivery), call the provider directly — the second argument is merged into the request last and can override anything:
+
+```typescript
+await pingramProvider.send(message, {
+  schedule: '2026-12-25T00:00:00Z',
 });
 ```
 

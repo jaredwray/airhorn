@@ -397,6 +397,184 @@ describe("AirhornPingram", () => {
 		});
 	});
 
+	describe("send defaults", () => {
+		const sendDefaults = {
+			templateId: "my_template",
+			parameters: { firstName: "John" },
+			to: { timezone: "America/New_York" },
+			sms: { from: "+15550009999", mediaUrls: ["https://example.com/a.png"] },
+			email: {
+				subject: "Default Subject",
+				senderEmail: "default@example.com",
+				senderName: "Acme",
+			},
+			mobile_push: { title: "Default Title" },
+		};
+
+		let defaultsProvider: AirhornPingram;
+
+		beforeEach(() => {
+			defaultsProvider = new AirhornPingram({
+				...mockOptions,
+				sendDefaults,
+			});
+		});
+
+		it("should apply defaults to SMS sends beneath the message values", async () => {
+			mockPingramSend.mockResolvedValueOnce({
+				trackingId: "tracking-400",
+				messages: [],
+			});
+
+			await defaultsProvider.send({
+				to: "+16175551212",
+				from: "",
+				content: "Hello",
+				type: AirhornSendType.SMS,
+			});
+
+			expect(mockPingramSend).toHaveBeenCalledWith({
+				templateId: "my_template",
+				parameters: { firstName: "John" },
+				type: "airhorn",
+				to: {
+					timezone: "America/New_York",
+					id: "+16175551212",
+					number: "+16175551212",
+				},
+				forceChannels: ["SMS"],
+				sms: {
+					from: "+15550009999",
+					mediaUrls: ["https://example.com/a.png"],
+					message: "Hello",
+				},
+			});
+		});
+
+		it("should let the message from win over the SMS default", async () => {
+			mockPingramSend.mockResolvedValueOnce({
+				trackingId: "tracking-401",
+				messages: [],
+			});
+
+			await defaultsProvider.send({
+				to: "+16175551212",
+				from: "+1234567890",
+				content: "Hello",
+				type: AirhornSendType.SMS,
+			});
+
+			expect(mockPingramSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					sms: expect.objectContaining({
+						from: "+1234567890",
+						message: "Hello",
+					}),
+				}),
+			);
+		});
+
+		it("should apply defaults to email sends beneath the message values", async () => {
+			mockPingramSend.mockResolvedValueOnce({
+				trackingId: "tracking-402",
+				messages: [],
+			});
+
+			await defaultsProvider.send({
+				to: "recipient@example.com",
+				from: "",
+				content: "<p>Hi</p>",
+				type: AirhornSendType.Email,
+			});
+
+			expect(mockPingramSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					templateId: "my_template",
+					email: {
+						subject: "Default Subject",
+						senderName: "Acme",
+						senderEmail: "default@example.com",
+						html: "<p>Hi</p>",
+					},
+				}),
+			);
+		});
+
+		it("should let the message subject and sender win over email defaults", async () => {
+			mockPingramSend.mockResolvedValueOnce({
+				trackingId: "tracking-403",
+				messages: [],
+			});
+
+			await defaultsProvider.send({
+				to: "recipient@example.com",
+				from: "sender@example.com",
+				subject: "Real Subject",
+				content: "<p>Hi</p>",
+				type: AirhornSendType.Email,
+			});
+
+			expect(mockPingramSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					email: expect.objectContaining({
+						subject: "Real Subject",
+						senderEmail: "sender@example.com",
+					}),
+				}),
+			);
+		});
+
+		it("should apply defaults to mobile push sends beneath the message values", async () => {
+			mockPingramSend.mockResolvedValueOnce({
+				trackingId: "tracking-404",
+				messages: [],
+			});
+
+			await defaultsProvider.send({
+				to: "user-123",
+				from: "YourApp",
+				content: "You have a new order",
+				type: AirhornSendType.MobilePush,
+			});
+
+			expect(mockPingramSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					to: {
+						timezone: "America/New_York",
+						id: "user-123",
+					},
+					mobile_push: {
+						title: "Default Title",
+						message: "You have a new order",
+					},
+				}),
+			);
+		});
+
+		it("should let per-call send options override the defaults", async () => {
+			mockPingramSend.mockResolvedValueOnce({
+				trackingId: "tracking-405",
+				messages: [],
+			});
+
+			await defaultsProvider.send(
+				{
+					to: "+16175551212",
+					from: "+1234567890",
+					content: "Hello",
+					type: AirhornSendType.SMS,
+				},
+				{ templateId: "override_template" },
+			);
+
+			expect(mockPingramSend).toHaveBeenCalledWith(
+				expect.objectContaining({
+					templateId: "override_template",
+				}),
+			);
+		});
+	});
+
 	describe("send dispatch", () => {
 		it("should return an error for unsupported message types", async () => {
 			const result = await provider.send({

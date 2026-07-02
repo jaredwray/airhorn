@@ -9,7 +9,27 @@ import {
 	Pingram,
 	type PingramRegion,
 	type SenderPostBody,
+	type SenderPostBodyEmail,
+	type SenderPostBodyMobilePush,
+	type SenderPostBodySms,
 } from "pingram";
+
+/**
+ * Typed Pingram request defaults merged into every send request. Top-level
+ * fields (e.g. `templateId`, `schedule`, `parameters`) are applied beneath
+ * the provider-managed fields, and the channel content objects (`email`,
+ * `sms`, `mobile_push`) and `to` are merged beneath the message-derived
+ * values, so the message always wins. The notification `type` comes from
+ * `notificationType` and the channels from the Airhorn message type.
+ */
+export type AirhornPingramSendDefaults = Omit<
+	Partial<SenderPostBody>,
+	"type" | "forceChannels" | "email" | "sms" | "mobile_push"
+> & {
+	email?: Partial<SenderPostBodyEmail>;
+	sms?: Partial<SenderPostBodySms>;
+	mobile_push?: Partial<SenderPostBodyMobilePush>;
+};
 
 export type AirhornPingramOptions = {
 	/**
@@ -34,6 +54,13 @@ export type AirhornPingramOptions = {
 	 * The capabilities to enable (defaults to SMS, Email, and MobilePush).
 	 */
 	capabilities?: AirhornSendType[];
+	/**
+	 * Pingram request defaults merged into every send request, e.g.
+	 * `templateId`, `parameters`, or channel content defaults such as
+	 * `email.senderName` and `sms.from`. Message-derived values take
+	 * precedence over these defaults.
+	 */
+	sendDefaults?: AirhornPingramSendDefaults;
 };
 
 export class AirhornPingram implements AirhornProvider {
@@ -42,6 +69,14 @@ export class AirhornPingram implements AirhornProvider {
 
 	private client: Pingram;
 	private notificationType: string;
+	private baseDefaults: Omit<
+		AirhornPingramSendDefaults,
+		"to" | "email" | "sms" | "mobile_push"
+	>;
+	private channelDefaults: Pick<
+		AirhornPingramSendDefaults,
+		"to" | "email" | "sms" | "mobile_push"
+	>;
 
 	constructor(options: AirhornPingramOptions) {
 		if (!options.apiKey) {
@@ -56,6 +91,18 @@ export class AirhornPingram implements AirhornProvider {
 		];
 
 		this.notificationType = options.notificationType || "airhorn";
+
+		// Split the send defaults so each send only carries the top-level
+		// defaults plus the content defaults for its own channel
+		const {
+			to,
+			email,
+			sms,
+			mobile_push: mobilePush,
+			...baseDefaults
+		} = options.sendDefaults ?? {};
+		this.baseDefaults = baseDefaults;
+		this.channelDefaults = { to, email, sms, mobile_push: mobilePush };
 
 		this.client = new Pingram({
 			apiKey: options.apiKey,
@@ -114,16 +161,20 @@ export class AirhornPingram implements AirhornProvider {
 		// biome-ignore lint/suspicious/noExplicitAny: expected
 		options?: any,
 	): Promise<AirhornProviderSendResult> {
+		const smsDefaults = this.channelDefaults.sms;
 		const body: SenderPostBody = {
+			...this.baseDefaults,
 			type: this.notificationType,
 			to: {
+				...this.channelDefaults.to,
 				id: message.to,
 				number: message.to,
 			},
 			forceChannels: [ChannelsEnum.SMS],
 			sms: {
+				...smsDefaults,
 				message: message.content,
-				from: message.from || undefined,
+				from: message.from || smsDefaults?.from,
 			},
 			...options,
 		};
@@ -136,17 +187,21 @@ export class AirhornPingram implements AirhornProvider {
 		// biome-ignore lint/suspicious/noExplicitAny: expected
 		options?: any,
 	): Promise<AirhornProviderSendResult> {
+		const emailDefaults = this.channelDefaults.email;
 		const body: SenderPostBody = {
+			...this.baseDefaults,
 			type: this.notificationType,
 			to: {
+				...this.channelDefaults.to,
 				id: message.to,
 				email: message.to,
 			},
 			forceChannels: [ChannelsEnum.EMAIL],
 			email: {
-				subject: message.subject || "Notification",
+				...emailDefaults,
+				subject: message.subject || emailDefaults?.subject || "Notification",
 				html: message.content,
-				senderEmail: message.from || undefined,
+				senderEmail: message.from || emailDefaults?.senderEmail,
 			},
 			...options,
 		};
@@ -161,14 +216,18 @@ export class AirhornPingram implements AirhornProvider {
 	): Promise<AirhornProviderSendResult> {
 		// Pingram delivers mobile push to the device tokens registered for the
 		// user, so `to` is the Pingram user identifier
+		const pushDefaults = this.channelDefaults.mobile_push;
 		const body: SenderPostBody = {
+			...this.baseDefaults,
 			type: this.notificationType,
 			to: {
+				...this.channelDefaults.to,
 				id: message.to,
 			},
 			forceChannels: [ChannelsEnum.PUSH],
 			mobile_push: {
-				title: message.subject || "Notification",
+				...pushDefaults,
+				title: message.subject || pushDefaults?.title || "Notification",
 				message: message.content,
 			},
 			...options,
