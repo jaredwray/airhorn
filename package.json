@@ -16,6 +16,7 @@
     "publish:airhorn": "pnpm --filter 'airhorn' run build:publish",
     "publish:aws": "pnpm --filter '@airhornjs/aws' run build:publish",
     "publish:azure": "pnpm --filter '@airhornjs/azure' run build:publish",
+    "publish:pingram": "pnpm --filter '@airhornjs/pingram' run build:publish",
     "publish:twilio": "pnpm --filter '@airhornjs/twilio' run build:publish",
     "build": "pnpm -r build",
     "clean": "pnpm -r clean"
