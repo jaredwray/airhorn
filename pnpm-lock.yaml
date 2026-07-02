@@ -45,8 +45,8 @@ importers:
         specifier: ^4.8.7
         version: 4.8.7
       hookified:
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^3.0.1
+        version: 3.0.1
       writr:
         specifier: ^6.1.2
         version: 6.1.2
@@ -1780,6 +1780,10 @@ packages:
 
   hookified@3.0.0:
     resolution: {integrity: sha512-x+jzDjd9CWxdgl6u/K4pjnvw7PZx6ZSpiPGAV43uXlJiJy7r2jIEUxxU1Cv7+rwy1GK5Qt5S+Jp7n81DpcUvTA==}
+    engines: {node: '>=22.18.0'}
+
+  hookified@3.0.1:
+    resolution: {integrity: sha512-mtpUIV7U9reosQ16+OHWBd0Ca07fs1ryChQjBPuUMZnrRdLTCW+kEfkTcFudkaevp3gVe5H9FxDCBxYIdO+QQA==}
     engines: {node: '>=22.18.0'}
 
   html-dom-parser@7.0.1:
@@ -4653,6 +4657,8 @@ snapshots:
   hookified@2.2.0: {}
 
   hookified@3.0.0: {}
+
+  hookified@3.0.1: {}
 
   html-dom-parser@7.0.1:
     dependencies:
