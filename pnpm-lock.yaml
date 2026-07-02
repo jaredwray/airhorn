@@ -39,8 +39,8 @@ importers:
   packages/airhorn:
     dependencies:
       cacheable:
-        specifier: ^2.3.5
-        version: 2.3.5
+        specifier: ^2.5.0
+        version: 2.5.0
       ecto:
         specifier: ^4.8.7
         version: 4.8.7
@@ -414,17 +414,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cacheable/memory@2.0.8':
-    resolution: {integrity: sha512-FvEb29x5wVwu/Kf93IWwsOOEuhHh6dYCJF3vcKLzXc0KXIW181AOzv6ceT4ZpBHDvAfG60eqb+ekmrnLHIy+jw==}
-
   '@cacheable/memory@2.2.0':
     resolution: {integrity: sha512-CTLKqLItRCEixEAewD3/j9DB3/o96gpTPD4eJ1v+DGOlxZRZncRQkGYqqnAGCscYd6RNeXfGeiuCphsPtqyIfQ==}
 
   '@cacheable/net@2.1.0':
     resolution: {integrity: sha512-DlLnk6EWquHuFKd7sMQop4/mKwYRxU36ZAn1JrvvJzTed8JmOGlJ6InzOXUqyXs8duP3LhmN1fNmBUwx4ChD3g==}
-
-  '@cacheable/utils@2.4.1':
-    resolution: {integrity: sha512-eiFgzCbIneyMlLOmNG4g9xzF7Hv3Mga4LjxjcSC/ues6VYq2+gUbQI8JqNuw/ZM8tJIeIaBGpswAsqV2V7ApgA==}
 
   '@cacheable/utils@2.5.0':
     resolution: {integrity: sha512-buipgOVDkkPXNR5+xBpDw7Zk2n1EvU7qBJCNUcL7rhQ//kfpOXPAvQ511Os0vpLYJ1pZnvudNytkQt2hst3wqA==}
@@ -1331,9 +1325,6 @@ packages:
   cac@7.0.0:
     resolution: {integrity: sha512-tixWYgm5ZoOD+3g6UTea91eow5z6AAHaho3g0V9CNSNb45gM8SmflpAc+GRd1InC4AqN/07Unrgp56Y94N9hJQ==}
     engines: {node: '>=20.19.0'}
-
-  cacheable@2.3.5:
-    resolution: {integrity: sha512-EQfaKe09tl615iNvq/TBRWTFf1AKJNXYQSsMx0Z3EI0nA+pVsVPS8wJhnRlkbdacKPh1d0qVIhwTc2zsQNFEEg==}
 
   cacheable@2.5.0:
     resolution: {integrity: sha512-60cyAOytib/OzBw1JNSoSV/boK1AtHryDIjvVBk7XbN4ugfkM3+Sry7fEjNgPMGgOjuaZPAp8ruZ0Cxafwyq9g==}
@@ -3450,13 +3441,6 @@ snapshots:
   '@biomejs/cli-win32-x64@2.5.1':
     optional: true
 
-  '@cacheable/memory@2.0.8':
-    dependencies:
-      '@cacheable/utils': 2.4.1
-      '@keyv/bigmap': 1.3.1(keyv@5.6.0)
-      hookified: 1.15.1
-      keyv: 5.6.0
-
   '@cacheable/memory@2.2.0':
     dependencies:
       '@cacheable/utils': 2.5.0
@@ -3471,11 +3455,6 @@ snapshots:
       hookified: 1.15.1
       http-cache-semantics: 4.2.0
       undici: 7.24.7
-
-  '@cacheable/utils@2.4.1':
-    dependencies:
-      hashery: 1.5.1
-      keyv: 5.6.0
 
   '@cacheable/utils@2.5.0':
     dependencies:
@@ -3656,7 +3635,7 @@ snapshots:
 
   '@jaredwray/fumanchu@4.7.0':
     dependencies:
-      '@cacheable/memory': 2.0.8
+      '@cacheable/memory': 2.2.0
       chrono-node: 2.9.0
       dayjs: 1.11.20
       ent: 2.2.2
@@ -4168,14 +4147,6 @@ snapshots:
 
   cac@7.0.0: {}
 
-  cacheable@2.3.5:
-    dependencies:
-      '@cacheable/memory': 2.0.8
-      '@cacheable/utils': 2.4.1
-      hookified: 1.15.1
-      keyv: 5.6.0
-      qified: 0.10.1
-
   cacheable@2.5.0:
     dependencies:
       '@cacheable/memory': 2.2.0
@@ -4342,7 +4313,7 @@ snapshots:
   ecto@4.8.7:
     dependencies:
       '@jaredwray/fumanchu': 4.7.0
-      cacheable: 2.3.5
+      cacheable: 2.5.0
       ejs: 5.0.2
       ent: 2.2.2
       hookified: 2.2.0
@@ -6194,7 +6165,7 @@ snapshots:
   writr@6.1.2:
     dependencies:
       ai: 6.0.170(zod@4.3.6)
-      cacheable: 2.3.5
+      cacheable: 2.5.0
       hashery: 2.0.0
       hookified: 2.2.0
       html-react-parser: 6.0.1(react@19.2.4)

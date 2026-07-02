@@ -31,7 +31,7 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "cacheable": "^2.3.5",
+    "cacheable": "^2.5.0",
     "ecto": "^4.8.7",
     "hookified": "^3.0.1",
     "writr": "^6.1.3"
