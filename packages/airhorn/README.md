@@ -29,6 +29,8 @@
 
 - [Getting Started](#getting-started)
 - [Airhorn Options](#airhorn-options)
+- [Templates](#templates)
+- [Setting the Sender (from)](#setting-the-sender-from)
 - [Using Send Helper Methods](#using-send-helper-methods)
 - [Airhorn Send Response](#airhorn-send-response)
 - [Send Strategies](#send-strategies)
@@ -78,19 +80,18 @@ npm install airhorn
 Once installed, this gives you the main send functionality and built in webhook support. You can use it in your project like so:
 
 ```typescript
-import { Airhorn, AirhornProviderType } from "airhorn";
+import { Airhorn, AirhornSendType } from "airhorn";
 
 const airhorn = new Airhorn();
 
 const template = {
-	from: "https://mywebhookdomain.com",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
 
 const data = { name: "John" };
 
-await airhorn.send("https://mockhttp.org/post", template, data, AirhornProviderType.WEBHOOK);
+await airhorn.send("https://mockhttp.org/post", template, data, AirhornSendType.Webhook);
 ```
 
 Now lets configure the Airhorn instance with your preferred providers such as `Twilio` for SMS and `SendGrid` for Email.
@@ -100,7 +101,7 @@ npm install airhorn @airhornjs/twilio
 ```
 
 ```typescript
-import { Airhorn, AirhornProviderType } from "airhorn";
+import { Airhorn, AirhornSendType } from "airhorn";
 import { AirhornTwilio } from "@airhornjs/twilio";
 
 const providers = [
@@ -116,15 +117,16 @@ const airhorn = new Airhorn({
 
 // this will give you twilio and webhook (built in) support. Now lets create a template and send it!
 const template = {
-	from: "+12223334444",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
 
 const data = { name: "John" };
 
-await airhorn.send("+1234567890", template, data, AirhornProviderType.SMS);
+await airhorn.send("+1234567890", template, data, AirhornSendType.SMS, { from: "+12223334444" });
 ```
+
+Notice that the template is just the content of your message. The recipient (`to`) and sender (`from`) are part of the send call — see [Setting the Sender (from)](#setting-the-sender-from) for the ways to provide `from`.
 
 To learn about the available providers and their capabilities, check the [Providers](#core-supported-providers) section.
 
@@ -187,6 +189,57 @@ export type AirhornOptions = {
 };
 ```
 
+# Templates
+
+A template is the content of your message — not the delivery details of an individual send. The recipient (`to`), notification type, and per-send options all live on the `send()` call, so the same template can be reused across sends, channels, and providers. The `content` (and optional `subject`) are rendered with your `data` via [ecto](https://github.com/jaredwray/ecto):
+
+```typescript
+export type AirhornTemplate = {
+	/**
+	 * The sender of the message. Optional — can also be provided per send via
+	 * `AirhornSendOptions.from`, which takes precedence over this value.
+	 */
+	from?: string;
+	subject?: string;
+	content: string;
+	requiredFields?: Array<string>;
+	templateEngine?: string;
+};
+```
+
+```typescript
+import { Airhorn, AirhornSendType, type AirhornTemplate } from "airhorn";
+
+const airhorn = new Airhorn();
+
+const template: AirhornTemplate = {
+	content: "Hi <%= customerName %>, your order #<%= orderId %> has shipped!",
+	templateEngine: "ejs",
+};
+
+const data = { customerName: "John", orderId: "12345" };
+
+await airhorn.send("+1234567890", template, data, AirhornSendType.SMS, { from: "+12223334444" });
+```
+
+You can also keep templates in markdown files and load them with [`loadTemplate`](#load-template-helper) for GitOps based workflows.
+
+# Setting the Sender (from)
+
+The sender can be provided in three places. Airhorn resolves it in this order:
+
+1. **Send options** — `options.from` on the send call. Highest precedence; overrides the template.
+2. **Template** — `template.from` (or `from` in a markdown template's front matter). Useful when a template is always sent from the same address.
+3. **Provider defaults** — some providers fall back to their own configuration (for example `@airhornjs/pingram`'s `sendDefaults`). Providers that require a sender (such as Twilio, AWS, and Azure) will report an error if none is set.
+
+```typescript
+// per send (recommended — keeps templates reusable)
+await airhorn.send(to, template, data, AirhornSendType.SMS, { from: "+12223334444" });
+
+// or on the template
+const template = { from: "+12223334444", content: "Hello <%= name %>!" };
+```
+
 # Using Send Helper Methods
 
 Airhorn provides helper methods for common tasks. For example, you can use the `sendSMS` method to send SMS messages easily:
@@ -207,17 +260,37 @@ const airhorn = new Airhorn({
 });
 
 const template = {
-	from: "+12223334444",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
 
 const data = { name: "John" };
 
-await airhorn.sendSMS("+1234567890", template, data);
+await airhorn.sendSMS("+1234567890", template, data, { from: "+12223334444" });
 ```
 
-All helper methods accept an optional `AirhornSendOptions` parameter to override the send strategy per call:
+All helper methods accept an optional `AirhornSendOptions` parameter to set the sender or override the send strategy per call:
+
+```typescript
+export type AirhornSendOptions = {
+	/**
+	 * The sender of the message (e.g. phone number, email address). This will override the
+	 * template's `from` value. If neither is set, providers fall back to their own defaults
+	 * or report an error when a sender is required.
+	 */
+	from?: string;
+	/**
+	 * The send strategy to use when sending messages. This will override the instance send strategy.
+	 * @default AirhornSendStrategy.RoundRobin
+	 */
+	sendStrategy?: AirhornSendStrategy;
+	/**
+	 * Whether to throw an error if sending fails. By default we use emitting for errors. This will override the instance throwOnErrors setting.
+	 * @default false
+	 */
+	throwOnErrors?: boolean;
+};
+```
 
 ```typescript
 import { Airhorn, AirhornSendStrategy } from "airhorn";
@@ -231,7 +304,6 @@ const airhorn = new Airhorn({
 });
 
 const template = {
-	from: "+12223334444",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
@@ -240,6 +312,7 @@ const data = { name: "John" };
 
 // Send SMS using fail-over strategy
 await airhorn.sendSMS("+1234567890", template, data, {
+	from: "+12223334444",
 	sendStrategy: AirhornSendStrategy.FailOver
 });
 ```
@@ -322,7 +395,6 @@ import { Airhorn, AirhornSendType } from "airhorn";
 const airhorn = new Airhorn();
 
 const template = {
-	from: "https://mywebhookdomain.com",
 	content: "Hey <%= name %> this is a notification from Airhorn",
 	templateEngine: "ejs",
 }
@@ -342,7 +414,6 @@ import { Airhorn, AirhornSendType } from "airhorn";
 const airhorn = new Airhorn();
 
 const template = {
-	from: "https://mywebhookdomain.com",
 	content: "Hey <%= name %> this is a notification from Airhorn",
 	templateEngine: "ejs",
 }
@@ -362,7 +433,6 @@ import { Airhorn, AirhornSendType } from "airhorn";
 const airhorn = new Airhorn();
 
 const template = {
-	from: "https://mywebhookdomain.com",
 	content: "Hey <%= name %> this is a notification from Airhorn",
 	templateEngine: "ejs",
 }
@@ -463,18 +533,18 @@ Webhooks is built into Airhorn as a default provider and can be used to send not
 An example using the `send` method (recommended):
 
 ```typescript
-import { Airhorn, AirhornProviderType } from "airhorn";
+import { Airhorn, AirhornSendType } from "airhorn";
+
+const airhorn = new Airhorn();
 
 const template = {
-	from: "+12223334444",
-	to: "+1234567890",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
 
 const data = { name: "John" };
 
-await airhorn.send("https://mockhttp.org/post", template, data, AirhornProviderType.WEBHOOK);
+await airhorn.send("https://mockhttp.org/post", template, data, AirhornSendType.Webhook);
 ```
 
 To send using the helper function `sendWebhook`: 
@@ -485,8 +555,6 @@ import { Airhorn } from "airhorn";
 const airhorn = new Airhorn();
 
 const template = {
-	from: "+12223334444",
-	to: "+1234567890",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
@@ -495,6 +563,8 @@ const data = { name: "John" };
 
 await airhorn.sendWebhook("https://mockhttp.org/post", template, data);
 ```
+
+The webhook payload posted to the URL includes the rendered `content`, the `from` value (empty if not provided), and a timestamp.
 
 # Statistics
 
@@ -596,7 +666,6 @@ airhorn.onHook(AirhornHook.BeforeSend, async ({ message }) => {
 });
 
 const template = {
-	from: "sender@example.com",
 	content: "Hello <%= name %>!",
 	templateEngine: "ejs",
 };
@@ -678,15 +747,17 @@ In previous versions of `Airhon` we used the file system to load all the templat
 Here is an example of how to use the `loadTemplate` helper method:
 
 ```typescript
-import { Airhorn } from "airhorn";
+import { Airhorn, AirhornSendType } from "airhorn";
 
 const airhorn = new Airhorn();
 
 const template = await airhorn.loadTemplate("path/to/template.md");
 
 // now you can send with that template
-await airhorn.send("https://mockhttp.org/post", template, data, AirhornProviderType.WEBHOOK);
+await airhorn.send("https://mockhttp.org/post", template, { name: "John" }, AirhornSendType.Webhook);
 ```
+
+The markdown body is the template content, and the front matter can set `subject`, `templateEngine`, `requiredFields`, and optionally `from` (which `options.from` on the send call overrides — see [Setting the Sender (from)](#setting-the-sender-from)).
 
 An example of the `markdown` format is located at `./packages/airhorn/test/fixtures`.
 

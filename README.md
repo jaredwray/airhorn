@@ -37,7 +37,7 @@ npm install airhorn @airhornjs/twilio
 ```
 
 ```typescript
-import { Airhorn, AirhornProviderType } from "airhorn";
+import { Airhorn, AirhornSendType } from "airhorn";
 import { AirhornTwilio } from "@airhornjs/twilio";
 
 const providers = [
@@ -53,15 +53,16 @@ const airhorn = new Airhorn({
 
 // this will give you twilio and webhook (built in) support. Now lets create a template and send it!
 const template = {
-	from: "+12223334444",
 	content: "Hey <%= name %> this is a test message from Airhorn",
 	templateEngine: "ejs",
 }
 
 const data = { name: "John" };
 
-await airhorn.send("+1234567890", template, data, AirhornProviderType.SMS);
+await airhorn.send("+1234567890", template, data, AirhornSendType.SMS, { from: "+12223334444" });
 ```
+
+The template is just the content of your message — the recipient (`to`) and sender (`from`) belong to the send call. You can also set `from` on the template itself or fall back to your provider's default sender; the send option takes precedence.
 
 Check out the documentation and providers to learn more!
 

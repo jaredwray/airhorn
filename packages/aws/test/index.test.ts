@@ -290,6 +290,23 @@ describe("AirhornAws", () => {
 			);
 		});
 
+		it("should send mobile push with a MobilePush-only capability", async () => {
+			const pushOnlyProvider = new AirhornAws({
+				...mockOptions,
+				capabilities: [AirhornSendType.MobilePush],
+			});
+
+			mockSnsPublish.mockResolvedValueOnce({
+				MessageId: "push-only-123",
+				$metadata: { httpStatusCode: 200 },
+			});
+
+			const result = await pushOnlyProvider.send(mockPushMessage);
+
+			expect(result.success).toBe(true);
+			expect(result.errors).toHaveLength(0);
+		});
+
 		it("should send to topic ARN for broadcasts", async () => {
 			mockSnsPublish.mockResolvedValueOnce({
 				MessageId: "topic-123",

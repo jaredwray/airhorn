@@ -43,8 +43,11 @@ export class AirhornAws implements AirhornProvider {
 					}
 				: undefined;
 
-		// Configure SNS if SMS capability is enabled
-		if (this.capabilities.includes(AirhornSendType.SMS)) {
+		// Configure SNS if SMS or MobilePush capability is enabled (both send through SNS)
+		if (
+			this.capabilities.includes(AirhornSendType.SMS) ||
+			this.capabilities.includes(AirhornSendType.MobilePush)
+		) {
 			this.snsClient = new SNSClient({
 				region: options.region,
 				credentials,

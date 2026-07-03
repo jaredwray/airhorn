@@ -50,17 +50,18 @@ const data = {
   customerName: 'John',
 };
 
-// Send SMS
+// The template is the content of the message
 const template = {
-  from: '+1234567890', // Optional: your Pingram sender number (defaults to your provisioned number)
   content: 'Hello <%= customerName %>!, your order #<%= orderId %> has been shipped!',
 };
 
+// Send SMS — the sender is part of the send call
 const result = await airhorn.send(
   '+16175551212', // to (E.164 format)
   template,
   data,
-  AirhornSendType.SMS
+  AirhornSendType.SMS,
+  { from: '+1234567890' }, // Optional: your Pingram sender number (defaults to your provisioned number)
 );
 ```
 
@@ -85,7 +86,6 @@ const data = {
 
 // Send Email
 const template = {
-  from: 'notifications@yourdomain.com', // Optional: must be a verified sender in Pingram
   subject: 'Order Confirmation: <%= orderId %>',
   content: 'Hi <%= customerName %>, your order #<%= orderId %> has been confirmed!',
 };
@@ -94,9 +94,12 @@ const result = await airhorn.send(
   'recipient@example.com', // to
   template,
   data,
-  AirhornSendType.Email
+  AirhornSendType.Email,
+  { from: 'notifications@yourdomain.com' }, // Optional: must be a verified sender in Pingram
 );
 ```
+
+The sender can also be set on the template itself (`template.from`) — `options.from` on the send call takes precedence, and Pingram's `sendDefaults` fill in when neither is set.
 
 ### Mobile Push Notifications with Pingram
 
@@ -120,7 +123,6 @@ const data = {
 };
 
 const template = {
-  from: 'YourApp',
   subject: 'New Order', // Used as the push notification title
   content: 'Hi <%= customerName %>, you have a new order #<%= orderId %>',
 };
@@ -129,7 +131,8 @@ await airhorn.send(
   'user-123', // Pingram user id with registered push tokens
   template,
   data,
-  AirhornSendType.MobilePush
+  AirhornSendType.MobilePush,
+  { from: 'YourApp' },
 );
 ```
 
