@@ -89,6 +89,12 @@ export type AirhornRetryFunction = (
 
 export type AirhornSendOptions = {
 	/**
+	 * The sender of the message (e.g. phone number, email address). This will override the
+	 * template's `from` value. If neither is set, providers fall back to their own defaults
+	 * or report an error when a sender is required.
+	 */
+	from?: string;
+	/**
 	 * The send strategy to use when sending messages. This will override the instance send strategy.
 	 * @default AirhornSendStrategy.RoundRobin
 	 */
@@ -580,6 +586,8 @@ export class Airhorn extends Hookified {
 	 * Generate a message from a template and data.
 	 * @param template - The template to use.
 	 * @param data - The data to populate the template.
+	 * @param providerType - The type of notification the message is for.
+	 * @param options - The send options. `options.from` takes precedence over `template.from`.
 	 * @returns The generated message.
 	 */
 	public async generateMessage(
@@ -588,10 +596,11 @@ export class Airhorn extends Hookified {
 		// biome-ignore lint/suspicious/noExplicitAny: object
 		data: Record<string, any>,
 		providerType: AirhornSendType,
+		options?: AirhornSendOptions,
 	): Promise<AirhornProviderMessage> {
 		const message: AirhornProviderMessage = {
 			to,
-			from: template.from,
+			from: options?.from ?? template.from ?? "",
 			subject: await this._ecto.render(
 				template.subject || "",
 				data,
@@ -686,7 +695,13 @@ export class Airhorn extends Hookified {
 				throw new Error(`No providers available for type: ${type}`);
 			}
 
-			const message = await this.generateMessage(to, template, data, type);
+			const message = await this.generateMessage(
+				to,
+				template,
+				data,
+				type,
+				options,
+			);
 			result.message = message;
 
 			await this.hook(AirhornHook.BeforeSend, { message, options });
@@ -738,6 +753,7 @@ export class Airhorn extends Hookified {
 	}
 }
 
+export type { AirhornTemplate } from "./template.js";
 export type {
 	AirhornProvider,
 	AirhornProviderMessage,

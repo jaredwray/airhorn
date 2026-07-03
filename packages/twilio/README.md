@@ -30,7 +30,7 @@ npm install airhorn @airhornjs/twilio
 ### SMS with Twilio
 
 ```typescript
-import { Airhorn } from 'airhorn';
+import { Airhorn, AirhornSendType } from 'airhorn';
 import { AirhornTwilio } from '@airhornjs/twilio';
 
 // Create Twilio provider for SMS only
@@ -44,27 +44,34 @@ const airhorn = new Airhorn({
   providers: [twilioProvider],
 });
 
-// Send SMS
-const message = {
-  from: '+1234567890',
-  content: 'Hello John!, your order #12345 has been shipped!',
-  type: AirhornProviderType.SMS,
+const data = {
+  orderId: '12345',
+  customerName: 'John',
 };
 
+// The template is the content of the message
+const template = {
+  content: 'Hello <%= customerName %>!, your order #<%= orderId %> has been shipped!',
+};
+
+// Send SMS — the sender is part of the send call
 const result = await airhorn.send(
   '+0987654321', // to
-  message,
+  template,
+  data,
+  AirhornSendType.SMS,
+  { from: '+1234567890' }, // your Twilio phone number
 );
 ```
 
 ### Email with SendGrid
 
 ```typescript
-import { Airhorn } from 'airhorn';
-import { TwilioProvider } from '@airhornjs/twilio';
+import { Airhorn, AirhornSendType } from 'airhorn';
+import { AirhornTwilio } from '@airhornjs/twilio';
 
 // Create Twilio provider with SendGrid support
-const twilioProvider = new TwilioProvider({
+const twilioProvider = new AirhornTwilio({
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
   sendGridApiKey: 'your-sendgrid-api-key', // Enables email support
@@ -75,26 +82,34 @@ const airhorn = new Airhorn({
   providers: [twilioProvider],
 });
 
+const data = {
+  orderId: '656565',
+  customerName: 'John',
+};
+
 // Send Email
-const message = {
-  from: 'sender@example.com',
+const template = {
   subject: 'Order Confirmation',
-  content: '<h1>Hello John</h1><p>Your order #656565 has been confirmed!</p>',
-  type: AirhornProviderType.Email,
+  content: '<h1>Hello <%= customerName %></h1><p>Your order #<%= orderId %> has been confirmed!</p>',
 };
 
 const result = await airhorn.send(
   'recipient@example.com', // to
-  message,
+  template,
+  data,
+  AirhornSendType.Email,
+  { from: 'sender@example.com' }, // verified SendGrid sender
 );
 ```
+
+The sender can also be set on the template itself (`template.from`) — `options.from` on the send call takes precedence.
 
 ### Both SMS and Email
 
 When configured with both Twilio and SendGrid credentials, the provider supports both SMS and email notifications:
 
 ```typescript
-const provider = new TwilioProvider({
+const provider = new AirhornTwilio({
   // Twilio SMS configuration
   accountSid: 'your-account-sid',
   authToken: 'your-auth-token',
@@ -123,12 +138,12 @@ console.log(provider.capabilities); // ['sms', 'email']
 
 ## Additional Options
 
-You can pass additional provider-specific options as the second parameter to the send method:
+For provider-specific options, call the provider directly with a message — the second parameter is passed through to Twilio / SendGrid:
 
 ### Twilio SMS Options
 
 ```typescript
-await airhorn.send(to, message, {
+await twilioProvider.send(message, {
   statusCallback: 'https://example.com/callback',
   maxPrice: '0.50',
   validityPeriod: 14400,
@@ -139,7 +154,7 @@ await airhorn.send(to, message, {
 ### SendGrid Email Options
 
 ```typescript
-await airhorn.send(to, message, {
+await twilioProvider.send(message, {
   replyTo: 'reply@example.com',
   categories: ['transactional', 'order-confirmation'],
   trackingSettings: {

@@ -31,7 +31,7 @@ npm install airhorn @airhornjs/aws
 ### SMS with Amazon SNS
 
 ```typescript
-import { Airhorn } from 'airhorn';
+import { Airhorn, AirhornSendType } from 'airhorn';
 import { AirhornAws } from '@airhornjs/aws';
 
 // Create AWS provider for SMS
@@ -46,16 +46,23 @@ const airhorn = new Airhorn({
   providers: [awsProvider],
 });
 
-// Send SMS
-const message = {
-  from: '+1234567890', // Your sender ID or phone number
-  content: 'Hello John!, your order #12345 has been shipped!',
-  type: AirhornSendType.SMS,
+const data = {
+  orderId: '12345',
+  customerName: 'John',
 };
 
+// The template is the content of the message
+const template = {
+  content: 'Hello <%= customerName %>!, your order #<%= orderId %> has been shipped!',
+};
+
+// Send SMS — the sender is part of the send call
 const result = await airhorn.send(
   '+0987654321', // to
-  message,
+  template,
+  data,
+  AirhornSendType.SMS,
+  { from: '+1234567890' }, // Your sender ID or phone number
 );
 ```
 
@@ -84,7 +91,6 @@ const data = {
 
 // Send Email
 const template = {
-  from: 'sender@example.com', // Must be verified in SES
   subject: 'Order <%= orderId %> Confirmation',
   content: '<h1>Hello <%= customerName %></h1><p>Your order #<%= orderId %> has been confirmed!</p>',
 };
@@ -93,9 +99,12 @@ const result = await airhorn.send(
   'recipient@example.com', // to
   template,
   data,
-  AirhornSendType.Email
+  AirhornSendType.Email,
+  { from: 'sender@example.com' }, // Must be verified in SES
 );
 ```
+
+The sender can also be set on the template itself (`template.from`) — `options.from` on the send call takes precedence.
 
 ### Both SMS and Email
 
@@ -148,7 +157,7 @@ import { AirhornAws } from '@airhornjs/aws';
 
 const awsProvider = new AirhornAws({
   region: 'us-east-1',
-  capabilities: [AirhornSendType.SMS], // SNS handles mobile push
+  capabilities: [AirhornSendType.MobilePush], // SNS handles mobile push
 });
 
 const airhorn = new Airhorn({
@@ -159,9 +168,8 @@ const data = {
   orderId: '12345',
 };
 
-// Send to iOS device via APNs
+// Send to iOS device via APNs — the template is the content of the notification
 const template = {
-  from: 'YourApp', // Sender ID
   content: JSON.stringify({
     aps: {
       alert: {
@@ -180,16 +188,9 @@ const template = {
 await airhorn.send(
   'arn:aws:sns:us-east-1:123456789012:endpoint/APNS/YourApp/abc123', // iOS endpoint ARN
   template,
+  data,
   AirhornSendType.MobilePush,
-  {
-    MessageStructure: 'json', // Required for platform-specific payloads
-    MessageAttributes: {
-      'AWS.SNS.MOBILE.APNS.PUSH_TYPE': {
-        DataType: 'String',
-        StringValue: 'alert', // or 'background'
-      },
-    },
-  },
+  { from: 'YourApp' }, // Sender ID
 );
 ```
 
@@ -211,14 +212,15 @@ await airhorn.send(
 
 ## Additional Options
 
-You can pass additional provider-specific options as the second parameter to the send method:
+For provider-specific options, call the provider directly with a message — the second parameter is passed through to SNS / SES:
 
 ### Amazon SNS Options
 
 ```typescript
-await airhorn.send(to, message, {
+await awsProvider.send(message, {
   smsType: 'Promotional', // or 'Transactional' (default)
   maxPrice: '0.50', // Maximum price in USD
+  MessageStructure: 'json', // For platform-specific mobile push payloads
   // ... other SNS PublishCommand options
 });
 ```
@@ -226,7 +228,7 @@ await airhorn.send(to, message, {
 ### Amazon SES Options
 
 ```typescript
-await airhorn.send(to, message, {
+await awsProvider.send(message, {
   ccAddresses: ['cc@example.com'],
   bccAddresses: ['bcc@example.com'],
   replyToAddresses: ['reply@example.com'],

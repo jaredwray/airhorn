@@ -32,7 +32,7 @@ npm install airhorn @airhornjs/azure
 ### SMS with Azure Communication Services
 
 ```typescript
-import { Airhorn } from 'airhorn';
+import { Airhorn, AirhornSendType } from 'airhorn';
 import { AirhornAzure } from '@airhornjs/azure';
 
 // Create Azure provider for SMS
@@ -50,18 +50,18 @@ const data = {
   customerName: 'John',
 };
 
-// Send SMS
+// The template is the content of the message
 const template = {
-  from: '+1234567890', // Your sender phone number (must be provisioned in Azure)
   content: 'Hello <%= customerName %>!, your order #<%= orderId %> has been shipped!',
-  type: AirhornSendType.SMS,
 };
 
+// Send SMS — the sender is part of the send call
 const result = await airhorn.send(
   '+0987654321', // to
   template,
   data,
-  AirhornSendType.SMS
+  AirhornSendType.SMS,
+  { from: '+1234567890' }, // Your sender phone number (must be provisioned in Azure)
 );
 ```
 
@@ -88,7 +88,6 @@ const data = {
 
 // Send Email
 const template = {
-  from: 'DoNotReply@yourdomain.com', // Must be verified domain in Azure
   subject: 'Order Confirmation: <%= orderId %>',
   content: 'Hi <%= customerName %>, your order #<%= orderId %> has been confirmed!',
 };
@@ -97,9 +96,12 @@ const result = await airhorn.send(
   'recipient@example.com', // to
   template,
   data,
-  AirhornSendType.Email
+  AirhornSendType.Email,
+  { from: 'DoNotReply@yourdomain.com' }, // Must be verified domain in Azure
 );
 ```
+
+The sender can also be set on the template itself (`template.from`) — `options.from` on the send call takes precedence.
 
 ### Mobile Push Notifications with Azure Notification Hubs
 
@@ -121,14 +123,13 @@ const data = {
   customerName: 'John',
 };
 
-// Send to iOS device via APNs
+// Send to iOS device via APNs — the template is the content of the notification
 const template = {
-  from: 'YourApp',
   content: JSON.stringify({
     aps: {
       alert: {
         title: 'New Order',
-        body: 'Hi <%= customerName %>You have a new order #<%= orderId %>',
+        body: 'Hi <%= customerName %>, you have a new order #<%= orderId %>',
       },
       badge: 1,
       sound: 'default',
@@ -145,6 +146,7 @@ await airhorn.send(
   data,
   AirhornSendType.MobilePush,
   {
+    from: 'YourApp',
     platform: 'apple',
     tags: 'user:john-doe && ios',
   },
@@ -197,10 +199,12 @@ const allProvider = new AirhornAzure({
 
 ## Additional Options
 
+For provider-specific options, call the provider directly with a message — the second parameter is passed through to Azure:
+
 ### SMS Options
 
 ```typescript
-await airhorn.send(to, message, {
+await azureProvider.send(message, {
   // Additional SMS options from Azure Communication Services
   deliveryReportTimeoutInSeconds: 300,
   tag: 'custom-tag',

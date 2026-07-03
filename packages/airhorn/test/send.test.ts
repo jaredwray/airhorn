@@ -526,3 +526,93 @@ describe("Airhorn send function", () => {
 		expect(failedEvents[0].success).toBe(false);
 	});
 });
+
+describe("Airhorn from precedence", () => {
+	let airhorn: Airhorn;
+	const mockFetch = vi.fn();
+
+	beforeEach(() => {
+		airhorn = new Airhorn();
+		vi.clearAllMocks();
+		global.fetch = mockFetch;
+	});
+
+	test("should generate a message without a from on the template", async () => {
+		const template: AirhornTemplate = {
+			content: "Test content",
+		};
+
+		const message = await airhorn.generateMessage(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+		);
+
+		expect(message.from).toBe("");
+	});
+
+	test("should use the template from when options do not set one", async () => {
+		const template: AirhornTemplate = {
+			from: "template@example.com",
+			content: "Test content",
+		};
+
+		const message = await airhorn.generateMessage(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+			{ sendStrategy: AirhornSendStrategy.RoundRobin },
+		);
+
+		expect(message.from).toBe("template@example.com");
+	});
+
+	test("should override the template from with options.from", async () => {
+		const template: AirhornTemplate = {
+			from: "template@example.com",
+			content: "Test content",
+		};
+
+		const message = await airhorn.generateMessage(
+			"https://example.com",
+			template,
+			{},
+			AirhornSendType.Webhook,
+			{ from: "options@example.com" },
+		);
+
+		expect(message.from).toBe("options@example.com");
+	});
+
+	test("should send using options.from when the template has no from", async () => {
+		const mockResponse = {
+			ok: true,
+			status: 200,
+			statusText: "OK",
+			json: vi.fn().mockResolvedValue({ success: true }),
+			headers: new Headers(),
+		};
+		mockFetch.mockResolvedValueOnce(mockResponse);
+
+		const template: AirhornTemplate = {
+			content: "Hello <%= name %>!",
+			templateEngine: "ejs",
+		};
+
+		const result = await airhorn.sendWebhook(
+			"https://example.com",
+			template,
+			{ name: "John" },
+			{ from: "options@example.com" },
+		);
+
+		expect(result.success).toBe(true);
+		expect(result.message?.from).toBe("options@example.com");
+		expect(result.message?.content).toBe("Hello John!");
+
+		const payload = JSON.parse(mockFetch.mock.calls[0][1].body);
+		expect(payload.from).toBe("options@example.com");
+	});
+});
