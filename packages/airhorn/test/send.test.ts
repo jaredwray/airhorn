@@ -616,3 +616,38 @@ describe("Airhorn from precedence", () => {
 		expect(payload.from).toBe("options@example.com");
 	});
 });
+
+describe("Airhorn provider options forwarding", () => {
+	test("should not forward the from option to providers", async () => {
+		const receivedOptions: any[] = [];
+		const mockProvider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: async (_message: any, options?: any) => {
+				receivedOptions.push(options);
+				return { success: true, response: {}, errors: [] };
+			},
+		};
+
+		const airhorn = new Airhorn({
+			providers: [mockProvider],
+			useWebhookProvider: false,
+		});
+
+		const template: AirhornTemplate = {
+			content: "Test content",
+		};
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ from: "+12223334444", throwOnErrors: false },
+		);
+
+		expect(result.success).toBe(true);
+		expect(result.message?.from).toBe("+12223334444");
+		expect(receivedOptions[0]).toEqual({ throwOnErrors: false });
+	});
+});

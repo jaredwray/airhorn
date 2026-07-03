@@ -738,7 +738,9 @@ export class Airhorn extends Hookified {
 	}
 
 	/**
-	 * Execute a send to a single provider.
+	 * Execute a send to a single provider. The `from` option is already resolved into the
+	 * message at this point, so it is stripped before forwarding the options — providers
+	 * merge options into their API calls and a stale `from` would override the message.
 	 * @param {AirhornProvider} provider - The provider to send with.
 	 * @param {AirhornProviderMessage} message - The message to send.
 	 * @param {AirhornSendOptions} options - The send options.
@@ -749,6 +751,11 @@ export class Airhorn extends Hookified {
 		message: AirhornProviderMessage,
 		options?: AirhornSendOptions,
 	): Promise<AirhornProviderSendResult> {
+		if (options?.from !== undefined) {
+			const { from, ...providerOptions } = options;
+			return provider.send(message, providerOptions);
+		}
+
 		return provider.send(message, options);
 	}
 }
