@@ -79,11 +79,8 @@ jobs:
       - name: Publish @airhornjs/azure
         run: pnpm publish:azure
 
-      - name: Publish @airhornjs/twilio
-        run: pnpm publish:twilio
-
-      # Kept last: @airhornjs/pingram needs a one-time manual first publish
-      # before its npmjs.com trusted publisher can be configured, so a failure
-      # here must not block the packages above.
       - name: Publish @airhornjs/pingram
         run: pnpm publish:pingram
+
+      - name: Publish @airhornjs/twilio
+        run: pnpm publish:twilio
