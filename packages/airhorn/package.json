@@ -34,7 +34,7 @@
     "cacheable": "^2.5.0",
     "ecto": "^5.0.0",
     "hookified": "^3.0.2",
-    "writr": "^6.1.3"
+    "writr": "^6.1.5"
   },
   "files": [
     "dist",
