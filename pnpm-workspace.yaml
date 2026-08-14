@@ -1,8 +1,14 @@
-minimumReleaseAge: 2880
-minimumReleaseAgeExclude:
-  - hookified
+minimumReleaseAge: 10080
+minimumReleaseAgeStrict: true
+minimumReleaseAgeIgnoreMissingTime: false
+blockExoticSubdeps: true
+strictDepBuilds: true
+dangerouslyAllowAllBuilds: false
+trustPolicy: no-downgrade
+
 packages:
   - packages/*
+
 allowBuilds:
-  esbuild: true
-  workerd: true
+  "esbuild@0.25.12 || 0.28.0 || 0.28.1": true
+  "workerd@1.20260801.1": true

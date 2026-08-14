@@ -1,86 +1,215 @@
 name: release
 
 on:
-  workflow_dispatch:
   release:
     types: [released]
 
-permissions:
-  contents: read
+permissions: {}
+
+concurrency:
+  group: npm-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
 
 jobs:
-  setup-test-build:
-
+  prepare:
+    name: Test, build, and pack
     runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v6
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
-
-      - name: Use Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
-
-      - name: Testing
-        run: pnpm test:ci
-
-  setup-release:
-
-    needs: setup-test-build
-
-    runs-on: ubuntu-latest
-
-    # Packages are published with npm Trusted Publishing (OIDC) — no NPM_TOKEN.
-    # This requires a trusted publisher (this repository + this workflow file) to be
-    # configured for each package on npmjs.com. The `id-token: write` permission lets
-    # the job mint the short-lived OIDC token used for authentication and to sign the
-    # provenance attestations.
+    timeout-minutes: 30
     permissions:
       contents: read
-      id-token: write
-
-    # A named environment records this publish as a tracked deployment, so the run
-    # shows a progress bar and the deployment history on the repo's Environments tab.
-    environment:
-      name: npm
-      url: https://www.npmjs.com/package/airhorn
+    outputs:
+      commit-sha: ${{ steps.release.outputs.commit-sha }}
+      version: ${{ steps.release.outputs.version }}
 
     steps:
-      - uses: actions/checkout@v6
-      - name: Install pnpm
-        uses: pnpm/action-setup@v6
+      - name: Checkout immutable release commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.sha }}
+
+      - name: Verify immutable release source
+        id: release
+        env:
+          RELEASE_SHA: ${{ github.sha }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "Release tag must be vX.Y.Z" >&2
+            exit 1
+          fi
+          test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
+          test "$(git rev-parse "refs/tags/${RELEASE_TAG}^{commit}")" = "$RELEASE_SHA"
+          git show-ref --verify --quiet refs/remotes/origin/main
+          git merge-base --is-ancestor "$RELEASE_SHA" refs/remotes/origin/main
+          echo "commit-sha=$RELEASE_SHA" >> "$GITHUB_OUTPUT"
+          echo "version=${RELEASE_TAG#v}" >> "$GITHUB_OUTPUT"
 
       - name: Use Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
-          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
 
-      - name: Install Dependencies
+      - name: Verify package names and versions
+        env:
+          EXPECTED_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          # JavaScript template literals are intentional.
+          # shellcheck disable=SC2016
+          node --input-type=module --eval '
+          import { readFileSync } from "node:fs";
+          const expectedVersion = process.env.EXPECTED_VERSION;
+          const manifests = [
+            ["package.json", "airhorn-mono"],
+            ["packages/airhorn/package.json", "airhorn"],
+            ["packages/aws/package.json", "@airhornjs/aws"],
+            ["packages/azure/package.json", "@airhornjs/azure"],
+            ["packages/pingram/package.json", "@airhornjs/pingram"],
+            ["packages/twilio/package.json", "@airhornjs/twilio"],
+          ];
+          for (const [path, expectedName] of manifests) {
+            const manifest = JSON.parse(readFileSync(path, "utf8"));
+            if (manifest.name !== expectedName) throw new Error(`Unexpected name in ${path}: ${manifest.name}`);
+            if (manifest.version !== expectedVersion) throw new Error(`Unexpected version in ${path}: ${manifest.version}`);
+          }
+          '
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build
         run: pnpm build
 
-      - name: Publish airhorn
-        run: pnpm publish:airhorn
+      - name: Test
+        run: pnpm test:ci
 
-      - name: Publish @airhornjs/aws
-        run: pnpm publish:aws
+      - name: Pack and verify packages
+        env:
+          OUTPUT_DIRECTORY: ${{ runner.temp }}/release-artifacts
+        run: pnpm packages:verify "$OUTPUT_DIRECTORY"
 
-      - name: Publish @airhornjs/azure
-        run: pnpm publish:azure
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: npm-release-${{ github.run_id }}
+          path: ${{ runner.temp }}/release-artifacts
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+          overwrite: true
 
-      - name: Publish @airhornjs/pingram
-        run: pnpm publish:pingram
+  aikido-gate:
+    name: Aikido release gate
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions: {}
 
-      - name: Publish @airhornjs/twilio
-        run: pnpm publish:twilio
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install Aikido client
+        run: >- # zizmor: ignore[adhoc-packages] Exact CLI; lifecycle scripts disabled.
+          npm install --global @aikidosec/ci-api-client@1.0.17
+          --ignore-scripts --no-audit --no-fund
+
+      - name: Scan release
+        env:
+          AIKIDO_CLIENT_API_KEY: ${{ secrets.AIKIDO_CLIENT_API_KEY }}
+          COMMIT_SHA: ${{ needs.prepare.outputs.commit-sha }}
+          REPOSITORY_NAME: ${{ github.event.repository.name }}
+        run: >-
+          aikido-api-client scan-release "$REPOSITORY_NAME" "$COMMIT_SHA"
+          --apikey "$AIKIDO_CLIENT_API_KEY"
+          --fail-on-sast-scan
+          --fail-on-iac-scan
+          --fail-on-secrets-scan
+
+  stage:
+    name: Stage ${{ matrix.package }}
+    needs: [prepare, aikido-gate]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+    environment:
+      name: npm
+      url: ${{ matrix.url }}
+    strategy:
+      # Staging is not idempotent. Re-run only failed cells, never successful ones.
+      fail-fast: false
+      matrix:
+        include:
+          - archive: airhorn.tgz
+            package: airhorn
+            url: https://www.npmjs.com/package/airhorn
+          - archive: aws.tgz
+            package: "@airhornjs/aws"
+            url: https://www.npmjs.com/package/@airhornjs/aws
+          - archive: azure.tgz
+            package: "@airhornjs/azure"
+            url: https://www.npmjs.com/package/@airhornjs/azure
+          - archive: pingram.tgz
+            package: "@airhornjs/pingram"
+            url: https://www.npmjs.com/package/@airhornjs/pingram
+          - archive: twilio.tgz
+            package: "@airhornjs/twilio"
+            url: https://www.npmjs.com/package/@airhornjs/twilio
+
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Install pinned npm CLI
+        run: | # zizmor: ignore[adhoc-packages] Exact CLI; lifecycle scripts disabled.
+          npm install --global npm@11.19.0 --ignore-scripts --no-audit --no-fund
+          test "$(npm --version)" = "11.19.0"
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: npm-release-${{ github.run_id }}
+          path: release-artifacts
+
+      - name: Verify release artifacts
+        env:
+          ARCHIVE: ${{ matrix.archive }}
+          EXPECTED_NAME: ${{ matrix.package }}
+          EXPECTED_VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          cd release-artifacts
+          sha256sum --check --strict SHA256SUMS
+          test -f "$ARCHIVE"
+          tar -xOzf "$ARCHIVE" package/package.json > "$RUNNER_TEMP/package.json"
+          # JavaScript template literals are intentional.
+          # shellcheck disable=SC2016
+          node --input-type=module --eval '
+            import { readFileSync } from "node:fs";
+            const [path, expectedName, expectedVersion] = process.argv.slice(1);
+            const text = readFileSync(path, "utf8");
+            const manifest = JSON.parse(text);
+            if (manifest.name !== expectedName) throw new Error(`Unexpected package: ${manifest.name}`);
+            if (manifest.version !== expectedVersion) throw new Error(`Unexpected version: ${manifest.version}`);
+            if (text.includes("workspace:")) throw new Error("Unresolved workspace dependency");
+          ' "$RUNNER_TEMP/package.json" "$EXPECTED_NAME" "$EXPECTED_VERSION"
+
+      - name: Stage package on npm
+        env:
+          ARCHIVE: ${{ matrix.archive }}
+        run: npm stage publish "release-artifacts/$ARCHIVE" --access public --ignore-scripts

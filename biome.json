@@ -7,7 +7,11 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**/src/**/*", "**/test/**/*"]
+		"includes": [
+			"**/src/**/*",
+			"**/test/**/*",
+			"scripts/verify-package-contents.ts"
+		]
 	},
 	"formatter": {
 		"enabled": true,
