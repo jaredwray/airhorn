@@ -78,7 +78,7 @@ The current release workflow authenticates with OIDC and does not reference `NPM
 ## 6. Security tooling
 
 - [x] Aikido runs on every build — verified 2026-08-14
-- [ ] Aikido release gate uses exact client `1.0.17`; every stage job `needs:` its passing dependency, SAST, IaC, and secret scan (PR pending)
+- [ ] Aikido release gate uses exact client `1.0.17` and the immutable GitHub repository ID; every stage job `needs:` its passing dependency, SAST, IaC, and secret scan (PR pending)
 - [x] Socket reviews every PR that changes dependencies — verified 2026-08-14
 
 ## Current PR verification

@@ -127,9 +127,9 @@ jobs:
         env:
           AIKIDO_CLIENT_API_KEY: ${{ secrets.AIKIDO_CLIENT_API_KEY }}
           COMMIT_SHA: ${{ needs.prepare.outputs.commit-sha }}
-          REPOSITORY_NAME: ${{ github.event.repository.name }}
+          REPOSITORY_ID: ${{ github.repository_id }}
         run: >-
-          aikido-api-client scan-release "$REPOSITORY_NAME" "$COMMIT_SHA"
+          aikido-api-client scan-release "$REPOSITORY_ID" "$COMMIT_SHA"
           --apikey "$AIKIDO_CLIENT_API_KEY"
           --fail-on-sast-scan
           --fail-on-iac-scan
