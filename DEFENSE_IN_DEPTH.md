@@ -6,23 +6,23 @@ Profile: npm library · public
 
 ## 1. Security docs
 
-- [ ] `SECURITY.md` present — contact info + "How this repository is secured" summary (PR #635 pending)
-- [ ] `DEFENSE_IN_DEPTH.md` present (this file) (PR #635 pending)
+- [x] `SECURITY.md` present — contact info + "How this repository is secured" summary — PR #635
+- [x] `DEFENSE_IN_DEPTH.md` present (this file) — PR #635
 
 ## 2. CODEOWNERS and cloud bootstrap
 
-- [ ] `.github/CODEOWNERS` covers `/.github/`, `/.cursor/`, `/.devcontainer/`, `/scripts/` with owners the maintainer names
+- [ ] `.github/CODEOWNERS` covers `/.github/`, `/.cursor/`, `/.devcontainer/`, `/scripts/` with owners the maintainer names (PR pending)
 - [ ] Codespaces and Cursor Cloud Agents bootstrap Aikido Safe Chain via scripts/setup-cloud-environment.sh (--ci shims, frozen lockfile)
 
 ## 3. Dependencies (pnpm)
 
-- [ ] `packageManager: pnpm@11.3+` pinned in `package.json`
+- [x] `packageManager: pnpm@11.3+` pinned in `package.json` — verified `pnpm@11.9.0`
 - [ ] 7-day cooldown: `minimumReleaseAge: 10080`, `minimumReleaseAgeStrict: true`, `minimumReleaseAgeIgnoreMissingTime: false`; no first-party `minimumReleaseAgeExclude`
 - [ ] `trustPolicy: no-downgrade`; no first-party `trustPolicyExclude`
 - [ ] Lifecycle scripts blocked: `strictDepBuilds: true`, `dangerouslyAllowAllBuilds: false`, `allowBuilds: {}` baseline
 - [ ] `blockExoticSubdeps: true`
-- [ ] Lockfile committed; CI installs with `pnpm install --frozen-lockfile`
-- [ ] No `.github/dependabot.yml`; other dependency-update tools (if any) open PRs only — never auto-merge
+- [x] Lockfile committed; CI installs with `pnpm install --frozen-lockfile` — verified
+- [x] No `.github/dependabot.yml`; other dependency-update tools (if any) open PRs only — never auto-merge — verified
 
 ## 4. GitHub Actions
 
@@ -32,9 +32,9 @@ Profile: npm library · public
 - [ ] Every job installs Socket Firewall (`SocketDev/action` SHA-pinned, `firewall-version` pinned); `pnpm install` / `npm install` run as `sfw pnpm install` / `sfw npm install`
 - [ ] `.github/workflows/check-workflows.yaml` lints workflows with zizmor on every PR
 - [ ] `persist-credentials: false` on checkouts that don't push
-- [ ] No `pull_request_target` on workflows that run untrusted PR code
+- [x] No `pull_request_target` on workflows that run untrusted PR code — verified
 - [ ] Artifact-publishing workflows disable `actions/setup-node` default caching (`package-manager-cache: false`) to prevent cache poisoning
-- [ ] No npm tokens (or other registry credentials) in Actions secrets
+- [x] No npm tokens (or other registry credentials) in Actions secrets — verified (no npm/registry tokens in workflow YAML; publish uses OIDC `id-token`)
 
 ## 5. npm publishing — npm libraries only
 
@@ -43,13 +43,13 @@ Profile: npm library · public
 - [ ] Maintainer promotes staged versions with 2FA (manual)
 - [ ] Drydock connected — staged releases reviewed before promotion (manual)
 - [ ] No direct publish rights: package requires 2FA and disallows tokens (manual)
-- [ ] `package.json` `repository.url` accurate so provenance maps to this repo
+- [x] `package.json` `repository.url` accurate so provenance maps to this repo — verified
 
 ## 6. Security tooling
 
-- [ ] Aikido runs on every build
+- [x] Aikido runs on every build — verified (Aikido Security GitHub app on pull requests)
 - [ ] Aikido release gate: the release workflow's stage-publish job `needs:` a passing `scan-release`
-- [ ] Socket reviews every PR that changes dependencies
+- [x] Socket reviews every PR that changes dependencies — verified (Socket Security GitHub app on pull requests)
 
 ## 7. Repository lockdown
 
