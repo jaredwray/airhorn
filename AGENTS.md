@@ -50,3 +50,11 @@ pnpm test             # Runs: biome lint + vitest with coverage
 - Biome handles formatting and linting (no ESLint/Prettier)
 - Double quotes, tab indentation
 - Run `biome check --write --error-on-warnings` to auto-fix lint issues
+
+## Safe Chain
+
+Package installs in this environment go through Aikido Safe Chain shims. Never bypass them:
+
+- Keep `~/.safe-chain/shims` first on `PATH`.
+- Do not call unshimmed `npm`, `pnpm`, `npx`, or `pnpx`.
+- Do not install packages with `curl | sh` or by pointing at a package manager outside the shim directory.
