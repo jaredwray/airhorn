@@ -4,6 +4,7 @@ minimumReleaseAgeIgnoreMissingTime: false
 trustPolicy: no-downgrade
 strictDepBuilds: true
 dangerouslyAllowAllBuilds: false
+blockExoticSubdeps: true
 packages:
   - packages/*
 allowBuilds:
