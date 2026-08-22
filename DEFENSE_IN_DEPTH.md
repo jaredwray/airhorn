@@ -20,13 +20,13 @@ Profile: npm library · public
 - [x] 7-day cooldown: `minimumReleaseAge: 10080`, `minimumReleaseAgeStrict: true`, `minimumReleaseAgeIgnoreMissingTime: false`; no first-party `minimumReleaseAgeExclude` — PR #638
 - [x] `trustPolicy: no-downgrade`; no first-party `trustPolicyExclude` — PR #639
 - [x] Lifecycle scripts blocked: `strictDepBuilds: true`, `dangerouslyAllowAllBuilds: false`, `allowBuilds: {}` baseline — PR #640 (third-party `allowBuilds` exceptions: esbuild, workerd)
-- [ ] `blockExoticSubdeps: true` (PR #641 pending)
+- [x] `blockExoticSubdeps: true` — PR #641
 - [x] Lockfile committed; CI installs with `pnpm install --frozen-lockfile` — verified
 - [x] No `.github/dependabot.yml`; other dependency-update tools (if any) open PRs only — never auto-merge — verified
 
 ## 4. GitHub Actions
 
-- [ ] `permissions: contents: read` (or `{}` + per-job grants) on every workflow
+- [ ] `permissions: contents: read` (or `{}` + per-job grants) on every workflow (PR #642 pending)
 - [ ] No `contents: write` except jobs whose purpose is mutating the repo (GitHub Release, Changesets version PR); generated output is a workflow artifact, never committed back from CI
 - [ ] Every action pinned to a full commit SHA (`npx actions-up`)
 - [ ] Every job installs Socket Firewall (`SocketDev/action` SHA-pinned, `firewall-version` pinned); `pnpm install` / `npm install` run as `sfw pnpm install` / `sfw npm install`
