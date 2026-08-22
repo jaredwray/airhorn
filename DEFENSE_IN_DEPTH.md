@@ -18,8 +18,8 @@ Profile: npm library · public
 
 - [x] `packageManager: pnpm@11.3+` pinned in `package.json` — verified `pnpm@11.9.0`
 - [x] 7-day cooldown: `minimumReleaseAge: 10080`, `minimumReleaseAgeStrict: true`, `minimumReleaseAgeIgnoreMissingTime: false`; no first-party `minimumReleaseAgeExclude` — PR #638
-- [ ] `trustPolicy: no-downgrade`; no first-party `trustPolicyExclude` (PR #639 pending)
-- [ ] Lifecycle scripts blocked: `strictDepBuilds: true`, `dangerouslyAllowAllBuilds: false`, `allowBuilds: {}` baseline
+- [x] `trustPolicy: no-downgrade`; no first-party `trustPolicyExclude` — PR #639
+- [ ] Lifecycle scripts blocked: `strictDepBuilds: true`, `dangerouslyAllowAllBuilds: false`, `allowBuilds: {}` baseline (PR #640 pending)
 - [ ] `blockExoticSubdeps: true`
 - [x] Lockfile committed; CI installs with `pnpm install --frozen-lockfile` — verified
 - [x] No `.github/dependabot.yml`; other dependency-update tools (if any) open PRs only — never auto-merge — verified
