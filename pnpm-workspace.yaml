@@ -1,6 +1,7 @@
 minimumReleaseAge: 10080
 minimumReleaseAgeStrict: true
 minimumReleaseAgeIgnoreMissingTime: false
+trustPolicy: no-downgrade
 packages:
   - packages/*
 allowBuilds:
