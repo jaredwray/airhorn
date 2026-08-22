@@ -86,17 +86,23 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Publish airhorn
-        run: pnpm publish:airhorn
+      - name: Pack
+        run: |
+          mkdir -p packed
+          pnpm --filter "./packages/**" pack --pack-destination packed
+          ls -la packed
 
-      - name: Publish @airhornjs/aws
-        run: pnpm publish:aws
-
-      - name: Publish @airhornjs/azure
-        run: pnpm publish:azure
-
-      - name: Publish @airhornjs/pingram
-        run: pnpm publish:pingram
-
-      - name: Publish @airhornjs/twilio
-        run: pnpm publish:twilio
+      - name: Stage publish
+        # pnpm ≥ 11.3. --no-git-checks: git-checks run even for a tarball and
+        # fail on a detached release-tag checkout and on the untracked pack output.
+        # stage publish accepts one tarball; loop so all workspace packages stage.
+        run: |
+          shopt -s nullglob
+          tarballs=(./packed/*.tgz)
+          if [ ${#tarballs[@]} -eq 0 ]; then
+            echo "error: no packed tarballs" >&2
+            exit 1
+          fi
+          for tgz in "${tarballs[@]}"; do
+            pnpm stage publish "$tgz" --access public --provenance --no-git-checks
+          done
