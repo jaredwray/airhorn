@@ -53,6 +53,6 @@ Profile: npm library · public
 
 ## 7. Repository lockdown
 
-- [ ] `lockdown-repo.sh` applied; `--check` with `--required-checks "setup-test (22),setup-test (24),setup-test (26),zizmor"` and `--allowed-actions "codecov/*,cloudflare/*,pnpm/*"` passes (PRs required on the default branch, merges blocked unless required status checks pass, tag ruleset, immutable releases, fork-PR approval, read-only workflow tokens, Actions allowlist, secret scanning, Dependabot disabled, private vulnerability reporting as applicable) (PR pending)
+- [ ] `lockdown-repo.sh` applied; `--check` with `--required-checks "setup-test (22),setup-test (24),setup-test (26),zizmor"` and `--allowed-actions "codecov/*,cloudflare/*,pnpm/*"` passes (PRs required on the default branch, merges blocked unless required status checks pass, tag ruleset, immutable releases, fork-PR approval, read-only workflow tokens, Actions allowlist, secret scanning, Dependabot disabled, private vulnerability reporting as applicable) (PR #650 pending)
 - [ ] Phishing-resistant 2FA (passkeys / hardware keys) on the GitHub and npm accounts (manual)
 - [ ] Recovery codes stored offline in a password manager (manual)
