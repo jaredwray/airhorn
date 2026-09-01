@@ -3,7 +3,7 @@
 		"target": "ES2022",
 		"module": "ESNext",
 		"lib": ["ES2022"],
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
@@ -14,8 +14,7 @@
 		"sourceMap": true,
 		"outDir": "./dist",
 		"rootDir": "./src",
-		"types": ["node"],
-		"ignoreDeprecations": "6.0"
+		"types": ["node"]
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "dist", "test"]
