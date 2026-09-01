@@ -10,5 +10,3 @@ packages:
 allowBuilds:
   esbuild: true
   workerd: true
-overrides:
-  axios: 1.19.0
