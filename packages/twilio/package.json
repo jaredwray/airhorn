@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.6",
-    "twilio": "^6.0.2"
+    "twilio": "^6.1.0"
   },
   "peerDependencies": {
     "airhorn": "workspace:^"
