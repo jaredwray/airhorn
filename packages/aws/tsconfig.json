@@ -3,7 +3,7 @@
 		"target": "ES2022",
 		"module": "ESNext",
 		"lib": ["ES2022"],
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"declaration": true,
 		"declarationMap": true,
 		"outDir": "./dist",
@@ -16,8 +16,7 @@
 		"allowSyntheticDefaultImports": true,
 		"noEmit": false,
 		"composite": true,
-		"types": ["node", "vitest/globals"],
-		"ignoreDeprecations": "6.0"
+		"types": ["node", "vitest/globals"]
 	},
 	"include": ["src/**/*"]
 }
