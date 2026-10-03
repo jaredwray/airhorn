@@ -254,8 +254,8 @@ importers:
         specifier: workspace:^
         version: link:../airhorn
       twilio:
-        specifier: ^6.1.0
-        version: 6.1.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+        specifier: ^6.1.1
+        version: 6.1.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
 packages:
 
@@ -1799,9 +1799,6 @@ packages:
     resolution: {integrity: sha512-kRGRZw3bLlFISDBgwTSA1TMBFN6J6GWDeubmDE3AF+3+yXL8hTWv8r5rkLbqYXY4RjPk/EzHnClI3zQf1cFmHA==}
     engines: {node: '>= 0.6'}
 
-  dayjs@1.11.20:
-    resolution: {integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==}
-
   dayjs@1.11.23:
     resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
@@ -3009,8 +3006,8 @@ packages:
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  twilio@6.1.0:
-    resolution: {integrity: sha512-a226jNHitbQQoLs4chB9TGzG2mOrxKR9NHs5XH8ZE4k48MQWdAwh+Hh6JsVB0hmCrsZpyHCsybf81Se6u6627A==}
+  twilio@6.1.1:
+    resolution: {integrity: sha512-d9xFCQaa8DpuDvFiG49TwmppmULHhqzEVncpppazS5oZv5O0E9Wb76STCHt4q+ZjWDL6RAtKey+u8jWcQLKWjw==}
     engines: {node: '>=20.0.0'}
 
   type-fest@4.41.0:
@@ -4549,8 +4546,6 @@ snapshots:
       '@babel/types': 7.29.0
 
   content-disposition@0.5.2: {}
-
-  dayjs@1.11.20: {}
 
   dayjs@1.11.23: {}
 
@@ -6249,10 +6244,10 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  twilio@6.1.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
+  twilio@6.1.1(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
       axios: 1.19.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
-      dayjs: 1.11.20
+      dayjs: 1.11.23
       https-proxy-agent: 5.0.1(supports-color@7.2.0)
       jsonwebtoken: 9.0.3
       qs: 6.15.0
