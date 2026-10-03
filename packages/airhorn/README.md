@@ -166,16 +166,6 @@ export type AirhornOptions = {
 	 */
 	useWebhookProvider?: boolean;
 	/**
-	 * The retry strategy to use when sending messages.
-	 * @default 0
-	 */
-	retryStrategy?: AirhornRetryStrategy;
-	/**
-	 * The timeout to use when sending messages.
-	 * @default 100
-	 */
-	timeout?: number;
-	/**
 	 * The send strategy to use when sending messages.
 	 * @default AirhornSendStrategy.RoundRobin
 	 */
@@ -269,7 +259,7 @@ const data = { name: "John" };
 await airhorn.sendSMS("+1234567890", template, data, { from: "+12223334444" });
 ```
 
-All helper methods accept an optional `AirhornSendOptions` parameter to set the sender or override the send strategy per call:
+All helper methods accept an optional `AirhornSendOptions` parameter to set the sender or override the send strategy per call. You can also set `retries` on that parameter. The default is 0, and 0 means no retry.
 
 ```typescript
 export type AirhornSendOptions = {
@@ -289,6 +279,12 @@ export type AirhornSendOptions = {
 	 * @default false
 	 */
 	throwOnErrors?: boolean;
+	/**
+	 * The number of extra attempts after a provider send fails.
+	 * A value of 0 sends the message one time.
+	 * @default 0
+	 */
+	retries?: number;
 };
 ```
 
@@ -314,6 +310,12 @@ const data = { name: "John" };
 await airhorn.sendSMS("+1234567890", template, data, {
 	from: "+12223334444",
 	sendStrategy: AirhornSendStrategy.FailOver
+});
+
+// Set retries to 2. Airhorn tries two more times after a failure. The default is 0.
+await airhorn.sendSMS("+1234567890", template, data, {
+	from: "+12223334444",
+	retries: 2
 });
 ```
 
@@ -351,7 +353,8 @@ export type AirhornSendResult = {
 	// biome-ignore lint/suspicious/noExplicitAny: expected
 	response: any;
 	/**
-	 * The number of times the message was retried.
+	 * The number of extra attempts after a failed provider send.
+	 * Airhorn increases this number for each extra attempt.
 	 */
 	retries: number;
 	/**

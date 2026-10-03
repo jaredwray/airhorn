@@ -618,7 +618,7 @@ describe("Airhorn from precedence", () => {
 });
 
 describe("Airhorn provider options forwarding", () => {
-	test("should not forward the from option to providers", async () => {
+	test("should not forward the from or retries options to providers", async () => {
 		const receivedOptions: any[] = [];
 		const mockProvider = {
 			name: "mock",
@@ -643,11 +643,304 @@ describe("Airhorn provider options forwarding", () => {
 			template,
 			{},
 			AirhornSendType.SMS,
-			{ from: "+12223334444", throwOnErrors: false },
+			{ from: "+12223334444", throwOnErrors: false, retries: 2 },
 		);
 
 		expect(result.success).toBe(true);
 		expect(result.message?.from).toBe("+12223334444");
+		expect(receivedOptions).toHaveLength(1);
 		expect(receivedOptions[0]).toEqual({ throwOnErrors: false });
+	});
+});
+
+describe("Airhorn send retries", () => {
+	const template: AirhornTemplate = {
+		content: "Hello",
+	};
+
+	function createAirhorn(providers: Array<any>) {
+		return new Airhorn({
+			providers,
+			useWebhookProvider: false,
+		});
+	}
+
+	function successResult(response: any = { ok: true }) {
+		return { success: true, response, errors: [] };
+	}
+
+	function failureResult(message: string) {
+		return {
+			success: false,
+			response: null,
+			errors: [new Error(message)],
+		};
+	}
+
+	test("should not retry when retries is omitted", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(failureResult("failed")),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{ name: "John" },
+			AirhornSendType.SMS,
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(1);
+		expect(result.success).toBe(false);
+		expect(result.retries).toBe(0);
+	});
+
+	test("should not retry when retries is 0", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(failureResult("failed")),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries: 0 },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(1);
+		expect(result.retries).toBe(0);
+	});
+
+	test("should report zero retries when the first attempt succeeds", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(successResult()),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries: 3 },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(1);
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(0);
+	});
+
+	test("should retry a failed provider until it succeeds", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi
+				.fn()
+				.mockResolvedValueOnce(failureResult("fail 1"))
+				.mockResolvedValueOnce(failureResult("fail 2"))
+				.mockResolvedValueOnce(successResult({ delivered: true })),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries: 2 },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(3);
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(2);
+		expect(result.errors).toEqual([]);
+		expect(result.response.response).toEqual({ delivered: true });
+	});
+
+	test("should stop after the configured retries when every attempt fails", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi
+				.fn()
+				.mockResolvedValueOnce(failureResult("fail 1"))
+				.mockResolvedValueOnce(failureResult("fail 2"))
+				.mockResolvedValueOnce(failureResult("fail 3")),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries: 2 },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(3);
+		expect(result.success).toBe(false);
+		expect(result.retries).toBe(2);
+		expect(result.response.errors[0].message).toBe("fail 3");
+	});
+
+	test("should retry thrown errors and record only the last failure", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi
+				.fn()
+				.mockRejectedValueOnce(new Error("first"))
+				.mockRejectedValueOnce(new Error("second"))
+				.mockRejectedValueOnce(new Error("last")),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries: 2 },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(3);
+		expect(result.success).toBe(false);
+		expect(result.retries).toBe(2);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].error.message).toBe("last");
+	});
+
+	test("should retry a thrown error and then succeed", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.Email],
+			send: vi
+				.fn()
+				.mockRejectedValueOnce(new Error("temporary"))
+				.mockResolvedValueOnce(successResult()),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.sendEmail(
+			"user@example.com",
+			template,
+			{},
+			{
+				retries: 1,
+			},
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(2);
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(1);
+		expect(result.errors).toEqual([]);
+	});
+
+	test.each([
+		{ retries: 1.9, calls: 2, performed: 1 },
+		{ retries: -3, calls: 1, performed: 0 },
+		{ retries: Number.NaN, calls: 1, performed: 0 },
+		{ retries: Number.POSITIVE_INFINITY, calls: 1, performed: 0 },
+	])(
+		"should make $calls attempts when retries is $retries",
+		async ({ retries, calls, performed }) => {
+			const provider = {
+				name: "mock",
+				capabilities: [AirhornSendType.SMS],
+				send: vi.fn().mockResolvedValue(failureResult("failed")),
+			};
+			const airhorn = createAirhorn([provider]);
+
+			const result = await airhorn.send(
+				"+1",
+				template,
+				{},
+				AirhornSendType.SMS,
+				{ retries },
+			);
+
+			expect(provider.send).toHaveBeenCalledTimes(calls);
+			expect(result.retries).toBe(performed);
+			expect(result.success).toBe(false);
+		},
+	);
+
+	test("should exhaust retries on a provider before failing over", async () => {
+		const primary = {
+			name: "primary",
+			capabilities: [AirhornSendType.SMS],
+			send: vi
+				.fn()
+				.mockResolvedValueOnce(failureResult("primary 1"))
+				.mockResolvedValueOnce(failureResult("primary 2")),
+		};
+		const secondary = {
+			name: "secondary",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(successResult({ provider: "secondary" })),
+		};
+		const airhorn = createAirhorn([primary, secondary]);
+
+		const result = await airhorn.sendFailOver(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries: 1 },
+		);
+
+		expect(primary.send).toHaveBeenCalledTimes(2);
+		expect(secondary.send).toHaveBeenCalledTimes(1);
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(1);
+		expect(result.providers).toEqual([secondary]);
+		expect(result.errors).toHaveLength(1);
+		expect(result.errors[0].error.message).toBe("primary 2");
+		expect(result.errors[0].provider).toBe(primary);
+	});
+
+	test("should sum retries across providers when sending to all", async () => {
+		const first = {
+			name: "first",
+			capabilities: [AirhornSendType.MobilePush],
+			send: vi
+				.fn()
+				.mockResolvedValueOnce(failureResult("first"))
+				.mockResolvedValueOnce(successResult()),
+		};
+		const second = {
+			name: "second",
+			capabilities: [AirhornSendType.MobilePush],
+			send: vi
+				.fn()
+				.mockRejectedValueOnce(new Error("second"))
+				.mockRejectedValueOnce(new Error("second again"))
+				.mockResolvedValueOnce(successResult()),
+		};
+		const airhorn = createAirhorn([first, second]);
+
+		const result = await airhorn.sendMobilePush(
+			"device-token",
+			template,
+			{},
+			{
+				retries: 2,
+				sendStrategy: AirhornSendStrategy.All,
+			},
+		);
+
+		expect(first.send).toHaveBeenCalledTimes(2);
+		expect(second.send).toHaveBeenCalledTimes(3);
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(3);
+		expect(result.errors).toEqual([]);
 	});
 });

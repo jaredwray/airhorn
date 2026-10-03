@@ -44,7 +44,8 @@ export type AirhornSendResult = {
 	// biome-ignore lint/suspicious/noExplicitAny: expected
 	response: any;
 	/**
-	 * The number of times the message was retried.
+	 * The number of extra attempts after a failed provider send.
+	 * Airhorn increases this number for each extra attempt.
 	 */
 	retries: number;
 	/**
@@ -104,7 +105,39 @@ export type AirhornSendOptions = {
 	 * @default false
 	 */
 	throwOnErrors?: boolean;
+	/**
+	 * The number of extra attempts after a provider send fails.
+	 * A value of 0 sends the message one time.
+	 * @default 0
+	 */
+	retries?: number;
 };
+
+/**
+ * Convert the retries option to a whole number.
+ * An empty value, an invalid number, or a value below 1 means no retry.
+ * The function removes the fraction from a positive number.
+ */
+function resolveRetries(retries?: number): number {
+	if (retries === undefined || !Number.isFinite(retries) || retries <= 0) {
+		return 0;
+	}
+
+	return Math.floor(retries);
+}
+
+/**
+ * Remove Airhorn options before the provider call.
+ * Airhorn puts `from` on the message and uses `retries` for the retry count.
+ */
+function providerSendOptions(options?: AirhornSendOptions) {
+	if (options === undefined) {
+		return undefined;
+	}
+
+	const { from, retries, ...providerOptions } = options;
+	return providerOptions;
+}
 
 export type AirhornOptions = {
 	/**
@@ -399,6 +432,7 @@ export class Airhorn extends Hookified {
 							provider,
 							message,
 							options,
+							result,
 						);
 						return { provider, result: providerResult };
 					} catch (error) {
@@ -459,6 +493,7 @@ export class Airhorn extends Hookified {
 							provider,
 							message,
 							options,
+							result,
 						);
 						if (providerResult.success) {
 							result.success = true;
@@ -535,6 +570,7 @@ export class Airhorn extends Hookified {
 							provider,
 							message,
 							options,
+							result,
 						);
 						result.success = providerResult.success;
 						result.response = providerResult;
@@ -738,25 +774,40 @@ export class Airhorn extends Hookified {
 	}
 
 	/**
-	 * Execute a send to a single provider. The `from` option is already resolved into the
-	 * message at this point, so it is stripped before forwarding the options — providers
-	 * merge options into their API calls and a stale `from` would override the message.
+	 * Send a message with one provider.
+	 * Airhorn tries again after a failure, up to `options.retries` extra attempts.
+	 * Airhorn removes `from` and `retries` before the provider call.
 	 * @param {AirhornProvider} provider - The provider to send with.
 	 * @param {AirhornProviderMessage} message - The message to send.
 	 * @param {AirhornSendOptions} options - The send options.
+	 * @param {AirhornSendResult} result - The send result. Each extra attempt increases `retries`.
 	 * @returns {Promise<AirhornProviderSendResult>} - The result of the send operation.
 	 */
 	private async executeSend(
 		provider: AirhornProvider,
 		message: AirhornProviderMessage,
-		options?: AirhornSendOptions,
+		options: AirhornSendOptions | undefined,
+		result: AirhornSendResult,
 	): Promise<AirhornProviderSendResult> {
-		if (options?.from !== undefined) {
-			const { from, ...providerOptions } = options;
-			return provider.send(message, providerOptions);
-		}
+		const maxRetries = resolveRetries(options?.retries);
+		const providerOptions = providerSendOptions(options);
 
-		return provider.send(message, options);
+		let attempt = 0;
+		while (true) {
+			try {
+				const providerResult = await provider.send(message, providerOptions);
+				if (providerResult.success || attempt >= maxRetries) {
+					return providerResult;
+				}
+			} catch (error) {
+				if (attempt >= maxRetries) {
+					throw error;
+				}
+			}
+
+			attempt += 1;
+			result.retries += 1;
+		}
 	}
 }
 
