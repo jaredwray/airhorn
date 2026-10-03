@@ -943,4 +943,117 @@ describe("Airhorn send retries", () => {
 		expect(result.retries).toBe(3);
 		expect(result.errors).toEqual([]);
 	});
+
+	test("should use a retry function as the limit for one provider", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi
+				.fn()
+				.mockResolvedValueOnce(failureResult("fail 1"))
+				.mockResolvedValueOnce(failureResult("fail 2"))
+				.mockResolvedValueOnce(successResult()),
+		};
+		const airhorn = createAirhorn([provider]);
+		const retries = vi.fn().mockReturnValue(2);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(3);
+		expect(retries).toHaveBeenCalledTimes(1);
+		expect(retries).toHaveBeenCalledWith(
+			expect.objectContaining({ to: "+1234567890", content: "Hello" }),
+			provider,
+			airhorn,
+		);
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(2);
+	});
+
+	test("should not call a retry function when the first attempt succeeds", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(successResult()),
+		};
+		const airhorn = createAirhorn([provider]);
+		const retries = vi.fn().mockReturnValue(4);
+
+		const result = await airhorn.send(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries },
+		);
+
+		expect(provider.send).toHaveBeenCalledTimes(1);
+		expect(retries).not.toHaveBeenCalled();
+		expect(result.success).toBe(true);
+		expect(result.retries).toBe(0);
+	});
+
+	test("should normalize the number that a retry function returns", async () => {
+		const provider = {
+			name: "mock",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(failureResult("failed")),
+		};
+		const airhorn = createAirhorn([provider]);
+
+		const result = await airhorn.send("+1", template, {}, AirhornSendType.SMS, {
+			retries: () => 1.9,
+		});
+
+		expect(provider.send).toHaveBeenCalledTimes(2);
+		expect(result.retries).toBe(1);
+		expect(result.success).toBe(false);
+	});
+
+	test("should call the retry function once for each failed provider", async () => {
+		const primary = {
+			name: "primary",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(failureResult("primary")),
+		};
+		const secondary = {
+			name: "secondary",
+			capabilities: [AirhornSendType.SMS],
+			send: vi.fn().mockResolvedValue(failureResult("secondary")),
+		};
+		const airhorn = createAirhorn([primary, secondary]);
+		const retries = vi.fn().mockReturnValue(0);
+
+		const result = await airhorn.sendFailOver(
+			"+1234567890",
+			template,
+			{},
+			AirhornSendType.SMS,
+			{ retries },
+		);
+
+		expect(primary.send).toHaveBeenCalledTimes(1);
+		expect(secondary.send).toHaveBeenCalledTimes(1);
+		expect(retries).toHaveBeenCalledTimes(2);
+		expect(retries).toHaveBeenNthCalledWith(
+			1,
+			expect.any(Object),
+			primary,
+			airhorn,
+		);
+		expect(retries).toHaveBeenNthCalledWith(
+			2,
+			expect.any(Object),
+			secondary,
+			airhorn,
+		);
+		expect(result.success).toBe(false);
+		expect(result.retries).toBe(0);
+	});
 });

@@ -88,6 +88,14 @@ export type AirhornRetryFunction = (
 	instance: Airhorn,
 ) => number;
 
+/**
+ * The retry limit for one provider.
+ * A number greater than 0 is the maximum number of extra attempts.
+ * A function receives the message, the failed provider, and the Airhorn instance.
+ * The function returns that number.
+ */
+export type AirhornRetryStrategy = number | AirhornRetryFunction;
+
 export type AirhornSendOptions = {
 	/**
 	 * The sender of the message (e.g. phone number, email address). This will override the
@@ -108,9 +116,10 @@ export type AirhornSendOptions = {
 	/**
 	 * The number of extra attempts after a provider send fails.
 	 * A value of 0 sends the message one time.
+	 * A function returns that number. Airhorn calls it on the first failure.
 	 * @default 0
 	 */
-	retries?: number;
+	retries?: AirhornRetryStrategy;
 };
 
 /**
@@ -170,13 +179,6 @@ export type AirhornOptions = {
 	 */
 	throwOnErrors?: boolean;
 };
-
-/**
- * The retry strategy to use when sending messages. If set to a number that is greater than 0,
- * it will be used as the maximum number of retries. If set to a function, it will be called with the
- * message, failed provider, and Airhorn instance to determine the number of retries.
- */
-export type AirhornRetryStrategy = number | AirhornRetryFunction;
 
 export class Airhorn extends Hookified {
 	private _sendStrategy: AirhornSendStrategy = AirhornSendStrategy.RoundRobin;
@@ -776,6 +778,7 @@ export class Airhorn extends Hookified {
 	/**
 	 * Send a message with one provider.
 	 * Airhorn tries again after a failure, up to `options.retries` extra attempts.
+	 * When `retries` is a function, Airhorn calls it on the first failure.
 	 * Airhorn removes `from` and `retries` before the provider call.
 	 * @param {AirhornProvider} provider - The provider to send with.
 	 * @param {AirhornProviderMessage} message - The message to send.
@@ -789,18 +792,32 @@ export class Airhorn extends Hookified {
 		options: AirhornSendOptions | undefined,
 		result: AirhornSendResult,
 	): Promise<AirhornProviderSendResult> {
-		const maxRetries = resolveRetries(options?.retries);
+		const retries = options?.retries;
 		const providerOptions = providerSendOptions(options);
+		let maxRetries: number | undefined;
+
+		const retryLimit = (): number => {
+			if (maxRetries !== undefined) {
+				return maxRetries;
+			}
+
+			const resolved =
+				typeof retries === "function"
+					? retries(message, provider, this)
+					: retries;
+			maxRetries = resolveRetries(resolved);
+			return maxRetries;
+		};
 
 		let attempt = 0;
 		while (true) {
 			try {
 				const providerResult = await provider.send(message, providerOptions);
-				if (providerResult.success || attempt >= maxRetries) {
+				if (providerResult.success || attempt >= retryLimit()) {
 					return providerResult;
 				}
 			} catch (error) {
-				if (attempt >= maxRetries) {
+				if (attempt >= retryLimit()) {
 					throw error;
 				}
 			}
