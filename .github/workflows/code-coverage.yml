@@ -39,8 +39,6 @@ jobs:
       run: pnpm build
 
     - name: Testing
-      env:
-        FIREBASE_CERT: ${{ secrets.FIREBASE_CERT }}
       run: pnpm test
 
     - name: Code Coverage
