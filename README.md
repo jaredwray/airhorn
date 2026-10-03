@@ -5,6 +5,7 @@
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/dm/airhorn)](https://npmjs.com/package/airhorn)
 [![npm](https://img.shields.io/npm/v/airhorn)](https://npmjs.com/package/airhorn)
+[![Drydock review](https://img.shields.io/endpoint?url=https%3A%2F%2Fdrydock.org%2Fpublic%2Fbadge%2Fnpm%2Fairhorn)](https://drydock.org/diff/airhorn)
 
 # Cloud Native Notifications Library
 

@@ -7,6 +7,7 @@
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/dm/@airhornjs/aws)](https://npmjs.com/package/@airhornjs/aws)
 [![npm](https://img.shields.io/npm/v/@airhornjs/aws)](https://npmjs.com/package/@airhornjs/aws)
+[![Drydock review](https://img.shields.io/endpoint?url=https%3A%2F%2Fdrydock.org%2Fpublic%2Fbadge%2Fnpm%2F%40airhornjs%2Faws)](https://drydock.org/diff/@airhornjs/aws)
 
 # @airhornjs/aws
 
