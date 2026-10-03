@@ -7,6 +7,7 @@
 [![license](https://img.shields.io/github/license/jaredwray/airhorn)](https://github.com/jaredwray/airhorn/blob/master/LICENSE)
 [![npm](https://img.shields.io/npm/dm/@airhornjs/pingram)](https://npmjs.com/package/@airhornjs/pingram)
 [![npm](https://img.shields.io/npm/v/@airhornjs/pingram)](https://npmjs.com/package/@airhornjs/pingram)
+[![Drydock review](https://img.shields.io/endpoint?url=https%3A%2F%2Fdrydock.org%2Fpublic%2Fbadge%2Fnpm%2F%40airhornjs%2Fpingram)](https://drydock.org/diff/@airhornjs/pingram)
 
 # @airhornjs/pingram
 
