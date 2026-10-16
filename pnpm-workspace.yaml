@@ -2,6 +2,9 @@ minimumReleaseAge: 10080
 minimumReleaseAgeStrict: true
 minimumReleaseAgeIgnoreMissingTime: false
 trustPolicy: no-downgrade
+overrides:
+  handlebars: 4.7.10
+  undici@7: 7.29.1
 strictDepBuilds: true
 dangerouslyAllowAllBuilds: false
 blockExoticSubdeps: true
