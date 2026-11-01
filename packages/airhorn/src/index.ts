@@ -604,7 +604,7 @@ export class Airhorn extends Hookified {
 	 * Add providers to the Airhorn instance.
 	 * @param {Array<AirhornProvider>} providers - The providers to add.
 	 */
-	public addProviders(providers: Array<AirhornProvider>) {
+	public addProviders(providers: Array<AirhornProvider>): void {
 		for (const provider of providers) {
 			this.addProvider(provider);
 		}
@@ -614,7 +614,7 @@ export class Airhorn extends Hookified {
 	 * Add a provider to the Airhorn instance.
 	 * @param {AirhornProvider} provider - The provider to add.
 	 */
-	public addProvider(provider: AirhornProvider) {
+	public addProvider(provider: AirhornProvider): void {
 		if (!this._providers.includes(provider)) {
 			this._providers.push(provider);
 		}

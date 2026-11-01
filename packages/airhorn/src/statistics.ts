@@ -79,7 +79,7 @@ export class AirhornStatistics {
 	 * Gets the total number of successful send operations
 	 * @returns The number of successful sends
 	 */
-	public get totalSendSuccesses() {
+	public get totalSendSuccesses(): number {
 		return this._executionTimes.filter((entry) => entry.success).length;
 	}
 
@@ -87,7 +87,7 @@ export class AirhornStatistics {
 	 * Gets the total number of failed send operations
 	 * @returns The number of failed sends
 	 */
-	public get totalSendFailures() {
+	public get totalSendFailures(): number {
 		return this._executionTimes.filter((entry) => !entry.success).length;
 	}
 
@@ -158,7 +158,7 @@ export class AirhornStatistics {
 	 * Records a new send statistic and updates statistics
 	 * @param entry - The send statistic to record
 	 */
-	public submit(entry: SendStatistic) {
+	public submit(entry: SendStatistic): void {
 		if (!this._enabled) {
 			return;
 		}
@@ -184,7 +184,7 @@ export class AirhornStatistics {
 	/**
 	 * Clears all send statistics and resets related statistics
 	 */
-	public clearExecutionTimes() {
+	public clearExecutionTimes(): void {
 		this._executionTimes = [];
 		this._totalExecutionTime = 0;
 		this._minExecutionTime = null;
@@ -194,7 +194,7 @@ export class AirhornStatistics {
 	/**
 	 * Resets all statistics to their initial state
 	 */
-	public reset() {
+	public reset(): void {
 		this.clearExecutionTimes();
 	}
 }
