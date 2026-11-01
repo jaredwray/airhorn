@@ -16,12 +16,17 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"preset": "recommended"
 		}
 	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "double"
+		}
+	},
+	"markdown": {
+		"formatter": {
+			"enabled": false
 		}
 	}
 }
