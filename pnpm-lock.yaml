@@ -163,7 +163,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  handlebars: 4.7.10
   zod: 4.6.7
 
 importers:
