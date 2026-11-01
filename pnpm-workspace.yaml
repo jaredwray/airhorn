@@ -4,8 +4,6 @@ minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeExclude:
   - "@jaredwray/fumanchu@4.7.5"
 trustPolicy: no-downgrade
-overrides:
-  zod: 4.6.7
 strictDepBuilds: true
 dangerouslyAllowAllBuilds: false
 blockExoticSubdeps: true
