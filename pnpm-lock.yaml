@@ -206,8 +206,8 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1(supports-color@7.2.0)
       hookified:
-        specifier: ^3.0.4
-        version: 3.0.4
+        specifier: ^3.1.0
+        version: 3.1.0
       writr:
         specifier: ^6.1.6
         version: 6.1.6(supports-color@7.2.0)
@@ -738,12 +738,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@keyv/bigmap@1.3.1':
-    resolution: {integrity: sha512-WbzE9sdmQtKy8vrNPa9BRnwZh5UF4s1KTmSK0KUVLo3eff5BlQNNWDnFOouNpKfPKDnms9xynJjsMYjMaT/aFQ==}
-    engines: {node: '>= 18'}
-    peerDependencies:
-      keyv: ^5.6.0
 
   '@keyv/serialize@1.1.1':
     resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
@@ -1727,8 +1721,8 @@ packages:
   hookified@2.2.0:
     resolution: {integrity: sha512-p/LgFzRN5FeoD3DLS6bkUapeye6E4SI6yJs6KetENd18S+FBthqYq2amJUWpt5z0EQwwHemidjY5OqJGEKm5uA==}
 
-  hookified@3.0.4:
-    resolution: {integrity: sha512-Uos6DSO6BKv4DeR1C22UosRpeUaaoQgEQ+eDCyoJRll2OGzGpZc708vL7orIvqrYLo6zhVV+pkwO9zKVCsq3PQ==}
+  hookified@3.1.0:
+    resolution: {integrity: sha512-G2jPVpzwIiV7pcYcg62ngNvY+y0iCkKmuJIaQpomFdvtY89UiSvWuPiNo1AalSr1t2op1cdz21ZThZc3DSbmvA==}
     engines: {node: '>=22.18.0'}
 
   html-dom-parser@8.0.2:
@@ -3339,12 +3333,7 @@ snapshots:
   '@biomejs/cli-win32-x64@2.6.3':
     optional: true
 
-  '@cacheable/memory@2.2.0':
-    dependencies:
-      '@cacheable/utils': 2.5.0
-      '@keyv/bigmap': 1.3.1(keyv@5.6.0)
-      hookified: 1.15.1
-      keyv: 5.6.0
+  '@cacheable/memory@2.2.0': {}
 
   '@cacheable/net@2.1.0':
     dependencies:
@@ -3454,12 +3443,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
-
-  '@keyv/bigmap@1.3.1(keyv@5.6.0)':
-    dependencies:
-      hashery: 1.5.1
-      hookified: 1.15.1
-      keyv: 5.6.0
 
   '@keyv/serialize@1.1.1': {}
 
@@ -4044,7 +4027,7 @@ snapshots:
       '@jaredwray/fumanchu': 4.7.5
       cacheable: 2.5.0
       ejs: 6.0.1
-      hookified: 3.0.4
+      hookified: 3.1.0
       liquidjs: 10.29.0
       nunjucks: 3.2.4
       pug: 3.0.4
@@ -4244,7 +4227,7 @@ snapshots:
 
   hashery@3.0.1:
     dependencies:
-      hookified: 3.0.4
+      hookified: 3.1.0
 
   hasown@2.0.4:
     dependencies:
@@ -4366,7 +4349,7 @@ snapshots:
 
   hookified@2.2.0: {}
 
-  hookified@3.0.4: {}
+  hookified@3.1.0: {}
 
   html-dom-parser@8.0.2:
     dependencies:
@@ -5819,7 +5802,7 @@ snapshots:
       ai: 7.0.116(zod@4.6.7)
       cacheable: 2.5.0
       hashery: 3.0.1
-      hookified: 3.0.4
+      hookified: 3.1.0
       html-react-parser: 6.1.8(react@19.3.0)
       js-yaml: 5.4.2
       react: 19.3.0
