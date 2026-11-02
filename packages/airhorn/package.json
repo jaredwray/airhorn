@@ -33,7 +33,7 @@
   "dependencies": {
     "cacheable": "^2.5.0",
     "ecto": "^5.1.1",
-    "hookified": "^3.0.4",
+    "hookified": "^3.1.0",
     "writr": "^6.1.6"
   },
   "files": [
