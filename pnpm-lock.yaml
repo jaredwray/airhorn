@@ -245,8 +245,8 @@ importers:
         specifier: workspace:*
         version: link:../airhorn
       pingram:
-        specifier: ^1.0.34
-        version: 1.0.34
+        specifier: ^1.0.39
+        version: 1.0.39
 
   packages/twilio:
     dependencies:
@@ -2290,8 +2290,8 @@ packages:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
 
-  pingram@1.0.34:
-    resolution: {integrity: sha512-esWUsKA5OmQMq5Y3Ae7IvSVpWeHm+SV3tTr3/VFsZGuoa7gL3+VXwKk2Ftz0KZ/9ygxohZ98FJ//vrxm81cabg==}
+  pingram@1.0.39:
+    resolution: {integrity: sha512-+KuF+dChPhNieGiJQRp6qXHedmpaEMJ7LAFYK96kc9ZbLgxJoW8lXJBW3P0pxd9y8Jra1vkMiasynBCHhifOUA==}
 
   postcss@8.5.31:
     resolution: {integrity: sha512-YUbWYCgErwnMAVkjUnYa+KlMBzGpHwiIt/DE7f0G33AuX2LH9UcTk6KgWxd3zRU+pN3u/C+Xl3EnMLM4Hea7Sg==}
@@ -5179,7 +5179,7 @@ snapshots:
 
   picomatch@4.0.7: {}
 
-  pingram@1.0.34:
+  pingram@1.0.39:
     dependencies:
       node-fetch: 2.7.0
     transitivePeerDependencies:
