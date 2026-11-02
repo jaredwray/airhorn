@@ -24,7 +24,7 @@
     "build": "tsdown"
   },
   "dependencies": {
-    "pingram": "^1.0.34"
+    "pingram": "^1.0.39"
   },
   "peerDependencies": {
     "airhorn": "workspace:*"
