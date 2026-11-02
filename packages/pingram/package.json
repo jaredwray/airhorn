@@ -1,6 +1,6 @@
 {
   "name": "@airhornjs/pingram",
-  "version": "7.2.0",
+  "version": "7.2.1",
   "description": "Pingram provider for Airhorn",
   "license": "MIT",
   "author": "Jared Wray <me@jaredwray.com>",
