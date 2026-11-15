@@ -2,7 +2,12 @@
 import { AirhornSendType } from "airhorn";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AirhornTwilio } from "../src/index";
-import { mockSgSend, mockSgSetApiKey, mockTwilioCreate } from "./setup";
+import {
+	mockSgSend,
+	mockSgSetApiKey,
+	mockTwilioCreate,
+	TwilioMock,
+} from "./setup";
 
 describe("AirhornTwilio", () => {
 	let provider: AirhornTwilio;
@@ -34,6 +39,22 @@ describe("AirhornTwilio", () => {
 			expect(providerWithEmail.capabilities).toContain(AirhornSendType.SMS);
 			expect(providerWithEmail.capabilities).toContain(AirhornSendType.Email);
 			expect(mockSgSetApiKey).toHaveBeenCalledWith("SG.test-api-key");
+		});
+
+		it("should pass region, edge, and timeout to the Twilio client", () => {
+			vi.clearAllMocks();
+			new AirhornTwilio({
+				...mockOptions,
+				region: "au1",
+				edge: "sydney",
+				timeout: 5000,
+			});
+
+			expect(TwilioMock).toHaveBeenCalledWith(
+				mockOptions.accountSid,
+				mockOptions.authToken,
+				{ region: "au1", edge: "sydney", timeout: 5000 },
+			);
 		});
 
 		it("should throw error when accountSid is missing", () => {
