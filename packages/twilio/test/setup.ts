@@ -26,10 +26,9 @@ vi.mock("twilio", () => ({
 	default: { Twilio: TwilioMock },
 }));
 
+// Node gives @sendgrid/mail (CommonJS) to ESM as a default export only.
 vi.mock("@sendgrid/mail", () => ({
 	default: sgMail,
-	setApiKey: mockSgSetApiKey,
-	send: mockSgSend,
 }));
 
 // Export for tests to use

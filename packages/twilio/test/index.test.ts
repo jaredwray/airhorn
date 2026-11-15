@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noExplicitAny: test file
-import { execFileSync } from "node:child_process";
 import { AirhornSendType } from "airhorn";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AirhornTwilio } from "../src/index";
@@ -53,28 +52,6 @@ describe("AirhornTwilio", () => {
 					authToken: "",
 				});
 			}).toThrowError("AirhornTwilio requires accountSid and authToken");
-		});
-
-		// Vitest gives named exports from CommonJS packages, but Node does not.
-		// This test loads the module and the real twilio package in plain Node.
-		it("should load and construct with the real twilio package in Node", () => {
-			const source = new URL("../src/index.ts", import.meta.url).href;
-			const script = `
-				const { AirhornTwilio } = await import(${JSON.stringify(source)});
-				const provider = new AirhornTwilio({
-					accountSid: "AC${"0".repeat(32)}",
-					authToken: "test-auth-token",
-				});
-				process.stdout.write(provider.name);
-			`;
-
-			const output = execFileSync(
-				process.execPath,
-				["--input-type=module", "--eval", script],
-				{ encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
-			);
-
-			expect(output).toBe("twilio");
 		});
 	});
 

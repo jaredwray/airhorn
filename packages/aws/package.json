@@ -47,5 +47,9 @@
   },
   "peerDependencies": {
     "airhorn": "workspace:^"
-  }
+  },
+  "files": [
+    "dist",
+    "LICENSE"
+  ]
 }
