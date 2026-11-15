@@ -239,13 +239,13 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0(supports-color@10.2.2)
       airhorn:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../airhorn
 
   packages/pingram:
     dependencies:
       airhorn:
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../airhorn
       pingram:
         specifier: ^1.0.39

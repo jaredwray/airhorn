@@ -29,7 +29,7 @@
     "@azure/notification-hubs": "^2.1.0"
   },
   "peerDependencies": {
-    "airhorn": "workspace:*"
+    "airhorn": "workspace:^"
   },
   "repository": {
     "type": "git",

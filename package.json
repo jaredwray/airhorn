@@ -8,8 +8,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "pnpm -r test",
-    "test:ci": "pnpm -r test:ci",
+    "test": "pnpm -r test && pnpm test:consumer",
+    "test:ci": "pnpm -r test:ci && pnpm test:consumer",
+    "test:consumer": "node scripts/consumer-check.ts",
     "website:build": "pnpm docula build",
     "website:serve": "pnpm docula dev",
     "version:sync": "tsx scripts/version-sync.ts",

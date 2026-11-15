@@ -19,7 +19,8 @@ All commands use **pnpm** (not npm or yarn).
 ```bash
 pnpm install          # Install dependencies
 pnpm build            # Build all packages
-pnpm test             # Lint, test, and coverage for all packages
+pnpm test             # Lint, test, and coverage for all packages, then the consumer check
+pnpm test:consumer    # Only the consumer check (run `pnpm build` first)
 ```
 
 To run for a single package:
@@ -43,6 +44,23 @@ pnpm test             # Runs: biome lint + vitest with coverage
 - **Linting:** Biome
 - Each package's `pnpm test` runs linting first, then vitest with coverage
 - Write tests in `packages/<name>/test/` using the `*.test.ts` naming convention
+
+## Consumer check
+
+Vitest and bundlers accept code that the Node.js loader rejects. For example, Vitest gives named
+exports from a CommonJS package, and a mock can have a shape that the real module does not have.
+The consumer check (`scripts/consumer-check.ts`) finds these defects. It packs each public package,
+installs the tarball in an empty project with only the declared dependencies, and uses it with
+plain Node.js.
+
+- Each public package must have a `test/consumer.ts` file. The check fails if the file is missing.
+- In `test/consumer.ts`, import the package by its name and use it as a consumer does. For a
+  provider, construct it with all of its optional clients. Throw an error if a result is wrong.
+- Do not use a mock, Vitest, a Node.js API, or the network in `test/consumer.ts`.
+- When you write a mock for a module, give it the shape that Node.js gives. For a CommonJS
+  package, run `node -e "import('<name>').then((m) => console.log(Object.keys(m)))"` to see the
+  shape.
+- Do not add a Vitest test that starts Node.js to load a package. Extend `test/consumer.ts`.
 
 ## Code Style
 

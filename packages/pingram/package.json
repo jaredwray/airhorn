@@ -27,7 +27,7 @@
     "pingram": "^1.0.39"
   },
   "peerDependencies": {
-    "airhorn": "workspace:*"
+    "airhorn": "workspace:^"
   },
   "repository": {
     "type": "git",

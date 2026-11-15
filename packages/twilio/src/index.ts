@@ -5,7 +5,11 @@ import {
 	type AirhornProviderSendResult,
 	AirhornSendType,
 } from "airhorn";
-import { Twilio } from "twilio";
+import twilio from "twilio";
+
+// The twilio package is CommonJS. Node cannot find its named exports from ESM.
+// Use the default import, which always works for CommonJS.
+const { Twilio } = twilio;
 
 export type AirhornTwilioOptions = {
 	accountSid: string;
@@ -22,7 +26,7 @@ export class AirhornTwilio implements AirhornProvider {
 		AirhornSendType.Email,
 	];
 
-	private twilioClient: Twilio;
+	private twilioClient: twilio.Twilio;
 	private sendGridEnabled = false;
 
 	constructor(options: AirhornTwilioOptions) {
