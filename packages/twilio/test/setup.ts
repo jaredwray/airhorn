@@ -20,10 +20,10 @@ const sgMail = {
 	send: mockSgSend,
 };
 
-// Mock the modules
+// Mock the modules. Node gives twilio (CommonJS) to ESM as a default export
+// only, so the mock has no named Twilio export.
 vi.mock("twilio", () => ({
-	default: TwilioMock,
-	Twilio: TwilioMock,
+	default: { Twilio: TwilioMock },
 }));
 
 vi.mock("@sendgrid/mail", () => ({
