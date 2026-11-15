@@ -17,6 +17,11 @@ export type AirhornTwilioOptions = {
 	sendGridApiKey?: string;
 	region?: string;
 	edge?: string;
+	/**
+	 * The time limit in milliseconds for each Twilio request. Twilio uses
+	 * 30000 if you do not set it. SendGrid email does not use this value.
+	 */
+	timeout?: number;
 };
 
 export class AirhornTwilio implements AirhornProvider {
@@ -37,6 +42,7 @@ export class AirhornTwilio implements AirhornProvider {
 		this.twilioClient = new Twilio(options.accountSid, options.authToken, {
 			region: options.region,
 			edge: options.edge,
+			timeout: options.timeout,
 		});
 
 		// Configure SendGrid if API key is provided

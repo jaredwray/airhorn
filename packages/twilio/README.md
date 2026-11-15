@@ -121,6 +121,7 @@ const provider = new AirhornTwilio({
   // Optional Twilio configuration
   region: 'sydney',
   edge: 'sydney',
+  timeout: 10000, // milliseconds
 });
 
 // Provider capabilities will include both 'sms' and 'email'
@@ -136,6 +137,7 @@ console.log(provider.capabilities); // ['sms', 'email']
 - `sendGridApiKey` (optional): Your SendGrid API key (enables email support)
 - `region` (optional): Twilio region
 - `edge` (optional): Twilio edge location
+- `timeout` (optional): The time limit in milliseconds for each Twilio request. Twilio uses 30000 if you do not set it. SendGrid email does not use this value.
 
 ## Additional Options
 
